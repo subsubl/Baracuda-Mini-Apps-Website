@@ -17,10 +17,20 @@ export default defineEventHandler(async (event) => {
 
         const apps = await Promise.all(appsList.filter((item: any) => item.type === 'dir').map(async (appDir: any) => {
             const appId = appDir.name
-            const appInfoUrl = `${RAW_BASE}/${appId}/appinfo.spixi`
+            const appUrl = appDir.url
 
             try {
+                // Fetch app contents to find icon
+                const appContentsResponse = await fetch(appUrl)
+                if (!appContentsResponse.ok) return null
+                const appContents = await appContentsResponse.json()
+
+                // Find icon file (png or svg)
+                const iconFile = appContents.find((file: any) => file.name === 'icon.png' || file.name === 'icon.svg')
+                const iconUrl = iconFile ? iconFile.download_url : null
+
                 // Fetch appinfo.spixi
+                const appInfoUrl = `${RAW_BASE}/${appId}/appinfo.spixi`
                 const infoResponse = await fetch(appInfoUrl)
                 if (!infoResponse.ok) return null
                 const infoText = await infoResponse.text()
@@ -39,7 +49,7 @@ export default defineEventHandler(async (event) => {
                     name: info.name || appId,
                     description: info.description || "Spixi Mini App", // Fallback as description isn't standard in all appinfo files
                     version: info.version || '1.0.0',
-                    icon: `${RAW_BASE}/${appId}/icon.svg`, // Assuming svg, fallback strategy could be added
+                    icon: iconUrl || `${RAW_BASE}/${appId}/icon.svg`, // Fallback
                     downloadUrl: appInfoUrl,
                     sourceUrl: `${TREE_BASE}/${appId}`
                 }
