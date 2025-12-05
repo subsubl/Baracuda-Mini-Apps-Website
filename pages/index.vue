@@ -223,11 +223,6 @@ function handleModalClick(e) {
           <h3 class="text-lg font-bold mb-2 text-white group-hover:text-accent transition-colors">{{ app.name }}</h3>
           <p class="text-gray-400 text-sm mb-4 flex-grow leading-relaxed line-clamp-2">{{ app.description }}</p>
           
-          <!-- Install Count -->
-          <div class="text-xs text-gray-500 mb-4">
-            {{ app.installCount }}+ installs
-          </div>
-          
           <div class="flex gap-3 mt-auto">
             <button @click.stop="openModal(app)" 
                     class="flex-1 bg-white/5 hover:bg-white/10 text-white rounded-xl py-2.5 px-4 font-medium text-sm text-center transition-all border border-white/5 hover:border-white/20">
