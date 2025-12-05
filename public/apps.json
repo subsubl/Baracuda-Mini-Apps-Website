@@ -3,108 +3,144 @@
         "id": "com.baracuda.spixi.coinflip",
         "name": "Coin Flip",
         "version": "1.0.2",
-        "description": "",
+        "description": "A simple and fun coin flip app for making quick decisions with friends.",
         "publisher": "Baracuda",
-        "category": "Utility",
-        "icon": "apps/com.baracuda.spixi.coinflip/icon.png"
+        "category": "Games",
+        "icon": "apps/com.baracuda.spixi.coinflip/icon.png",
+        "isNew": false,
+        "isPopular": false,
+        "installCount": 150
     },
     {
         "id": "com.baracuda.spixi.dentistgame",
         "name": "Dentist Mystery",
         "version": "3.1.1",
         "description": "A thrilling detective mystery adventure!",
-        "publisher": "Unknown",
-        "category": "Utility",
-        "icon": "apps/com.baracuda.spixi.dentistgame/icon.png"
+        "publisher": "Baracuda",
+        "category": "Games",
+        "icon": "apps/com.baracuda.spixi.dentistgame/icon.png",
+        "isNew": false,
+        "isPopular": true,
+        "installCount": 520
     },
     {
         "id": "com.baracuda.spixi.doom",
         "name": "DOOM",
         "version": "1.0.4",
-        "description": "",
+        "description": "The classic first-person shooter brought to Spixi Mini Apps.",
         "publisher": "Baracuda",
-        "category": "Utility",
-        "icon": "apps/com.baracuda.spixi.doom/icon.png"
+        "category": "Games",
+        "icon": "apps/com.baracuda.spixi.doom/icon.png",
+        "isNew": false,
+        "isPopular": true,
+        "installCount": 1250
     },
     {
         "id": "com.baracuda.spixi.kalker",
         "name": "Kalker",
         "version": "1.0.0",
-        "description": "",
+        "description": "A powerful scientific calculator for complex mathematical calculations.",
         "publisher": "Baracuda",
-        "category": "Utility",
-        "icon": "apps/com.baracuda.spixi.kalker/icon.png"
+        "category": "Productivity",
+        "icon": "apps/com.baracuda.spixi.kalker/icon.png",
+        "isNew": true,
+        "isPopular": false,
+        "installCount": 85
     },
     {
         "id": "com.baracuda.spixi.pong",
         "name": "Pong",
         "version": "3.10.12",
-        "description": "",
+        "description": "Classic multiplayer Pong game with real-time P2P gameplay.",
         "publisher": "Baracuda",
-        "category": "Utility",
-        "icon": "apps/com.baracuda.spixi.pong/icon.png"
+        "category": "Games",
+        "icon": "apps/com.baracuda.spixi.pong/icon.png",
+        "isNew": false,
+        "isPopular": true,
+        "installCount": 890
     },
     {
         "id": "com.baracuda.spixi.survivalmanual",
         "name": "SurvivalManual",
         "version": "1.0.2",
-        "description": "Survival Manual for Spixi",
-        "publisher": "Unknown",
-        "category": "Utility",
-        "icon": "apps/com.baracuda.spixi.survivalmanual/icon.png"
+        "description": "Essential survival guide with offline access to critical survival information.",
+        "publisher": "Baracuda",
+        "category": "Productivity",
+        "icon": "apps/com.baracuda.spixi.survivalmanual/icon.png",
+        "isNew": false,
+        "isPopular": false,
+        "installCount": 320
     },
     {
         "id": "com.ixilabs.spixi.auth",
         "name": "Spixi Authenticator",
         "version": "1.0.0",
-        "description": "",
+        "description": "Secure two-factor authentication app for enhanced account security.",
         "publisher": "IXI Labs",
-        "category": "Utility",
-        "icon": "apps/com.ixilabs.spixi.auth/icon.png"
+        "category": "Tools",
+        "icon": "apps/com.ixilabs.spixi.auth/icon.png",
+        "isNew": true,
+        "isPopular": false,
+        "installCount": 210
     },
     {
         "id": "com.ixilabs.spixi.doomwasm",
         "name": "DoomWASM",
         "version": "1.0.0",
-        "description": "",
+        "description": "DOOM powered by WebAssembly for high-performance gaming.",
         "publisher": "IXI Labs",
-        "category": "Utility",
-        "icon": "apps/com.ixilabs.spixi.doomwasm/icon.png"
+        "category": "Games",
+        "icon": "apps/com.ixilabs.spixi.doomwasm/icon.png",
+        "isNew": false,
+        "isPopular": false,
+        "installCount": 340
     },
     {
         "id": "com.ixilabs.spixi.gate-control",
         "name": "Gate Control",
         "version": "1.0.2",
-        "description": "",
+        "description": "IoT gate control app for managing smart gates and access points.",
         "publisher": "IXI Labs",
-        "category": "Utility",
-        "icon": "apps/com.ixilabs.spixi.gate-control/icon.png"
+        "category": "Tools",
+        "icon": "apps/com.ixilabs.spixi.gate-control/icon.png",
+        "isNew": false,
+        "isPopular": false,
+        "installCount": 95
     },
     {
         "id": "com.ixilabs.spixi.mini-apps-test",
         "name": "Mini Apps Test",
         "version": "1.1.0",
-        "description": "",
+        "description": "Developer testing suite for Spixi Mini Apps SDK functionality.",
         "publisher": "IXI Labs",
-        "category": "Utility",
-        "icon": "apps/com.ixilabs.spixi.mini-apps-test/icon.png"
+        "category": "Tools",
+        "icon": "apps/com.ixilabs.spixi.mini-apps-test/icon.png",
+        "isNew": false,
+        "isPopular": false,
+        "installCount": 180
     },
     {
         "id": "com.ixilabs.spixi.tictactoe",
         "name": "Tic-Tac-Toe",
         "version": "1.0.6",
-        "description": "",
+        "description": "Classic multiplayer Tic-Tac-Toe with peer-to-peer gameplay.",
         "publisher": "IXI Labs",
-        "category": "Utility",
-        "icon": "apps/com.ixilabs.spixi.tictactoe/icon.png"
+        "category": "Games",
+        "icon": "apps/com.ixilabs.spixi.tictactoe/icon.png",
+        "isNew": false,
+        "isPopular": true,
+        "installCount": 650
     },
     {
         "id": "com.ixilabs.spixi.video-test",
         "name": "Spixi Video Test",
         "version": "0.1.0",
-        "description": "",
+        "description": "Video calling test application for Spixi's video chat capabilities.",
         "publisher": "IXI Labs",
-        "category": "Utility",
-        "icon": "apps/com.ixilabs.spixi.video-test/icon.png"
+        "category": "Social",
+        "icon": "apps/com.ixilabs.spixi.video-test/icon.png",
+        "isNew": true,
+        "isPopular": false,
+        "installCount": 120
     }
 ]

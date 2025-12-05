@@ -1,11 +1,40 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import QrcodeVue from 'qrcode.vue'
 
 const { t } = useI18n()
 
 // Fetch apps data
-const { data: apps } = await useFetch('/api/apps')
+const { data: apps, pending } = await useFetch('/api/apps')
+
+// Search and filter state
+const searchQuery =ref('')
+const selectedCategory = ref('All')
+const categories = ['All', 'Games', 'Productivity', 'Tools', 'Social']
+
+// Filtered apps
+const filteredApps = computed(() => {
+  if (!apps.value) return []
+  
+  let filtered = apps.value
+
+  // Filter by category
+  if (selectedCategory.value !== 'All') {
+    filtered = filtered.filter(app => app.category === selectedCategory.value)
+  }
+
+  // Filter by search query
+  if (searchQuery.value.trim()) {
+    const query = searchQuery.value.toLowerCase()
+    filtered = filtered.filter(app => 
+      app.name.toLowerCase().includes(query) ||
+      app.description.toLowerCase().includes(query) ||
+      app.publisher.toLowerCase().includes(query)
+    )
+  }
+
+  return filtered
+})
 
 // Modal state
 const showModal = ref(false)
@@ -66,21 +95,104 @@ function handleModalClick(e) {
           <h3 class="text-3xl font-bold text-white mb-2">{{ t('pages.mini-apps.featuredTitle') }}</h3>
           <p class="text-gray-400">{{ t('pages.mini-apps.featuredDesc') }}</p>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div v-for="app in apps" :key="app.name" 
+
+      <!-- Search and Filter Section -->
+      <div class="mb-8 space-y-4">
+        <!-- Search Bar -->
+        <div class="relative">
+          <input
+            v-model="searchQuery"
+            type="text"
+            placeholder="Search apps..."
+            class="w-full px-5 py-3 pl-12 bg-card-bg border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-accent/50 transition-colors"
+          />
+          <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </div>
+
+        <!-- Category Filters -->
+        <div class="flex flex-wrap gap-2">
+          <button
+            v-for="category in categories"
+            :key="category"
+            @click="selectedCategory = category"
+            :class="[
+              'px-4 py-2 rounded-lg font-medium text-sm transition-all',
+              selectedCategory === category
+                ? 'bg-accent text-white'
+                : 'bg-card-bg text-gray-400 hover:bg-white/5 hover:text-white border border-white/10'
+            ]"
+          >
+            {{ category }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Loading Skeleton -->
+      <div v-if="pending" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div v-for="i in 6" :key="i" class="bg-card-bg rounded-2xl p-6 border border-white/5 animate-pulse">
+          <div class="flex items-start justify-between mb-5">
+            <div class="w-14 h-14 bg-white/10 rounded-xl"></div>
+            <div class="w-16 h-6 bg-white/10 rounded"></div>
+          </div>
+          <div class="h-6 bg-white/10 rounded mb-3 w-3/4"></div>
+          <div class="h-4 bg-white/10 rounded mb-2"></div>
+          <div class="h-4 bg-white/10 rounded w-5/6"></div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div v-else-if="filteredApps.length === 0" class="text-center py-16">
+        <div class="text-6xl mb-4">🔍</div>
+        <h3 class="text-2xl font-bold text-white mb-2">No apps found</h3>
+        <p class="text-gray-400 mb-6">Try adjusting your search or filters</p>
+        <button
+          @click="searchQuery = ''; selectedCategory = 'All'"
+          class="px-6 py-3 bg-accent hover:bg-blue-600 text-white rounded-xl font-medium transition-colors"
+        >
+          Clear Filters
+        </button>
+      </div>
+
+      <!-- App Cards Grid -->
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div v-for="app in filteredApps" :key="app.id" 
              @click="openModal(app)"
              class="app-card bg-card-bg rounded-2xl p-6 border border-white/5 hover:border-accent/50 flex flex-col h-full transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-accent/10 group cursor-pointer">
-          <div class="flex items-start justify-between mb-5">
+          <div class="flex items-start justify-between mb-3">
             <div class="relative">
                 <div class="absolute inset-0 bg-accent/20 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <img :src="app.icon" :alt="app.name" @error="$event.target.style.display='none'" class="relative w-14 h-14 rounded-xl object-cover bg-[#1A202C]">
             </div>
-            <span class="px-2.5 py-1 text-[10px] uppercase font-bold tracking-wider bg-white/5 text-gray-400 rounded-md border border-white/5">
-              {{ app.version }}
+            <div class="flex flex-col items-end gap-1">
+              <span class="px-2.5 py-1 text-[10px] uppercase font-bold tracking-wider bg-white/5 text-gray-400 rounded-md border border-white/5">
+                v{{ app.version }}
+              </span>
+            </div>
+          </div>
+          
+          <!-- Category and Status Badges -->
+          <div class="flex flex-wrap gap-1.5 mb-3">
+            <span class="px-2 py-1 text-[10px] font-semibold rounded-md bg-accent/20 text-accent border border-accent/30">
+              {{ app.category }}
+            </span>
+            <span v-if="app.isPopular" class="px-2 py-1 text-[10px] font-semibold rounded-md bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">
+              ⭐ Popular
+            </span>
+            <span v-if="app.isNew" class="px-2 py-1 text-[10px] font-semibold rounded-md bg-green-500/20 text-green-400 border border-green-500/30">
+           ✨ New
             </span>
           </div>
+          
           <h3 class="text-lg font-bold mb-2 text-white group-hover:text-accent transition-colors">{{ app.name }}</h3>
-          <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed line-clamp-2">{{ app.description }}</p>
+          <p class="text-gray-400 text-sm mb-4 flex-grow leading-relaxed line-clamp-2">{{ app.description }}</p>
+          
+          <!-- Install Count -->
+          <div class="text-xs text-gray-500 mb-4">
+            {{ app.installCount }}+ installs
+          </div>
+          
           <div class="flex gap-3 mt-auto">
             <button @click.stop="openModal(app)" 
                     class="flex-1 bg-white/5 hover:bg-white/10 text-white rounded-xl py-2.5 px-4 font-medium text-sm text-center transition-all border border-white/5 hover:border-white/20">
