@@ -87,6 +87,42 @@ function handleModalClick(e) {
           </div>
         </div>
       </div>
+      
+      <!-- 3-Step How It Works Guide -->
+      <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Step 1 -->
+        <div class="bg-card-bg/50 rounded-2xl p-6 border border-white/5 text-center">
+          <div class="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+            </svg>
+          </div>
+          <h4 class="text-white font-bold mb-2">1. Get Spixi</h4>
+          <p class="text-sm text-gray-400">Download Spixi from app stores or scan QR codes below</p>
+        </div>
+        
+        <!-- Step 2 -->
+        <div class="bg-card-bg/50 rounded-2xl p-6 border border-white/5 text-center">
+          <div class="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path>
+            </svg>
+          </div>
+          <h4 class="text-white font-bold mb-2">2. Scan QR Code</h4>
+          <p class="text-sm text-gray-400">Click "Try Now" on any app to get its QR code</p>
+        </div>
+        
+        <!-- Step 3 -->
+        <div class="bg-card-bg/50 rounded-2xl p-6 border border-white/5 text-center">
+          <div class="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"></path>
+            </svg>
+          </div>
+          <h4 class="text-white font-bold mb-2">3. Enjoy!</h4>
+          <p class="text-sm text-gray-400">The app installs instantly and runs securely in Spixi</p>
+        </div>
+      </div>
     </div>
 
     <!-- App Grid -->
