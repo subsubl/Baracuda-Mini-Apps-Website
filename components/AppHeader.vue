@@ -189,7 +189,6 @@ const toggleDropdownLanguage = () => {
                           {{ t('menu.builder') }}
                         </NuxtLink>
                       </li>
-                        </li>
                         <li class="py-3">
                             <NuxtLink 
                                 to="/howitworks" 
