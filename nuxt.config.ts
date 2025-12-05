@@ -31,40 +31,27 @@ export default defineNuxtConfig({
             {
                 code: 'en',
                 file: 'en.json'
+        fallback: 'light',
             },
 
-        ],
-        lazy: true,
-        langDir: 'lang',
-        defaultLocale: 'en',
-        strategy: 'no_prefix',
-    },
+            googleFonts: {
+                families: {
+                    'Lexend': true,
+                }
+            },
 
-    colorMode: {
-        classSuffix: '',
-        storageKey: 'color-theme',
-        preference: 'system',
-        fallback: 'light',
-    },
+            css: ['~/assets/css/main.css'],
 
-    googleFonts: {
-        families: {
-            'Lexend': true,
-        }
-    },
+            postcss: {
+                plugins: {
+                    tailwindcss: {},
+                    autoprefixer: {},
+                },
+            },
 
-    css: ['~/assets/css/main.css'],
+            plugins: [
+                { src: '~/plugins/utils.client.js', ssr: false },
+            ],
 
-    postcss: {
-        plugins: {
-            tailwindcss: {},
-            autoprefixer: {},
-        },
-    },
-
-    plugins: [
-        { src: '~/plugins/utils.client.js', ssr: false },
-    ],
-
-    compatibilityDate: '2025-03-14',
+            compatibilityDate: '2025-03-14',
 })
