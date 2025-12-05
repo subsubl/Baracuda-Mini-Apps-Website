@@ -38,19 +38,6 @@ export default defineNuxtConfig({
         langDir: 'lang',
         defaultLocale: 'en',
         strategy: 'no_prefix',
-        compilation: {
-            strictMessage: false,
-            escapeHtml: false,
-        },
-    },
-
-    app: {
-        pageTransition: false,
-        head: {
-            title: 'Spixi',
-            charset: 'utf-8',
-            viewport: 'width=device-width, initial-scale=1',
-        },
     },
 
     colorMode: {
