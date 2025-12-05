@@ -1,0 +1,49 @@
+{
+    "menu": {
+        "home": "Home",
+        "mini-apps": "Mini Apps",
+        "download": "Download",
+        "howitworks": "How it works",
+        "privacy": "Privacy",
+        "terms": "Terms",
+        "ixian": "Ixian",
+        "ixilabs": "Ixilabs",
+        "newversion": "New {version}",
+        "misc": {
+            "hamburger": {
+                "screenreader": "Open main menu"
+            }
+        }
+    },
+    "footer": {
+        "download": "Download Spixi",
+        "ixian": "Ixian Website",
+        "ixilabs": "IXI Labs Website",
+        "howitworks": "How it works",
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Use"
+    },
+    "pages": {
+        "miniapps": {
+            "hero": {
+                "title": "Mini Apps",
+                "description": "Extend Spixi with lightweight, secure applications.<br>Games, tools, and utilities running directly within your chat."
+            },
+            "try": "Try it now",
+            "viewsource": "View Source",
+            "modal": {
+                "title": "Open {name} in Spixi",
+                "scan": "Scan QR with Spixi",
+                "url": "Add Mini App from URL:",
+                "close": "Close"
+            }
+        },
+        "home": {
+            "features": {
+                "start": "Start using Spixi",
+                "starthelp": "Download Spixi today and experience the future of secure communication.<br>Available on Desktop and Mobile.",
+                "downloadnow": "Download Now"
+            }
+        }
+    }
+}

@@ -1,0 +1,8 @@
+v {
+  "scripts": {
+    "start": "npx http-server ."
+  },
+  "devDependencies": {
+    "qrcode-generator": "^2.0.4"
+  }
+}
