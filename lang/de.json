@@ -3,6 +3,7 @@
         "home": "Startseite",
         "download": "Herunterladen",
         "howitworks": "Wie es funktioniert",
+        "builder": "Builder",
         "privacy": "Datenschutz",
         "terms": "Nutzungsbedingungen",
         "ixian": "Ixian Webseite",
@@ -84,59 +85,62 @@
             }
         },
         "howitworks": {
-            "title": "Wie es funktioniert",
-            "subtitle1": "Spixi ist eine dezentrale Chat-App mit $IXI-Wallet.",
-            "subtitle2": "Das bedeutet, dass es nicht auf Server angewiesen ist und alle Daten direkt zwischen dir und deinen Kontakten ausgetauscht werden.",
-            "helper": "Spitzname ist keine ID",
-            "helperdesc": "Bitte beachte, dass der Spitzname nur deinen Kontakten angezeigt wird und nicht als ID verwendet wird. Um einen Namen zu registrieren, besuche bitte <a href='https://www.ixinames.com/' target='_blank'>www.ixinames.com</a>",
-            "hiw1": {
-                "title": "Erstelle oder stelle dein Spixi-Konto wieder her",
-                "content": "Drücke die entsprechende Taste, um den Vorgang zu starten. Du kannst einen Spitznamen festlegen und ein Profilbild hinzufügen. <br> Füge ein Passwort hinzu und du bist bereit! <p class='h-2'>&nbsp;</p> Um dein Konto wiederherzustellen, benötigst du die <span class='font-semibold'>Sicherungsdatei und das Passwort</span>. Da Spixi dezentralisiert ist, bist du der einzige, der auf dein Konto und deine Nachrichten zugreifen kann, es gibt keine anderen Backups. <p class='h-2'>&nbsp;</p> <span class='font-semibold'>Wichtiger Hinweis: Dein Passwort ist der einzige Weg, um auf dein Konto zuzugreifen. Bewahre es sicher auf!</span>"
+            "title": "Wie Mini-Apps funktionieren",
+            "subtitle1": "Serverlos. Dezentralisiert. Sicher.",
+            "subtitle2": "Erlebe die Zukunft der Apps: direkte Peer-to-Peer-Interaktion ohne Zwischenhändler.",
+            "helper": "Wussten Sie schon?",
+            "helperdesc": "Spixi Mini-Apps sind nur Zip-Dateien mit HTML/JS. Sie laufen vollständig auf Ihrem Gerät und kommunizieren direkt mit den Geräten Ihrer Freunde.",
+            "hero": {
+                "title": "Post-Quanten-sichere Architektur",
+                "desc": "Mini-Apps erben die militärische Verschlüsselung des Ixian-Netzwerks. Alle Daten sind Ende-zu-Ende verschlüsselt."
             },
-            "hiw2": {
-                "title": "Spixi-Adresse ist dein einziger Identifikator.",
-                "content": "Keine Telefonnummer, E-Mail-Adresse oder andere persönliche Informationen erforderlich. Spixi verwendet die Adresse, um sich mit anderen zu verbinden und Zahlungen zu senden oder zu empfangen. <p class='h-2'>&nbsp;</p> <span class='font-semibold'>Hinweis: Durch Drücken auf den Avatar im Chat kannst du Kontakte löschen. Details werden angezeigt und die Schaltfläche „Kontakt löschen“ ist verfügbar.</span>"
+            "steps": {
+                "step1": {
+                    "title": "Peer-to-Peer-Ökologie",
+                    "content": "Im Gegensatz zu traditionellen Web-Apps, die auf zentralen Servern basieren, kommunizieren Mini-Apps direkt zwischen Nutzern. Kein Data Farming, kein Tracking, nur Sie und Ihre Kontakte."
+                },
+                "step2": {
+                    "title": "Keine Installation",
+                    "content": "Vergessen Sie App Stores und große Downloads. Mini-Apps laden sofort, wenn Sie sie brauchen. Teilen Sie sie in einer Chat-Nachricht und beginnen Sie sofort zu spielen oder zusammenzuarbeiten."
+                },
+                "step3": {
+                    "title": "Kollaborativ durch Design",
+                    "content": "Von Grund auf für Echtzeit-Interaktion gebaut. Whiteboards, Spiele und Tools ermöglichen nahtlose Zusammenarbeit zwischen mehreren Nutzern in einer Chat-Sitzung."
+                },
+                "step4": {
+                    "title": "Sandboxed Sicherheit",
+                    "content": "Apps laufen in einem sicheren, isolierten WebView-Container. Sie können ohne Ihre explizite Erlaubnis über die Bridge nicht auf Ihre privaten Schlüssel oder Dateien zugreifen."
+                }
             },
-            "hiw3": {
-                "title": "Kontakte hinzufügen",
-                "content": "Beginne mit dem Erstellen eines neuen Chats. Eine Option zum Hinzufügen neuer Kontakte wird angezeigt. <p class='h-2'>&nbsp;</p> Füge die Spixi-Adresse, den IXI-Namen ein oder scanne den Spixi-QR-Code, um fortzufahren. <p class='h-2'>&nbsp;</p> Weitere Informationen findest du in den FAQ."
-            },
-            "hiw4": {
-                "title": "Senden und Empfangen von $IXI-Zahlungen",
-                "content": "Du kannst $IXI senden, indem du auf dem Wallet-Bildschirm die Schaltfläche „Scannen“ verwendest. Fahre mit einem QR-Code fort, der eine andere Spixi-Wallet-Adresse enthält. Alternativ kannst du die Schaltfläche „Senden“ drücken, um eine $IXI-Zahlung zu senden. <p class='h-2'>&nbsp;</p> Weitere Informationen findest du in den FAQ."
+            "architecture": {
+                "title": "Die Architektur",
+                "host": "Host-App (Spixi)",
+                "bridge": "Brücke (SDK)",
+                "miniapp": "Mini-App (WebView)",
+                "network": "P2P-Netzwerk (Ixian)"
             },
             "faq": {
                 "title": "Häufig gestellte Fragen",
-                "q1": "Ist Spixi sicher? Welche Sicherheitsmaßnahmen wurden implementiert?",
-                "a1": "Spixi wurde mit einem starken Fokus auf Sicherheit und Privatsphäre entwickelt. Nachrichten werden verschlüsselt und nur auf dem Gerät gespeichert, ohne auf zentrale Server angewiesen zu sein. Wir sammeln auch keine Nutzerdaten.",
-                "q2": "Sind Spixi-Nachrichten sicher?",
-                "a2": "Alle über Spixi gesendeten Nachrichten sind mit den neuesten Verschlüsselungstechnologien verschlüsselt. Spixi verwendet ein Peer-to-Peer-Modell und ist nicht auf zentrale Server angewiesen. Nachrichten werden lokal auf dem Gerät gespeichert.",
-                "q3": "Welche Kosten sind mit der Nutzung von Spixi verbunden?",
-                "a3": "Spixi ist völlig kostenlos! Du kannst es verwenden, um mit Freunden zu chatten, Dateien auszutauschen oder $IXI-Zahlungen zu senden und zu empfangen. Wir erheben keine Gebühren für die Nutzung der App.",
-                "q4": "Welche Plattformen werden unterstützt?",
-                "a4": "Spixi ist derzeit für Android-, iOS-, Windows- und MacOS-Geräte verfügbar. Lade es jetzt für deine bevorzugte Plattform herunter!",
-                "q5": "Welche Dateitypen kann ich über Spixi senden?",
-                "a5": "Spixi ermöglicht das Senden verschiedener Dateitypen, einschließlich Bildern, Videos, Dokumenten usw. Weitere Informationen findest du in den FAQ.",
-                "q6": "Kann ich Zahlungen senden und empfangen?",
-                "a6": "Ja, Spixi enthält ein sicheres und benutzerfreundliches IXI-Wallet. Du kannst direkt aus der App $IXI-Zahlungen senden und empfangen.",
-                "q7": "Wie erstelle ich ein Konto?",
-                "a7": "Um ein Konto zu erstellen, lade und installiere Spixi auf deinem Gerät. Befolge die Anweisungen, um einen Spitznamen festzulegen, ein Profilbild hinzuzufügen und ein Passwort zu erstellen. Das ist alles! Weitere Informationen findest du in den FAQ.",
-                "q8": "Wie stelle ich mein Konto wieder her?",
-                "a8": "Um dein Konto wiederherzustellen, benötigst du die Sicherungsdatei und das Passwort. Befolge die Anweisungen in der App, um dein Konto wiederherzustellen. Weitere Informationen findest du in den FAQ.",
-                "q9": "Wie füge ich Kontakte hinzu?",
-                "a9": "Um Kontakte hinzuzufügen, erstelle einen neuen Chat und verwende die Option, um neue Kontakte hinzuzufügen. Gib die Spixi-Adresse oder den IXI-Namen ein oder scanne den Spixi-QR-Code. Weitere Informationen findest du in den FAQ.",
-                "q10": "Kann ich Benachrichtigungen in Spixi anpassen?",
-                "a10": "Push-Benachrichtigungen in Spixi sind zum Schutz Ihrer Privatsphäre nicht anpassbar. ",
-                "q11": "Kann sich ein anderer Spixi-Benutzer über meinen Nicknamen mit mir verbinden?",
-                "a11": "Spitznamen werden nur Kontakten angezeigt und dienen nicht als Handles. ",
-                "q12": "Wie geht Spixi mit Benutzerdaten um?",
-                "a12": "Spixi speichert oder gibt keine personenbezogenen Daten weiter. ",
-                "q13": "Kann ich mein Spixi-Konto dauerhaft löschen?",
-                "a13": "Sie können Ihr Wallet und Ihr Konto jederzeit dauerhaft löschen. Da Spixi eine dezentrale App ist, wird Ihr Konto nur auf Ihrem Gerät gespeichert. ",
-                "q14": "Fallen bei der Nutzung von Spixi Gebühren an?",
-                "a14": "Die Nutzung von Spixi ist kostenlos und wird immer kostenlos bleiben. ",
-                "q15": "Wo finde ich Unterstützung, wenn ich Probleme mit Spixi habe?",
-                "a15": "Sie können der Ixian-Community beitreten (weitere Informationen zum Beitritt finden Sie unter <a href='https://www.ixian.io/' target='_blank'>www.ixian.io</a>) und Unterstützung von anderen Benutzern erhalten. "
+                "q1": "Brauche ich einen Server, um eine Mini-App auszuführen?",
+                "a1": "Nein! Das ist das Schöne daran. Mini-Apps sind reiner clientseitiger Code (HTML/JS), der über das Ixian P2P-Netzwerk direkt mit anderen Nutzern kommuniziert. Keine Backend-Infrastruktur erforderlich.",
+                "q2": "Sind Mini-Apps sicher?",
+                "a2": "Extrem. Sie laufen in einer Sandbox-Umgebung (WebView) und der gesamte Netzwerkverkehr wird mit Ixians post-quanten-sicherem Protokoll (RSA + ECDH + ML-KEM) verschlüsselt. Die App selbst kann ohne Erlaubnis nicht auf Ihre sensiblen Daten zugreifen.",
+                "q3": "Wie installiere ich eine Mini-App?",
+                "a3": "Sie müssen nichts 'installieren' im eigentlichen Sinne. Sie können sie aus einem Repository hinzufügen oder einfach eine .spixi-Datei in einem Chat empfangen. Sie laden sofort. Sie können Ihre Favoriten für einfachen Zugriff anpinnen.",
+                "q4": "Kann ich meine eigene bauen?",
+                "a4": "Absolut. Wenn Sie HTML, CSS und JavaScript kennen, können Sie eine Mini-App bauen. Wir bieten ein einfaches SDK, um die P2P-Kommunikation zu handhaben. Schauen Sie in den 'Build'-Bereich für Anleitungen.",
+                "q5": "Was können Mini-Apps tun?",
+                "a5": "Fast alles, was eine Web-App kann! Spiele, Taschenrechner, kollaborative Tools, Umfragen und sogar die Steuerung von IoT-Geräten über Gateways. Die Grenze ist Ihre Vorstellungskraft.",
+                "q6": "Kostet es Geld?",
+                "a6": "Das Bauen und Hosten von Mini-Apps ist kostenlos, da es keine Server zu bezahlen gibt. Nutzer zahlen auch keine Gasgebühren für Standardinteraktionen.",
+                "q7": "Wie aktualisiere ich eine App?",
+                "a7": "Entwickler veröffentlichen neue Versionen als .spixi-Dateien. Wenn Sie eine neuere Version öffnen, aktualisiert Spixi automatisch Ihren lokalen Cache.",
+                "q8": "Können Mini-Apps Zahlungen tätigen?",
+                "a8": "Ja, sie können Zahlungen (in IXI) anfordern, die der Nutzer in der nativen Spixi-Oberfläche genehmigen muss. Sicher und einfach.",
+                "q9": "Was ist mit Offline-Nutzung?",
+                "a9": "Da der App-Code lokal zwischengespeichert wird, funktionieren viele Apps (wie Taschenrechner oder Solo-Spiele) perfekt offline. Netzwerkfunktionen werden fortgesetzt, wenn Sie wieder verbunden sind.",
+                "q10": "Gibt es einen App Store?",
+                "a10": "Wir haben ein Community-Verzeichnis, in dem Sie vorgestellte Apps durchsuchen können, aber jeder kann eine App direkt an Nutzer verteilen, ohne einen Gatekeeper."
             }
         },
         "privacy": {
@@ -150,6 +154,6 @@
         "misc": {
             "tryit": "Ausprobieren",
             "learnmore": "Mehr erfahren"
-        }        
+        }
     }
 }

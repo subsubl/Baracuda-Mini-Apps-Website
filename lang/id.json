@@ -3,6 +3,7 @@
         "home": "Beranda",
         "download": "Unduh",
         "howitworks": "Bagaimana cara kerjanya",
+        "builder": "Builder",
         "privacy": "Kebijakan Privasi",
         "terms": "Ketentuan Penggunaan",
         "ixian": "Situs web Ixian",
@@ -84,59 +85,62 @@
             }
         },
         "howitworks": {
-            "title": "Cara kerjanya",
-            "subtitle1": "Spixi adalah aplikasi obrolan terdesentralisasi dengan dompet $IXI.",
-            "subtitle2": "Karena itu, aplikasi ini tidak bergantung pada server, semua data dipertukarkan secara langsung antara Anda dan kontak milik Anda.",
-            "helper": "Nama panggilan Anda bukanlah nama pengguna Anda",
-            "helperdesc": "Harap diingat bahwa nama panggilan hanya ditampilkan kepada kontak Anda dan tidak berfungsi sebagai nama pengguna Anda. Jika Anda ingin mendaftarkan nama, Anda perlu mengunjungi <a href='https://www.ixinames.com/' target='_blank'>www.ixinames.com</a>",
-            "hiw1": {
-                "title": "Membuat atau Memulihkan <br> Akun Spixi milik Anda",
-                "content": "Ketuk tombol yang sesuai untuk memulai proses. Anda dapat mengatur nama panggilan dan menambahkan foto profil. <br> Tambahkan kata sandi dan Anda siap untuk memulai! <p class='h2'>&nbsp;</p> Jika Anda memulihkan akun, Anda akan memerlukan <span class='font-semibold'>file cadangan dan kata sandi</span>. Ingat, Spixi bersifat terdesentralisasi dan hanya Anda yang memiliki akses ke akun dan pesan milik Anda, tidak ada cadangan di tempat lain. <p class='h2'>&nbsp;</p> <span class='font-semibold'>Catatan penting: Kata sandi milik Anda adalah satu-satunya cara untuk mengakses akun milik Anda. Jaga keamanannya!</span>"
+            "title": "Cara Kerja Mini Apps",
+            "subtitle1": "Tanpa Server. Terdesentralisasi. Aman.",
+            "subtitle2": "Rasakan masa depan aplikasi: interaksi peer-to-peer langsung tanpa perantara.",
+            "helper": "Tahukah Anda?",
+            "helperdesc": "Spixi Mini Apps hanyalah file zip yang berisi HTML/JS. Mereka berjalan sepenuhnya di perangkat Anda dan berkomunikasi langsung dengan perangkat teman Anda.",
+            "hero": {
+                "title": "Arsitektur Aman Pasca-Kuantum",
+                "desc": "Mini Apps mewarisi enkripsi tingkat militer dari jaringan Ixian. Semua data dienkripsi end-to-end."
             },
-            "hiw2": {
-                "title": "Alamat Spixi adalah satu-satunya Pengidentifikasi Anda.",
-                "content": "Tidak ada nomor telepon, email, atau informasi pribadi lainnya. Spixi menggunakan alamat Anda untuk terhubung dengan orang lain dan memungkinkan Anda dapat mengirim atau menerima pembayaran. <p class='h2'>&nbsp;</p> <span class='font-semibold'>Catatan: Hapus kontak dengan mengetuk avatar mereka di chat. Anda akan melihat detail mereka dan menemukan tombol “Hapus Kontak”.</span>"
+            "steps": {
+                "step1": {
+                    "title": "Ekologi Peer-to-Peer",
+                    "content": "Tidak seperti aplikasi web tradisional yang bergantung pada server pusat, Mini Apps berkomunikasi langsung antar pengguna. Tidak ada data farming, tidak ada pelacakan, hanya Anda dan kontak Anda."
+                },
+                "step2": {
+                    "title": "Tanpa Instalasi",
+                    "content": "Lupakan toko aplikasi dan unduhan besar. Mini Apps dimuat secara instan saat Anda membutuhkannya. Bagikan dalam pesan obrolan dan mulailah bermain atau berkolaborasi segera."
+                },
+                "step3": {
+                    "title": "Kolaboratif Secara Desain",
+                    "content": "Dibangun dari awal untuk interaksi real-time. Papan tulis, game, dan alat memfasilitasi kolaborasi mulus antara beberapa pengguna dalam satu sesi obrolan."
+                },
+                "step4": {
+                    "title": "Keamanan Sandboxed",
+                    "content": "Aplikasi berjalan dalam wadah WebView yang aman dan terisolasi. Mereka tidak dapat mengakses kunci pribadi atau file Anda tanpa izin eksplisit Anda melalui Bridge."
+                }
             },
-            "hiw3": {
-                "title": "Menambahkan Kontak",
-                "content": "Mulailah dengan membuat obrolan baru. Anda akan melihat opsi untuk menambahkan kontak baru. <p class='h2'>&nbsp;</p> Tempel Alamat Spixi, nama IXI, atau Pindai Kode QR Spixi mereka untuk melanjutkan. <p class='h2'>&nbsp;</p> Periksa FAQ untuk informasi lebih lanjut."
-            },
-            "hiw4": {
-                "title": "Mengirim dan Menerima <br> Pembayaran $IXI",
-                "content": "Anda dapat mengirim $IXI dengan menggunakan tombol “Pindai”, di layar Dompet. Lanjutkan dengan kode QR yang berisi alamat Dompet Spixi lainnya. Atau, Anda dapat mengirim pembayaran $IXI dengan mengetuk tombol “Kirim”,. <p class='h2'>&nbsp;</p> Periksa FAQ untuk informasi lebih lanjut."
+            "architecture": {
+                "title": "Arsitektur",
+                "host": "Aplikasi Host (Spixi)",
+                "bridge": "Jembatan (SDK)",
+                "miniapp": "Mini App (WebView)",
+                "network": "Jaringan P2P (Ixian)"
             },
             "faq": {
-                "title": "Pertanyaan Umum",
-                "q1": "Apakah Spixi aman? Langkah keamanan apa yang diterapkan?",
-                "a1": "Spixi adalah salah satu aplikasi obrolan paling aman di luar sana. Aplikasi ini tidak bergantung pada atau menggunakan server terpusat apa pun dan pesan Anda hanya disimpan di perangkat Anda secara lokal. Spixi adalah aplikasi peer-to-peer dan menggunakan beberapa lapisan enkripsi untuk keamanan dan privasi tambahan. Aplikasi ini menggunakan algoritma enkripsi seperti RSA, AES, dan ChaCha20-Poly1305.",
-                "q2": "Bagaimana cara kerja pembayaran di Spixi?",
-                "a2": "Spixi adalah dAPP (aplikasi terdesentralisasi) yang berjalan pada platform Ixian. Aplikasi ini menggunakan Blockchain Ixian untuk melakukan pembayaran IXI. Semua pembayaran yang dilakukan dapat diverifikasi di Ixian Block Explorer.",
-                "q3": "Dapatkah saya menggunakan Spixi pada beberapa perangkat secara bersamaan?",
-                "a3": "Karena Spixi terdesentralisasi, beberapa fitur lebih menantang untuk diterapkan. Anda akan senang mengetahui bahwa kami sedang mengerjakan Dukungan multiperangkat. Setelah dirilis, Anda akan dapat menggunakan akun yang sama di berbagai perangkat sambil tetap menikmati tingkat keamanan dan privasi yang sama.",
-                "q4": "Apa yang terjadi jika saya lupa kata sandi?",
-                "a4": "Spixi adalah dompet dan dApp yang dapat menyimpan sendiri kata sandinya. Ini berarti kata sandi tidak dapat diambil kembali jika hilang. Pastikan untuk membuat cadangan dan menyimpan berkas, tulis kata sandinya, dan simpan dengan aman. Terserah Anda untuk menjaga keamanan dana Anda.",
-                "q5": "Bagaimana cara memblokir atau melaporkan kontak?",
-                "a5": "Karena sifatnya, Spixi tidak memiliki registri pengguna terpusat. Saat 2 pengguna terhubung, sebelum pesan apa pun dapat dikirim, jabat tangan dilakukan di mana kunci publik dipertukarkan. Ini menciptakan koneksi yang aman di antara mereka. Jika Anda ingin 'memblokir' pengguna, cukup hapus mereka dari kontak Anda. Ini akan menonaktifkan mereka dari mengirimi Anda pesan. Anda selalu dapat memutuskan untuk menambahkannya lagi.",
-                "q6": "Apakah Spixi mendukung obrolan grup? Bagaimana cara membuatnya?",
-                "a6": "Karena Spixi tidak menggunakan server pusat, obrolan grup agak lebih sulit ditambahkan. Kami sedang mengerjakan ini dan berharap dapat segera menambahkan fitur ini dan fitur lainnya.",
-                "q7": "Bisakah saya membuat server komunitas di Spixi?",
-                "a7": "Bot Komunitas Spixi memungkinkan Anda membuat server yang dapat diikuti oleh pengguna Spixi lainnya. Anda dapat mengelola pengguna dan membuat saluran yang berbeda.",
-                "q8": "Jenis file apa yang dapat saya kirim melalui Spixi?",
-                "a8": "Anda dapat mengirim file apa pun yang Anda inginkan. Penting untuk diingat bahwa ini adalah transfer peer-to-peer langsung dan juga bergantung pada jaringan Ixian S2 untuk mengirimkan file. Kami terus meningkatkan aplikasi dan infrastruktur Ixian, yang akan menghasilkan waktu transfer yang lebih cepat dalam waktu dekat.",
-                "q9": "Apakah pesan saya dicadangkan?",
-                "a9": "Pesan Anda HANYA disimpan di perangkat Anda. Tidak ada server dengan cadangan. Ini penting untuk memastikan privasi dan keamanan komunikasi Anda. Dan memastikan bahwa Anda dan kontak Anda adalah satu-satunya orang yang memiliki akses ke pesan.",
-                "q10": "Dapatkah saya menyesuaikan notifikasi di Spixi?",
-                "a10": "Notifikasi push di Spixi tidak dapat disesuaikan untuk melindungi privasi Anda. Karena notifikasi tersebut dikirim melalui server eksternal dari Apple atau Google dalam bentuk yang tidak terenkripsi, notifikasi tersebut dapat dengan mudah dicegat. Untuk mencegah kebocoran informasi pribadi, notifikasi tidak berisi data khusus pengguna seperti isi pesan dan lain-lain.",
-                "q11": "Dapatkah pengguna Spixi lain terhubung dengan saya menggunakan nama panggilan saya?",
-                "a11": "Nama panggilan hanya ditampilkan ke kontak dan tidak berfungsi sebagai pegangan. Alamat Spixi Anda digunakan untuk terhubung. Spixi mengenali Nama IXI, ini memungkinkan orang lain menemukan Anda dan menambahkan Anda menggunakan Nama IXI Anda. Untuk mendaftarkan nama, Anda harus mengunjungi <a href='https://www.ixinames.com/' target='_blank'>www.ixinames.com</a>",
-                "q12": "Bagaimana Spixi menangani data pengguna?",
-                "a12": "Spixi tidak menyimpan atau membagikan data pribadi apa pun. Tidak ada nomor telepon, email, riwayat, atau kontak yang disimpan di tempat lain. Akun Anda adalah milik Anda sendiri.",
-                "q13": "Bisakah saya menghapus akun Spixi saya secara permanen?",
-                "a13": "Anda selalu dapat menghapus dompet dan akun Anda secara permanen. Karena Spixi adalah aplikasi yang terdesentralisasi, akun Anda hanya disimpan di perangkat Anda. Anda bebas membuat cadangan akun dan menyimpannya sendiri, tetapi Spixi tidak memiliki kemampuan pencadangan jarak jauh.",
-                "q14": "Apakah ada biaya yang terkait dengan penggunaan Spixi?",
-                "a14": "Penggunaan Spixi gratis dan akan selalu gratis. Mengirim pesan dan file (hingga batas tertentu) tidak dikenakan biaya apa pun.",
-                "q15": "Di mana saya dapat menemukan dukungan jika saya mengalami masalah dengan Spixi?",
-                "a15": "Anda dapat bergabung dengan komunitas Ixian (kunjungi <a href='https://www.ixian.io/' target='_blank'>www.ixian.io</a> untuk informasi lebih lanjut tentang cara bergabung) dan mendapatkan dukungan dari pengguna lain. Atau Anda dapat menulis kepada kami langsung ke <a href='mailto:support&commat;spixi.io'>support&commat;spixi.io</a> dan kami akan dengan senang hati membantu."
+                "title": "Pertanyaan yang Sering Diajukan",
+                "q1": "Apakah saya memerlukan server untuk menjalankan Mini App?",
+                "a1": "Tidak! Itulah keindahannya. Mini Apps murni kode sisi klien (HTML/JS) yang berkomunikasi langsung dengan pengguna lain melalui jaringan P2P Ixian. Tidak diperlukan infrastruktur backend.",
+                "q2": "Apakah Mini Apps aman?",
+                "a2": "Sangat aman. Mereka berjalan di lingkungan sandboxed (WebView) dan semua lalu lintas jaringan dienkripsi menggunakan protokol aman pasca-kuantum Ixian (RSA + ECDH + ML-KEM). Aplikasi itu sendiri tidak dapat mengakses data sensitif Anda tanpa izin.",
+                "q3": "Bagaimana cara menginstal Mini App?",
+                "a3": "Anda tidak perlu 'menginstal' secara harfiah. Anda dapat menambahkannya dari repositori atau cukup menerima file .spixi dalam obrolan. Mereka dimuat secara instan. Anda dapat menyematkan favorit Anda untuk akses mudah.",
+                "q4": "Bisakah saya membuatnya sendiri?",
+                "a4": "Tentu saja. Jika Anda mengetahui HTML, CSS, dan JavaScript, Anda dapat membuat Mini App. Kami menyediakan SDK sederhana untuk menangani komunikasi P2P. Periksa bagian 'Build' untuk panduan.",
+                "q5": "Apa yang bisa dilakukan Mini Apps?",
+                "a5": "Hampir semua yang bisa dilakukan aplikasi web! Game, kalkulator, alat kolaboratif, jajak pendapat, dan bahkan mengontrol perangkat IoT melalui gateway. Batasnya adalah imajinasi Anda.",
+                "q6": "Apakah biayanya mahal?",
+                "a6": "Membangun dan menghosting Mini Apps gratis karena tidak ada server yang harus dibayar. Pengguna juga tidak membayar biaya gas untuk interaksi standar.",
+                "q7": "Bagaimana cara memperbarui aplikasi?",
+                "a7": "Pengembang merilis versi baru sebagai file .spixi. Saat Anda membuka versi yang lebih baru, Spixi secara otomatis memperbarui cache lokal Anda.",
+                "q8": "Bisakah Mini Apps melakukan pembayaran?",
+                "a8": "Ya, mereka dapat meminta pembayaran (dalam IXI) yang harus disetujui pengguna di antarmuka asli Spixi. Aman dan sederhana.",
+                "q9": "Bagaimana dengan penggunaan offline?",
+                "a9": "Karena kode aplikasi di-cache secara lokal, banyak aplikasi (seperti kalkulator atau game solo) bekerja dengan sempurna secara offline. Fitur jaringan akan dilanjutkan saat Anda terhubung kembali.",
+                "q10": "Apakah ada App Store?",
+                "a10": "Kami memiliki direktori komunitas tempat Anda dapat menelusuri aplikasi unggulan, tetapi siapa pun dapat mendistribusikan aplikasi langsung ke pengguna tanpa penjaga gerbang."
             }
         },
         "privacy": {
