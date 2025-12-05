@@ -68,7 +68,8 @@ function handleModalClick(e) {
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div v-for="app in apps" :key="app.name" 
-             class="app-card bg-card-bg rounded-2xl p-6 border border-white/5 hover:border-accent/50 flex flex-col h-full transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-accent/10 group">
+             @click="openModal(app)"
+             class="app-card bg-card-bg rounded-2xl p-6 border border-white/5 hover:border-accent/50 flex flex-col h-full transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-accent/10 group cursor-pointer">
           <div class="flex items-start justify-between mb-5">
             <div class="relative">
                 <div class="absolute inset-0 bg-accent/20 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -81,11 +82,12 @@ function handleModalClick(e) {
           <h3 class="text-lg font-bold mb-2 text-white group-hover:text-accent transition-colors">{{ app.name }}</h3>
           <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed line-clamp-2">{{ app.description }}</p>
           <div class="flex gap-3 mt-auto">
-            <button @click="openModal(app)" 
+            <button @click.stop="openModal(app)" 
                     class="flex-1 bg-white/5 hover:bg-white/10 text-white rounded-xl py-2.5 px-4 font-medium text-sm text-center transition-all border border-white/5 hover:border-white/20">
               {{ t('pages.mini-apps.tryNow') }}
             </button>
             <a :href="app.sourceUrl" target="_blank" 
+               @click.stop
                class="px-3 py-2.5 text-gray-500 hover:text-white transition-colors bg-transparent hover:bg-white/5 rounded-xl" 
                :title="t('pages.mini-apps.viewsource')">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -228,29 +230,61 @@ function handleModalClick(e) {
            id="modal-backdrop"
            @click="handleModalClick"
            class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-[#090B0D] rounded-2xl p-6 w-[90%] max-w-md text-spixi dark:text-spixi-dark shadow-2xl"
+        <div class="relative bg-white dark:bg-[#090B0D] rounded-2xl p-8 w-[90%] max-w-md text-spixi dark:text-spixi-dark shadow-2xl overflow-hidden"
              @click.stop>
-          <div class="flex flex-col items-center gap-3">
-            <h2 class="text-xl font-semibold mb-4">
-              {{ t('pages.mini-apps.modalTitle1') }} {{ selectedApp?.name }} {{ t('pages.mini-apps.modalTitle2') }}
+          <!-- Blurred Icon Background -->
+          <div class="absolute inset-0 overflow-hidden">
+            <img v-if="selectedApp?.icon" 
+                 :src="selectedApp.icon" 
+                 class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full object-cover opacity-10 blur-3xl scale-150"
+                 @error="$event.target.style.display='none'">
+          </div>
+          
+          <!-- Modal Content -->
+          <div class="relative z-10 flex flex-col items-center gap-4">
+            <!-- App Icon -->
+            <div class="w-20 h-20 rounded-2xl overflow-hidden bg-[#1A202C] shadow-xl mb-2">
+              <img v-if="selectedApp?.icon" 
+                   :src="selectedApp.icon" 
+                   :alt="selectedApp?.name"
+                   class="w-full h-full object-cover"
+                   @error="$event.target.style.display='none'">
+            </div>
+            
+            <!-- App Name -->
+            <h2 class="text-2xl font-bold text-center">
+              {{ selectedApp?.name }}
             </h2>
+            
+            <!-- App Description -->
+            <p class="text-sm text-gray-600 dark:text-gray-400 text-center max-w-sm leading-relaxed">
+              {{ selectedApp?.description || 'Discover this amazing mini app on Spixi!' }}
+            </p>
+            
+            <!-- Publisher & Version -->
+            <div class="flex gap-4 text-xs text-gray-500">
+              <span v-if="selectedApp?.publisher">{{ selectedApp.publisher }}</span>
+              <span v-if="selectedApp?.version">v{{ selectedApp.version }}</span>
+            </div>
 
-            <div class="bg-[#f0f0f0] dark:bg-[#0D141C] p-4 rounded-lg w-full flex flex-col items-center gap-1">
-              <h3 class="font-medium">{{ t('pages.mini-apps.scanQr') }}</h3>
+            <!-- QR Code Section -->
+            <div class="bg-[#f0f0f0] dark:bg-[#0D141C] p-6 rounded-xl w-full flex flex-col items-center gap-2 mt-4">
+              <h3 class="font-medium text-sm">{{ t('pages.mini-apps.scanQr') }}</h3>
               <QrcodeVue v-if="selectedApp" 
                          :value="selectedApp.downloadUrl" 
-                         :size="192" 
+                         :size="180" 
                          :margin="2" 
                          level="H" 
-                         class="mx-auto my-4 rounded-lg bg-white p-2"/>
-              <p class="text-sm text-center text-gray-500">{{ t('pages.mini-apps.addFromUrl') }}</p>
+                         class="mx-auto my-2 rounded-lg bg-white p-2"/>
+              <p class="text-xs text-center text-gray-500 mt-2">{{ t('pages.mini-apps.addFromUrl') }}</p>
               <p class="text-xs text-center break-all font-mono bg-white dark:bg-black/20 p-2 rounded w-full">
                 {{ selectedApp?.downloadUrl }}
               </p>
             </div>
 
+            <!-- Close Button -->
             <button @click="closeModal"
-                    class="mt-2 border border-accent text-spixi dark:text-white rounded-lg px-4 py-2 hover:bg-accent hover:text-white transition-colors">
+                    class="mt-4 w-full border border-accent text-spixi dark:text-white rounded-lg px-6 py-3 hover:bg-accent hover:text-white transition-colors font-medium">
               {{ t('pages.mini-apps.close') }}
             </button>
           </div>
