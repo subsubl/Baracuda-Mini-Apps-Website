@@ -109,7 +109,8 @@
             "addFromUrl": "Add Mini App from URL:",
             "scanQr": "Scan QR with Spixi",
             "modalTitle1": "Open",
-            "modalTitle2": "in Spixi"
+            "modalTitle2": "in Spixi",
+            "viewsource": "View Source"
         },
         "howitworks": {
             "title": "How it works",
