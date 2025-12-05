@@ -33,48 +33,62 @@ function handleModalClick(e) {
   <div>
     <!-- Hero Section -->
     <div class="pt-[4em] pb-4 px-[2em] max-w-7xl mx-auto">
-      <div class="bg-white dark:bg-[#090B0D] rounded-2xl relative overflow-hidden">
-        <img src="/img/pattern.png" class="absolute object-cover top-0 right-0 h-full opacity-50 pointer-events-none" alt="Pattern">
+      <div class="bg-hero-gradient rounded-3xl relative overflow-hidden text-white shadow-2xl">
+        <img src="/img/pattern.png" class="absolute object-cover top-0 right-0 h-full opacity-30 pointer-events-none mix-blend-overlay" alt="Pattern">
         <div class="flex flex-col md:flex-row items-center justify-between gap-10 relative z-10">
-          <div class="md:w-1/2 inline-flex flex-col gap-4 justify-between item p-10">
-            <h2 class="text-5xl font-lexend font-semibold text-black dark:text-spixi-dark pt-4">
-              {{ t('pages.mini-apps.title') }}
-            </h2>
-            <p class="text-base text-spixi dark:text-spixi-dark mt-4">
-              {{ t('pages.mini-apps.subtitle1') }} <br>
-              {{ t('pages.mini-apps.subtitle2') }}
+          <div class="md:w-1/2 inline-flex flex-col gap-6 justify-between item p-12">
+            <div>
+              <span class="text-accent uppercase tracking-widest text-xs font-bold mb-2 block">Spixi Mini Apps</span>
+              <h2 class="text-5xl font-lexend font-bold leading-tight">
+                {{ t('pages.mini-apps.title') }}
+              </h2>
+            </div>
+            <p class="text-lg text-gray-300 leading-relaxed max-w-lg">
+              {{ t('pages.mini-apps.subtitle1') }} {{ t('pages.mini-apps.subtitle2') }}
             </p>
+            <div class="flex gap-4 mt-2">
+                 <a href="#featured" class="bg-accent hover:bg-blue-600 text-white px-6 py-3 rounded-xl font-medium transition-colors">{{ t('pages.mini-apps.browseApps') }}</a>
+                 <a href="#build" class="border border-white/20 hover:bg-white/10 text-white px-6 py-3 rounded-xl font-medium transition-colors">{{ t('pages.mini-apps.buildYourApp') }}</a>
+            </div>
           </div>
-          <div class="md:w-1/2 flex justify-center pr-8">
-            <NuxtImg src="/img/mini-l.png" class="dark:hidden" alt="Spixi Mini Apps Light"/>
-            <NuxtImg src="/img/mini-d.png" class="hidden dark:block" alt="Spixi Mini Apps Dark"/>
+          <div class="md:w-1/2 flex justify-center pr-8 relative">
+            <div class="absolute inset-0 bg-accent/20 blur-[100px] rounded-full pointer-events-none"></div>
+            <NuxtImg src="/img/mini-l.png" class="dark:hidden relative z-10 drop-shadow-2xl" alt="Spixi Mini Apps Light"/>
+            <NuxtImg src="/img/mini-d.png" class="hidden dark:block relative z-10 drop-shadow-2xl" alt="Spixi Mini Apps Dark"/>
           </div>
         </div>
       </div>
     </div>
 
     <!-- App Grid -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <main id="featured" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div class="flex flex-col items-start justify-between mb-10">
+          <h3 class="text-3xl font-bold text-white mb-2">{{ t('pages.mini-apps.featuredTitle') }}</h3>
+          <p class="text-gray-400">{{ t('pages.mini-apps.featuredDesc') }}</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div v-for="app in apps" :key="app.name" 
-             class="app-card bg-white dark:bg-[#12171F] rounded-2xl p-6 border border-gray-100 dark:border-gray-800 flex flex-col h-full transition-transform hover:scale-[1.02]">
-          <div class="flex items-start justify-between mb-4">
-            <img :src="app.icon" :alt="app.name" @error="$event.target.style.display='none'" class="w-16 h-16 rounded-xl object-cover bg-gray-100 dark:bg-gray-800">
-            <span class="px-3 py-1 text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-accent rounded-full">
+             class="app-card bg-card-bg rounded-2xl p-6 border border-white/5 hover:border-accent/50 flex flex-col h-full transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-accent/10 group">
+          <div class="flex items-start justify-between mb-5">
+            <div class="relative">
+                <div class="absolute inset-0 bg-accent/20 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <img :src="app.icon" :alt="app.name" @error="$event.target.style.display='none'" class="relative w-14 h-14 rounded-xl object-cover bg-[#1A202C]">
+            </div>
+            <span class="px-2.5 py-1 text-[10px] uppercase font-bold tracking-wider bg-white/5 text-gray-400 rounded-md border border-white/5">
               {{ app.version }}
             </span>
           </div>
-          <h3 class="text-xl font-bold mb-2 text-spixi dark:text-white">{{ app.name }}</h3>
-          <p class="text-gray-600 dark:text-gray-400 text-sm mb-6 flex-grow">{{ app.description }}</p>
+          <h3 class="text-lg font-bold mb-2 text-white group-hover:text-accent transition-colors">{{ app.name }}</h3>
+          <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed line-clamp-2">{{ app.description }}</p>
           <div class="flex gap-3 mt-auto">
             <button @click="openModal(app)" 
-                    class="flex-1 bg-[#0456A9] hover:bg-[#003D79] text-white rounded-xl py-3 px-8 dark:text-black dark:bg-[#3898FA] dark:hover:bg-[#6AB2FB] font-medium text-center transition-colors">
+                    class="flex-1 bg-white/5 hover:bg-white/10 text-white rounded-xl py-2.5 px-4 font-medium text-sm text-center transition-all border border-white/5 hover:border-white/20">
               {{ t('pages.mini-apps.tryNow') }}
             </button>
             <a :href="app.sourceUrl" target="_blank" 
-               class="px-3 py-2.5 text-gray-500 hover:text-spixi dark:hover:text-white transition-colors" 
+               class="px-3 py-2.5 text-gray-500 hover:text-white transition-colors bg-transparent hover:bg-white/5 rounded-xl" 
                :title="t('pages.mini-apps.viewsource')">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
               </svg>
             </a>
@@ -83,9 +97,131 @@ function handleModalClick(e) {
       </div>
     </main>
 
-    <!-- Spixi Summary Section -->
-    <SpixiSummary />
+    <!-- Build Section -->
+    <section id="build" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative">
+        <div class="absolute inset-0 bg-accent/5 rounded-3xl -z-10 translate-y-20 mx-4"></div>
+        
+        <div class="flex flex-col lg:flex-row gap-16 mb-20 items-center">
+            <div class="lg:w-1/2">
+                <span class="text-accent uppercase tracking-widest text-xs font-bold mb-4 block">Developers</span>
+                <h2 class="text-4xl font-lexend font-bold text-white mb-6 leading-tight">{{ t('pages.mini-apps.build.title') }}</h2>
+                <p class="text-lg text-gray-400 mb-10 leading-relaxed">{{ t('pages.mini-apps.build.description') }}</p>
+                
+                <div class="space-y-8">
+                    <div class="flex gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center flex-shrink-0 text-accent">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold mb-1">{{ t('pages.mini-apps.build.features.hardware.title') }}</h4>
+                            <p class="text-sm text-gray-500">{{ t('pages.mini-apps.build.features.hardware.desc') }}</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center flex-shrink-0 text-accent">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path></svg>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold mb-1">{{ t('pages.mini-apps.build.features.payment.title') }}</h4>
+                            <p class="text-sm text-gray-500">{{ t('pages.mini-apps.build.features.payment.desc') }}</p>
+                        </div>
+                    </div>
+                     <div class="flex gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center flex-shrink-0 text-accent">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold mb-1">{{ t('pages.mini-apps.build.features.distribution.title') }}</h4>
+                            <p class="text-sm text-gray-500">{{ t('pages.mini-apps.build.features.distribution.desc') }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="lg:w-1/2 flex justify-center relative">
+                 <div class="absolute inset-0 bg-blue-500/20 blur-[80px] rounded-full pointer-events-none"></div>
+                 <!-- Using a placeholder or reusing pattern for abstract visual -->
+                 <div class="relative w-full h-[400px] border border-white/5 bg-card-bg/50 backdrop-blur rounded-2xl p-8 flex items-center justify-center overflow-hidden">
+                    <pre class="text-xs text-gray-500 font-mono opacity-50">
+&lt;spixi-app id="my.app"&gt;
+  &lt;name&gt;Awesome App&lt;/name&gt;
+  &lt;version&gt;1.0.0&lt;/version&gt;
+  ...
+  &lt;script&gt;
+     spixi.init();
+     spixi.payment.request(...);
+  &lt;/script&gt;
+&lt;/spixi-app&gt;
+                    </pre>
+                    <div class="absolute top-0 right-0 p-4">
+                        <div class="flex gap-2">
+                            <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                        </div>
+                    </div>
+                 </div>
+            </div>
+        </div>
 
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Documentation -->
+            <div class="bg-card-bg rounded-2xl p-8 border border-white/5 hover:border-accent/40 transition-colors">
+                <div class="mb-4 text-white">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                </div>
+                <h3 class="text-white font-bold text-xl mb-2">{{ t('pages.mini-apps.build.cards.docs.title') }}</h3>
+                <p class="text-gray-400 text-sm mb-6">{{ t('pages.mini-apps.build.cards.docs.desc') }}</p>
+                <a href="https://ixian.io" target="_blank" class="text-accent hover:text-white font-medium text-sm flex items-center gap-1 transition-colors">
+                    {{ t('pages.mini-apps.build.cards.docs.btn') }} &rarr;
+                </a>
+            </div>
+
+            <!-- GitHub -->
+            <div class="bg-card-bg rounded-2xl p-8 border border-white/5 hover:border-accent/40 transition-colors">
+                 <div class="mb-4 text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                </div>
+                <h3 class="text-white font-bold text-xl mb-2">{{ t('pages.mini-apps.build.cards.github.title') }}</h3>
+                <p class="text-gray-400 text-sm mb-6">{{ t('pages.mini-apps.build.cards.github.desc') }}</p>
+                <a href="https://github.com/ixian-platform/Spixi-Mini-Apps" target="_blank" class="text-accent hover:text-white font-medium text-sm flex items-center gap-1 transition-colors">
+                    {{ t('pages.mini-apps.build.cards.github.btn') }} &rarr;
+                </a>
+            </div>
+
+            <!-- Packer -->
+            <div class="bg-card-bg rounded-2xl p-8 border border-white/5 hover:border-accent/40 transition-colors">
+                 <div class="mb-4 text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16.5 9.4 7.5 4.21 7.5 14.79 16.5 20 16.5 9.4"></polyline><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                </div>
+                <h3 class="text-white font-bold text-xl mb-2">{{ t('pages.mini-apps.build.cards.packer.title') }}</h3>
+                <p class="text-gray-400 text-sm mb-6">{{ t('pages.mini-apps.build.cards.packer.desc') }}</p>
+                <a href="#" class="text-accent hover:text-white font-medium text-sm flex items-center gap-1 transition-colors">
+                    {{ t('pages.mini-apps.build.cards.packer.btn') }} &rarr;
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Spixi Summary/Footer CTA -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div class="bg-hero-gradient rounded-3xl relative overflow-hidden text-white shadow-2xl p-12 flex flex-col md:flex-row items-center justify-between">
+           <img src="/img/pattern.png" class="absolute object-cover top-0 left-0 w-full h-full opacity-20 pointer-events-none mix-blend-overlay" alt="Pattern">
+           <div class="md:w-1/2 relative z-10">
+               <h2 class="text-4xl font-lexend font-bold mb-4">{{ t('pages.mini-apps.cta.title') }}</h2>
+               <p class="text-lg text-gray-300 mb-8 max-w-md">{{ t('pages.mini-apps.cta.desc') }}</p>
+                
+               <NuxtLink to="/download" class="inline-block bg-accent hover:bg-blue-600 text-white px-8 py-4 rounded-xl font-bold transition-colors">
+                   {{ t('pages.mini-apps.cta.btn') }}
+               </NuxtLink>
+               <p class="mt-4 text-xs text-gray-500">{{ t('pages.mini-apps.cta.note') }}</p>
+           </div>
+           <div class="md:w-1/2 relative z-10 flex justify-end mt-10 md:mt-0">
+               <!-- Reusing SpixiSummary Logic or Image -->
+                <NuxtImg class="w-[400px] drop-shadow-2xl" src="/img/SpixiSummaryDark.png" />
+           </div>
+        </div>
+    </div>
+    
     <!-- Modal -->
     <Teleport to="body">
       <div v-if="showModal" 

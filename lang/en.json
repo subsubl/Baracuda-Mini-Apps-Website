@@ -85,24 +85,53 @@
             }
         },
         "mini-apps": {
-            "title": "Spixi Mini Apps",
-            "subtitle1": "Lightweight extensions built into Spixi.",
-            "subtitle2": "Try new tools, games, and utilities without leaving your chat.",
-            "try": "Try these sample Mini Apps",
-            "tictac": {
-                "title": "Tic Tac Toe",
-                "desc": "Challenge friends to a quick game and settle debates instantly.",
-                "tag": "Games"
+            "title": "Apps that live where you already chat.",
+            "subtitle1": "Extensions and interactive experiences, right within Spixi.",
+            "subtitle2": "Browse apps created by the community or build your own.",
+            "browseApps": "Browse Apps",
+            "buildYourApp": "Build Your App",
+            "featuredTitle": "Featured Mini Apps",
+            "featuredDesc": "Explore new ways to use Spixi with these community-built apps.",
+            "build": {
+                "title": "Build Mini Apps for Spixi",
+                "description": "The Spixi Mini Apps SDK allows developers to create powerful HTML5 applications that run natively inside Spixi on all platforms.",
+                "features": {
+                    "hardware": {
+                        "title": "Hardware Access",
+                        "desc": "Access device features like camera, files, and more natively."
+                    },
+                    "payment": {
+                        "title": "Payment Integration",
+                        "desc": "Seamlessly integrate Spixi payments into your apps."
+                    },
+                    "distribution": {
+                        "title": "Easy Distribution",
+                        "desc": "Share your apps with users via simple links or QR codes."
+                    }
+                },
+                "cards": {
+                    "docs": {
+                        "title": "Read the Mini Apps Docs",
+                        "desc": "Learn how to build apps using standard web technologies.",
+                        "btn": "Read Docs"
+                    },
+                    "github": {
+                        "title": "View example apps on GitHub",
+                        "desc": "Browse the source code of our example apps to get you started.",
+                        "btn": "Open GitHub"
+                    },
+                    "packer": {
+                        "title": "Use the App Packer",
+                        "desc": "Package your web app into a .spixi file for distribution.",
+                        "btn": "Open Packer"
+                    }
+                }
             },
-            "whiteboard": {
-                "title": "Whiteboard",
-                "desc": "Draw together. Share doodles live with friends.",
-                "tag": "Tools"
-            },
-            "miniAppsTest": {
-                "title": "Mini Apps Test",
-                "desc": "A sample app for exploring and testing the Spixi Mini Apps SDK.",
-                "tag": "Dev"
+            "cta": {
+                "title": "Ready to try Spixi?",
+                "desc": "Download Spixi today and experience the future of private messaging and applications.",
+                "btn": "Download Now",
+                "note": "Available on iOS, Android, Windows, macOS and Linux."
             },
             "tryNow": "Try it now",
             "close": "Close",

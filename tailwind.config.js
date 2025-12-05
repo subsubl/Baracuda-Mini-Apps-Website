@@ -10,21 +10,22 @@ export default {
     "./error.vue",
   ],
   theme: {
-    colors: {
-      'spixi': '#17334F',
-      'spixi-dark': '#F0F2F4'
+    extend: {
+      colors: {
+        'page-bg': '#020205',
+        'card-bg': '#0D121D',
+        'accent': '#3898FA',
+        'spixi': '#17334F',
+        'spixi-dark': '#F0F2F4'
+      },
+      fontFamily: {
+        'lexend': ['Lexend', 'sans-serif'],
+      },
+      backgroundImage: {
+        'hero-gradient': 'linear-gradient(to right bottom, #1B0F33, #080C14)',
+      },
     },
-    fontFamily: {
-      'lexend': ['Lexend', 'sans-serif'],
-    },
-    letterSpacing: {
-      'hero': '-1.92px',
-    },
-    extend: {},
   },
-  plugins: [
-    require('flowbite/plugin'),
-  ],
   darkMode: 'class',
 }
 
