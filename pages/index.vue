@@ -27,9 +27,9 @@ const filteredApps = computed(() => {
   if (searchQuery.value.trim()) {
     const query = searchQuery.value.toLowerCase()
     filtered = filtered.filter(app => 
-      app.name.toLowerCase().includes(query) ||
-      app.description.toLowerCase().includes(query) ||
-      app.publisher.toLowerCase().includes(query)
+      app.name?.toLowerCase().includes(query) ||
+      (app.description && app.description.toLowerCase().includes(query)) ||
+      app.publisher?.toLowerCase().includes(query)
     )
   }
 
