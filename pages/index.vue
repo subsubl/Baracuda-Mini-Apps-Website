@@ -7,35 +7,6 @@ const { t } = useI18n()
 // Fetch apps data
 const { data: apps, pending } = await useFetch('/api/apps')
 
-// Search and filter state
-const searchQuery = ref('')
-const selectedCategory = ref('All')
-const categories = ['All', 'Games', 'Productivity', 'Tools', 'Social']
-
-// Filtered apps
-const filteredApps = computed(() => {
-  if (!apps.value) return []
-  
-  let filtered = apps.value
-
-  // Filter by category
-  if (selectedCategory.value !== 'All') {
-    filtered = filtered.filter(app => app.category === selectedCategory.value)
-  }
-
-  // Filter by search query
-  if (searchQuery.value.trim()) {
-    const query = searchQuery.value.toLowerCase()
-    filtered = filtered.filter(app => 
-      app.name?.toLowerCase().includes(query) ||
-      (app.description && app.description.toLowerCase().includes(query)) ||
-      app.publisher?.toLowerCase().includes(query)
-    )
-  }
-
-  return filtered
-})
-
 // Modal state
 const showModal = ref(false)
 const selectedApp = ref(null)
@@ -132,39 +103,6 @@ function handleModalClick(e) {
           <p class="text-gray-400">{{ t('pages.mini-apps.featuredDesc') }}</p>
       </div>
 
-      <!-- Search and Filter Section -->
-      <div class="mb-8 space-y-4">
-        <!-- Search Bar -->
-        <div class="relative">
-          <input
-            v-model="searchQuery"
-            type="text"
-            placeholder="Search apps..."
-            class="w-full px-5 py-3 pl-12 bg-card-bg border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-accent/50 transition-colors"
-          />
-          <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-          </svg>
-        </div>
-
-        <!-- Category Filters -->
-        <div class="flex flex-wrap gap-2">
-          <button
-            v-for="category in categories"
-            :key="category"
-            @click="selectedCategory = category"
-            :class="[
-              'px-4 py-2 rounded-lg font-medium text-sm transition-all',
-              selectedCategory === category
-                ? 'bg-accent text-white'
-                : 'bg-card-bg text-gray-400 hover:bg-white/5 hover:text-white border border-white/10'
-            ]"
-          >
-            {{ category }}
-          </button>
-        </div>
-      </div>
-
       <!-- Loading Skeleton -->
       <div v-if="pending" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div v-for="i in 6" :key="i" class="bg-card-bg rounded-2xl p-6 border border-white/5 animate-pulse">
@@ -178,22 +116,9 @@ function handleModalClick(e) {
         </div>
       </div>
 
-      <!-- Empty State -->
-      <div v-else-if="filteredApps.length === 0" class="text-center py-16">
-        <div class="text-6xl mb-4">🔍</div>
-        <h3 class="text-2xl font-bold text-white mb-2">No apps found</h3>
-        <p class="text-gray-400 mb-6">Try adjusting your search or filters</p>
-        <button
-          @click="searchQuery = ''; selectedCategory = 'All'"
-          class="px-6 py-3 bg-accent hover:bg-blue-600 text-white rounded-xl font-medium transition-colors"
-        >
-          Clear Filters
-        </button>
-      </div>
-
       <!-- App Cards Grid -->
       <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div v-for="app in filteredApps" :key="app.id" 
+        <div v-for="app in apps" :key="app.id" 
              @click="openModal(app)"
              class="app-card bg-card-bg rounded-2xl p-6 border border-white/5 hover:border-accent/50 flex flex-col h-full transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-accent/10 group cursor-pointer">
           <div class="flex items-start justify-between mb-3">
