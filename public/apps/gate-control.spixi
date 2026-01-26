@@ -1,6 +1,6 @@
 caVersion = 0
 id = com.ixilabs.spixi.gate-control
-publisher = IXI Labs
+publisher = Baracuda Ent
 name = Gate Control
 version = 1.0.2
 capabilities = multiUser

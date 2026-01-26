@@ -1,6 +1,6 @@
 caVersion = 0
 id = com.ixilabs.spixi.whiteboard
-publisher = IXI Labs
+publisher = Baracuda Ent
 name = Whiteboard
 version = 1.0.2
 capabilities = multiUser

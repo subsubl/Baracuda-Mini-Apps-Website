@@ -35,8 +35,8 @@ const { t } = useI18n()
             <NuxtLink to="https://www.ixian.io/" class="text-gray-700 dark:text-white" target="_blank">
               {{ t('footer.ixian') }}
             </NuxtLink>
-            <NuxtLink to="https://www.ixilabs.co.uk/" class="text-gray-700 dark:text-white" target="_blank">
-              {{ t('footer.ixilabs') }}
+            <NuxtLink to="https://baracuda.ent" class="text-gray-700 dark:text-white" target="_blank">
+              {{ t('footer.baracuda') }}
             </NuxtLink>
         </div>
         <div class="flex md:hidden">
