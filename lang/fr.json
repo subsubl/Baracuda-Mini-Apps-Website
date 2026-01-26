@@ -1,159 +1,159 @@
 {
-  "menu": {
-    "home": "Accueil",
-    "download": "Télécharger",
-    "howitworks": "Comment ça fonctionne",
-    "builder": "Builder",
-    "privacy": "Politique de confidentialité",
-    "terms": "Conditions d'utilisation",
-    "ixian": "Site web d'Ixian",
-    "ixilabs": "Site web de Ixi Labs",
-    "newversion": "La version {version} est disponible!",
-    "misc": {
-      "hamburger": {
-        "screenreader": "Ouvrir le menu de navigation"
-      }
-    }
-  },
-  "footer": {
-    "download": "Télécharger Spixi",
-    "ixian": "Site web d'Ixian",
-    "ixilabs": "Site web de Ixian Labs",
-    "howitworks": "Comment ça marche",
-    "privacy": "Politique de confidentialité",
-    "terms": "Conditions d'utilisation"
-  },
-  "pages": {
-    "home": {
-      "hero": {
-        "connectwith": "Connectez-vous avec",
-        "confidence": "Confiance",
-        "subtitle": "Prenez le contrôle de vos données et de votre communication avec l'application de discussion la plus sécurisée et privée au monde."
-      },
-      "features": {
-        "downloadnow": "Télécharger maintenant",
-        "nocompromise": "Avec Spixi, pas de compromis",
-        "security": "sécurité",
-        "and": "et",
-        "privacy": "confidentialité",
-        "e2etitle": "Confidentialité par Conception",
-        "e2edesc": "Pas besoin de numéros de téléphone, d'emails ou d'autres données personnelles. Créez un compte, connectez-vous avec vos amis et c'est tout. Votre ID Spixi est tout ce dont vous avez besoin.",
-        "lastencryptiontitle": "encryptage de pointe",
-        "lastencryptiondesc": "Vos messages sont sécurisés car Spixi utilise les dernières méthodes de cryptage pour garder vos conversations privées. Tous les messages sont stockés sur votre appareil en local et ne dépendent pas des serveurs en ligne centralisées.",
-        "reliabletitle": "Fiabilité et Rapidité",
-        "reliabledesc": "Contrairement aux services centralisés, qui sont susceptibles de tomber en panne en raison de points de défaillance uniques, Spixi minimise les interruptions et vous maintient en ligne lorsque les autres ne peuvent pas.",
-        "start": "Commencez à utiliser Spixi aujourd'hui!",
-        "starthelp": "Prenez le contrôle de vos données et de votre communication. <br> Téléchargez Spixi pour les appareils mobiles ou de bureau maintenant.",
-        "whattodo": "Parlez, partagez et envoyez des paiements avec",
-        "learnhowitworks": "Découvrez comment ça marche",
-        "decentralizedtitle": "Véritablement décentralisé",
-        "decentralizeddesc": "Spixi fonctionne de manière peer-to-peer, éliminant le besoin de serveurs centralisés pour stocker vos messages. Lorsque vous envoyez un message, il arrive seulement au destinataire prévu.",
-        "paymentstitle": "Paiements IXI simplifiés",
-        "paymentsdesc": "Spixi inclut un portefeuille IXI sécurisé et facile à utiliser. Besoin de stocker vos $IXI? Spixi vous offre un moyen simple d'envoyer et de recevoir des paiements aussi facilement que d'envoyer un message.",
-        "onlinetitle": "Toujours en ligne",
-        "onlinedesc": "Lorsque vous envoyez un message, il arrive seulement au destinataire prévu. Contrairement aux serveurs centralisés, qui sont susceptibles de tomber en panne en raison de points de défaillance uniques, Spixi minimise les interruptions.",
-        "appstoretitle": "Magasin d'applications Spixi",
-        "appstoredesc": "Vous avez une idée pour une application décentralisée et souhaitez la déployer pour de nombreux utilisateurs ? Spixi vous permet de créer des dApps personnalisées à déployer directement via la Blockchain ixian. Réduisez les coûts et accédez à des milliers d'utilisateurs.",
-        "tech": {
-          "title": "Fonctionne avec la technologie Ixian",
-          "line1": "Les fonctionnalités uniques de Spixi sont possibles grâce à la technologie Ixian.",
-          "line2": "La plateforme fournit une blockchain robuste avec un réseau de transmission décentralisé.",
-          "website": "Visitez le site web d'Ixian"
+    "menu": {
+        "home": "Accueil",
+        "download": "Télécharger",
+        "howitworks": "Comment ça fonctionne",
+        "builder": "Builder",
+        "privacy": "Politique de confidentialité",
+        "terms": "Conditions d'utilisation",
+        "ixian": "Site web d'Ixian",
+        "baracuda": "Site web de Baracuda Ent",
+        "newversion": "La version {version} est disponible!",
+        "misc": {
+            "hamburger": {
+                "screenreader": "Ouvrir le menu de navigation"
+            }
         }
-      }
     },
-    "download": {
-      "title": "Télécharger Spixi",
-      "subtitle1": "Spixi est disponible pour les appareils mobiles et de bureau.",
-      "subtitle2": "Téléchargez maintenant et commencez à utiliser l'application de messagerie de nouvelle génération.",
-      "thankyou": "Merci d'avoir téléchargé Spixi!",
-      "thankyouaux": "Spixi est actuellement en Open Beta. Restez à l'écoute pour les mises à jour et les nouvelles fonctionnalités à mesure que nous les mettons en œuvre. Les prochaines fonctionnalités incluent les groupes de discussion, les appels vidéo et les dApps personnalisées.",
-      "formobile": "Spixi pour appareils mobiles",
-      "availableandroid": "Disponible sur Google Play Store et APK.",
-      "androidapk": "Télécharger APK",
-      "availableios": "Disponible sur l'App Store d'Apple.",
-      "fordesktop": "Spixi pour ordinateurs de bureau",
-      "availablewindows": "Spixi {version} pour PC Windows",
-      "windowsdownload": "Télécharger Spixi {version} pour Windows",
-      "availablemacos": "Spixi {version} pour ordinateurs Mac",
-      "macosdownload": "Télécharger Spixi {version} pour Mac",
-      "version": {
-        "android": "{version} Disponible",
-        "ios": "{version} Disponible",
-        "windows": "{version}",
-        "macos": "{version}"
-      }
+    "footer": {
+        "download": "Télécharger Spixi",
+        "ixian": "Site web d'Ixian",
+        "baracuda": "Site web de Ixian Labs",
+        "howitworks": "Comment ça marche",
+        "privacy": "Politique de confidentialité",
+        "terms": "Conditions d'utilisation"
     },
-    "howitworks": {
-      "title": "Comment fonctionnent les Mini Apps",
-      "subtitle1": "Sans serveur. Décentralisé. Sécurisé.",
-      "subtitle2": "Découvrez l'avenir des applications : interaction directe peer-to-peer sans intermédiaires.",
-      "helper": "Le saviez-vous ?",
-      "helperdesc": "Les Mini Apps Spixi sont juste des fichiers zip contenant du HTML/JS. Elles s'exécutent entièrement sur votre appareil et communiquent directement avec les appareils de vos amis.",
-      "hero": {
-        "title": "Architecture Sécurisée Post-Quantique",
-        "desc": "Les Mini Apps héritent du cryptage de niveau militaire du réseau Ixian. Toutes les données sont cryptées de bout en bout."
-      },
-      "steps": {
-        "step1": {
-          "title": "Écologie Peer-to-Peer",
-          "content": "Contrairement aux applications web traditionnelles qui dépendent de serveurs centraux, les Mini Apps communiquent directement entre les utilisateurs. Pas de collecte de données, pas de suivi, juste vous et vos contacts."
+    "pages": {
+        "home": {
+            "hero": {
+                "connectwith": "Connectez-vous avec",
+                "confidence": "Confiance",
+                "subtitle": "Prenez le contrôle de vos données et de votre communication avec l'application de discussion la plus sécurisée et privée au monde."
+            },
+            "features": {
+                "downloadnow": "Télécharger maintenant",
+                "nocompromise": "Avec Spixi, pas de compromis",
+                "security": "sécurité",
+                "and": "et",
+                "privacy": "confidentialité",
+                "e2etitle": "Confidentialité par Conception",
+                "e2edesc": "Pas besoin de numéros de téléphone, d'emails ou d'autres données personnelles. Créez un compte, connectez-vous avec vos amis et c'est tout. Votre ID Spixi est tout ce dont vous avez besoin.",
+                "lastencryptiontitle": "encryptage de pointe",
+                "lastencryptiondesc": "Vos messages sont sécurisés car Spixi utilise les dernières méthodes de cryptage pour garder vos conversations privées. Tous les messages sont stockés sur votre appareil en local et ne dépendent pas des serveurs en ligne centralisées.",
+                "reliabletitle": "Fiabilité et Rapidité",
+                "reliabledesc": "Contrairement aux services centralisés, qui sont susceptibles de tomber en panne en raison de points de défaillance uniques, Spixi minimise les interruptions et vous maintient en ligne lorsque les autres ne peuvent pas.",
+                "start": "Commencez à utiliser Spixi aujourd'hui!",
+                "starthelp": "Prenez le contrôle de vos données et de votre communication. <br> Téléchargez Spixi pour les appareils mobiles ou de bureau maintenant.",
+                "whattodo": "Parlez, partagez et envoyez des paiements avec",
+                "learnhowitworks": "Découvrez comment ça marche",
+                "decentralizedtitle": "Véritablement décentralisé",
+                "decentralizeddesc": "Spixi fonctionne de manière peer-to-peer, éliminant le besoin de serveurs centralisés pour stocker vos messages. Lorsque vous envoyez un message, il arrive seulement au destinataire prévu.",
+                "paymentstitle": "Paiements IXI simplifiés",
+                "paymentsdesc": "Spixi inclut un portefeuille IXI sécurisé et facile à utiliser. Besoin de stocker vos $IXI? Spixi vous offre un moyen simple d'envoyer et de recevoir des paiements aussi facilement que d'envoyer un message.",
+                "onlinetitle": "Toujours en ligne",
+                "onlinedesc": "Lorsque vous envoyez un message, il arrive seulement au destinataire prévu. Contrairement aux serveurs centralisés, qui sont susceptibles de tomber en panne en raison de points de défaillance uniques, Spixi minimise les interruptions.",
+                "appstoretitle": "Magasin d'applications Spixi",
+                "appstoredesc": "Vous avez une idée pour une application décentralisée et souhaitez la déployer pour de nombreux utilisateurs ? Spixi vous permet de créer des dApps personnalisées à déployer directement via la Blockchain ixian. Réduisez les coûts et accédez à des milliers d'utilisateurs.",
+                "tech": {
+                    "title": "Fonctionne avec la technologie Ixian",
+                    "line1": "Les fonctionnalités uniques de Spixi sont possibles grâce à la technologie Ixian.",
+                    "line2": "La plateforme fournit une blockchain robuste avec un réseau de transmission décentralisé.",
+                    "website": "Visitez le site web d'Ixian"
+                }
+            }
         },
-        "step2": {
-          "title": "Zéro Installation",
-          "content": "Oubliez les magasins d'applications et les gros téléchargements. Les Mini Apps se chargent instantanément quand vous en avez besoin. Partagez-les dans un message de discussion et commencez à jouer ou à collaborer immédiatement."
+        "download": {
+            "title": "Télécharger Spixi",
+            "subtitle1": "Spixi est disponible pour les appareils mobiles et de bureau.",
+            "subtitle2": "Téléchargez maintenant et commencez à utiliser l'application de messagerie de nouvelle génération.",
+            "thankyou": "Merci d'avoir téléchargé Spixi!",
+            "thankyouaux": "Spixi est actuellement en Open Beta. Restez à l'écoute pour les mises à jour et les nouvelles fonctionnalités à mesure que nous les mettons en œuvre. Les prochaines fonctionnalités incluent les groupes de discussion, les appels vidéo et les dApps personnalisées.",
+            "formobile": "Spixi pour appareils mobiles",
+            "availableandroid": "Disponible sur Google Play Store et APK.",
+            "androidapk": "Télécharger APK",
+            "availableios": "Disponible sur l'App Store d'Apple.",
+            "fordesktop": "Spixi pour ordinateurs de bureau",
+            "availablewindows": "Spixi {version} pour PC Windows",
+            "windowsdownload": "Télécharger Spixi {version} pour Windows",
+            "availablemacos": "Spixi {version} pour ordinateurs Mac",
+            "macosdownload": "Télécharger Spixi {version} pour Mac",
+            "version": {
+                "android": "{version} Disponible",
+                "ios": "{version} Disponible",
+                "windows": "{version}",
+                "macos": "{version}"
+            }
         },
-        "step3": {
-          "title": "Collaboratif par Conception",
-          "content": "Construit dès le départ pour l'interaction en temps réel. Tableaux blancs, jeux et outils facilitent une collaboration fluide entre plusieurs utilisateurs dans une session de discussion."
+        "howitworks": {
+            "title": "Comment fonctionnent les Mini Apps",
+            "subtitle1": "Sans serveur. Décentralisé. Sécurisé.",
+            "subtitle2": "Découvrez l'avenir des applications : interaction directe peer-to-peer sans intermédiaires.",
+            "helper": "Le saviez-vous ?",
+            "helperdesc": "Les Mini Apps Spixi sont juste des fichiers zip contenant du HTML/JS. Elles s'exécutent entièrement sur votre appareil et communiquent directement avec les appareils de vos amis.",
+            "hero": {
+                "title": "Architecture Sécurisée Post-Quantique",
+                "desc": "Les Mini Apps héritent du cryptage de niveau militaire du réseau Ixian. Toutes les données sont cryptées de bout en bout."
+            },
+            "steps": {
+                "step1": {
+                    "title": "Écologie Peer-to-Peer",
+                    "content": "Contrairement aux applications web traditionnelles qui dépendent de serveurs centraux, les Mini Apps communiquent directement entre les utilisateurs. Pas de collecte de données, pas de suivi, juste vous et vos contacts."
+                },
+                "step2": {
+                    "title": "Zéro Installation",
+                    "content": "Oubliez les magasins d'applications et les gros téléchargements. Les Mini Apps se chargent instantanément quand vous en avez besoin. Partagez-les dans un message de discussion et commencez à jouer ou à collaborer immédiatement."
+                },
+                "step3": {
+                    "title": "Collaboratif par Conception",
+                    "content": "Construit dès le départ pour l'interaction en temps réel. Tableaux blancs, jeux et outils facilitent une collaboration fluide entre plusieurs utilisateurs dans une session de discussion."
+                },
+                "step4": {
+                    "title": "Sécurité Sandboxed",
+                    "content": "Les applications s'exécutent dans un conteneur WebView sécurisé et isolé. Elles ne peuvent pas accéder à vos clés privées ou fichiers sans votre permission explicite via le Bridge."
+                }
+            },
+            "architecture": {
+                "title": "L'Architecture",
+                "host": "App Hôte (Spixi)",
+                "bridge": "Pont (SDK)",
+                "miniapp": "Mini App (WebView)",
+                "network": "Réseau P2P (Ixian)"
+            },
+            "faq": {
+                "title": "Foire Aux Questions",
+                "q1": "Ai-je besoin d'un serveur pour exécuter une Mini App ?",
+                "a1": "Non ! C'est la beauté de la chose. Les Mini Apps sont purement du code côté client (HTML/JS) qui communique directement avec d'autres utilisateurs via le réseau P2P Ixian. Aucune infrastructure backend n'est requise.",
+                "q2": "Les Mini Apps sont-elles sécurisées ?",
+                "a2": "Extrêmement. Elles s'exécutent dans un environnement bac à sable (WebView) et tout le trafic réseau est crypté à l'aide du protocole sécurisé post-quantique d'Ixian (RSA + ECDH + ML-KEM). L'application elle-même ne peut pas accéder à vos données sensibles sans permission.",
+                "q3": "Comment installer une Mini App ?",
+                "a3": "Vous n'avez pas besoin d''installer' à proprement parler. Vous pouvez les ajouter depuis un dépôt ou simplement recevoir un fichier .spixi dans une discussion. Elles se chargent instantanément. Vous pouvez épingler vos favorites pour un accès facile.",
+                "q4": "Puis-je construire la mienne ?",
+                "a4": "Absolument. Si vous connaissez HTML, CSS et JavaScript, vous pouvez construire une Mini App. Nous fournissons un SDK simple pour gérer la communication P2P. Consultez la section 'Construire' pour des guides.",
+                "q5": "Que peuvent faire les Mini Apps ?",
+                "a5": "Presque tout ce qu'une application web peut faire ! Jeux, calculatrices, outils collaboratifs, sondages, et même contrôler des appareils IoT via des passerelles. La limite est votre imagination.",
+                "q6": "Est-ce que ça coûte de l'argent ?",
+                "a6": "Construire et héberger des Mini Apps est gratuit car il n'y a pas de serveurs à payer. Les utilisateurs ne paient pas non plus de frais de gaz pour les interactions standard.",
+                "q7": "Comment mettre à jour une application ?",
+                "a7": "Les développeurs publient de nouvelles versions sous forme de fichiers .spixi. Lorsque vous ouvrez une version plus récente, Spixi met automatiquement à jour votre cache local.",
+                "q8": "Les Mini Apps peuvent-elles effectuer des paiements ?",
+                "a8": "Oui, elles peuvent demander des paiements (en IXI) que l'utilisateur doit approuver dans l'interface native de Spixi. Sécurisé et simple.",
+                "q9": "Qu'en est-il de l'utilisation hors ligne ?",
+                "a9": "Puisque le code de l'application est mis en cache localement, de nombreuses applications (comme les calculatrices ou les jeux solo) fonctionnent parfaitement hors ligne. Les fonctionnalités réseau reprendront lorsque vous vous reconnecterez.",
+                "q10": "Y a-t-il un App Store ?",
+                "a10": "Nous avons un répertoire communautaire où vous pouvez parcourir les applications en vedette, mais n'importe qui peut distribuer une application directement aux utilisateurs sans gardien."
+            }
         },
-        "step4": {
-          "title": "Sécurité Sandboxed",
-          "content": "Les applications s'exécutent dans un conteneur WebView sécurisé et isolé. Elles ne peuvent pas accéder à vos clés privées ou fichiers sans votre permission explicite via le Bridge."
+        "privacy": {
+            "title": "Politique de confidentialité",
+            "translation": "La politique de confidentialité de Spixi est disponible uniquement en anglais."
+        },
+        "terms": {
+            "title": "Conditions d'utilisation",
+            "translation": "Les conditions d'utilisation de Spixi sont disponibles uniquement en anglais."
+        },
+        "misc": {
+            "tryit": "Essayez",
+            "learnmore": "En savoir plus"
         }
-      },
-      "architecture": {
-        "title": "L'Architecture",
-        "host": "App Hôte (Spixi)",
-        "bridge": "Pont (SDK)",
-        "miniapp": "Mini App (WebView)",
-        "network": "Réseau P2P (Ixian)"
-      },
-      "faq": {
-        "title": "Foire Aux Questions",
-        "q1": "Ai-je besoin d'un serveur pour exécuter une Mini App ?",
-        "a1": "Non ! C'est la beauté de la chose. Les Mini Apps sont purement du code côté client (HTML/JS) qui communique directement avec d'autres utilisateurs via le réseau P2P Ixian. Aucune infrastructure backend n'est requise.",
-        "q2": "Les Mini Apps sont-elles sécurisées ?",
-        "a2": "Extrêmement. Elles s'exécutent dans un environnement bac à sable (WebView) et tout le trafic réseau est crypté à l'aide du protocole sécurisé post-quantique d'Ixian (RSA + ECDH + ML-KEM). L'application elle-même ne peut pas accéder à vos données sensibles sans permission.",
-        "q3": "Comment installer une Mini App ?",
-        "a3": "Vous n'avez pas besoin d''installer' à proprement parler. Vous pouvez les ajouter depuis un dépôt ou simplement recevoir un fichier .spixi dans une discussion. Elles se chargent instantanément. Vous pouvez épingler vos favorites pour un accès facile.",
-        "q4": "Puis-je construire la mienne ?",
-        "a4": "Absolument. Si vous connaissez HTML, CSS et JavaScript, vous pouvez construire une Mini App. Nous fournissons un SDK simple pour gérer la communication P2P. Consultez la section 'Construire' pour des guides.",
-        "q5": "Que peuvent faire les Mini Apps ?",
-        "a5": "Presque tout ce qu'une application web peut faire ! Jeux, calculatrices, outils collaboratifs, sondages, et même contrôler des appareils IoT via des passerelles. La limite est votre imagination.",
-        "q6": "Est-ce que ça coûte de l'argent ?",
-        "a6": "Construire et héberger des Mini Apps est gratuit car il n'y a pas de serveurs à payer. Les utilisateurs ne paient pas non plus de frais de gaz pour les interactions standard.",
-        "q7": "Comment mettre à jour une application ?",
-        "a7": "Les développeurs publient de nouvelles versions sous forme de fichiers .spixi. Lorsque vous ouvrez une version plus récente, Spixi met automatiquement à jour votre cache local.",
-        "q8": "Les Mini Apps peuvent-elles effectuer des paiements ?",
-        "a8": "Oui, elles peuvent demander des paiements (en IXI) que l'utilisateur doit approuver dans l'interface native de Spixi. Sécurisé et simple.",
-        "q9": "Qu'en est-il de l'utilisation hors ligne ?",
-        "a9": "Puisque le code de l'application est mis en cache localement, de nombreuses applications (comme les calculatrices ou les jeux solo) fonctionnent parfaitement hors ligne. Les fonctionnalités réseau reprendront lorsque vous vous reconnecterez.",
-        "q10": "Y a-t-il un App Store ?",
-        "a10": "Nous avons un répertoire communautaire où vous pouvez parcourir les applications en vedette, mais n'importe qui peut distribuer une application directement aux utilisateurs sans gardien."
-      }
-    },
-    "privacy": {
-      "title": "Politique de confidentialité",
-      "translation": "La politique de confidentialité de Spixi est disponible uniquement en anglais."
-    },
-    "terms": {
-      "title": "Conditions d'utilisation",
-      "translation": "Les conditions d'utilisation de Spixi sont disponibles uniquement en anglais."
-    },
-    "misc": {
-      "tryit": "Essayez",
-      "learnmore": "En savoir plus"
     }
-  }
 }

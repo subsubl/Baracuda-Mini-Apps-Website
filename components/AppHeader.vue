@@ -229,10 +229,10 @@ const toggleDropdownLanguage = () => {
                         </li>
                         <li class="py-3">
                             <a 
-                                href="https://www.ixilabs.co.uk/" 
+                                href="https://baracuda.ent"
                                 target="_blank" 
                                 class="block py-2 px-3 font-lexend text-4xl text-[#1D2329] dark:text-white hover:text-[#24BBFF] dark:hover:text-[#24BBFF]">
-                                {{ t('menu.ixilabs') }}
+                                {{ t('menu.baracuda') }}
                             </a>
                         </li>
                     </ul>

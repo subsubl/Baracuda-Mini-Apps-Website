@@ -58,6 +58,61 @@ const readEntry = async (entry: any, pathPrefix: string, rootFolder: string) => 
     }
 };
 
+const fileInput = ref<HTMLInputElement | null>(null);
+
+const onClickUpload = () => {
+  fileInput.value?.click();
+};
+
+const onFileSelect = (e: Event) => {
+  const input = e.target as HTMLInputElement;
+  if (input.files && input.files.length > 0) {
+    processInputFiles(input.files);
+  }
+  input.value = '';
+};
+
+const processInputFiles = (files: FileList) => {
+    isDragging.value = false;
+    error.value = null;
+    success.value = false;
+    filesMap.value.clear();
+    processing.value = true;
+
+    try {
+        if (files.length === 0) return;
+
+        // Determine root folder from the first file
+        const firstPath = files[0].webkitRelativePath;
+        let rootFolder = '';
+        if (firstPath) {
+             const parts = firstPath.split('/');
+             if (parts.length > 1) {
+                 rootFolder = parts[0] + '/';
+             }
+        }
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const relativePath = file.webkitRelativePath || file.name;
+
+            const zipPath = relativePath.startsWith(rootFolder)
+              ? relativePath.slice(rootFolder.length)
+              : relativePath;
+
+            if (zipPath) {
+                filesMap.value.set(zipPath, file);
+            }
+        }
+        validateFiles();
+    } catch (err) {
+        console.error(err);
+        error.value = "Error reading files. Please try again.";
+    } finally {
+        processing.value = false;
+    }
+};
+
 const onDrop = async (e: DragEvent) => {
   isDragging.value = false;
   error.value = null;
@@ -240,6 +295,15 @@ contentSize = ${zipSize}`;
 
 <template>
   <div class="container mx-auto px-4 py-8">
+    <input
+      type="file"
+      ref="fileInput"
+      class="hidden"
+      webkitdirectory
+      directory
+      multiple
+      @change="onFileSelect"
+    />
     <div class="max-w-2xl mx-auto">
       <div class="text-center mb-8">
         <h1 class="text-3xl font-bold mb-2 text-gray-900 dark:text-white">Mini App Packer</h1>
@@ -249,16 +313,22 @@ contentSize = ${zipSize}`;
       </div>
 
       <div
-        class="border-2 border-dashed rounded-lg p-12 text-center transition-colors duration-200 ease-in-out cursor-pointer"
+        class="border-2 border-dashed rounded-lg p-12 text-center transition-colors duration-200 ease-in-out cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
         :class="[
           isDragging
             ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/10'
             : (error ? 'border-red-500 dark:border-red-500 bg-red-50 dark:bg-red-900/10' : 'border-gray-300 dark:border-gray-700 hover:border-primary-400 dark:hover:border-primary-600'),
           filesMap.size > 0 && !error ? 'bg-gray-50 dark:bg-gray-800' : ''
         ]"
+        role="button"
+        tabindex="0"
+        aria-label="Upload app folder"
         @dragover.prevent="onDragOver"
         @dragleave.prevent="onDragLeave"
         @drop.prevent="onDrop"
+        @click="onClickUpload"
+        @keydown.enter.prevent="onClickUpload"
+        @keydown.space.prevent="onClickUpload"
       >
         <div v-if="filesMap.size === 0" class="space-y-4">
           <div class="flex justify-center">
@@ -268,7 +338,7 @@ contentSize = ${zipSize}`;
           </div>
           <div>
             <p class="text-lg font-medium text-gray-700 dark:text-gray-300">
-              Drop your app folder here
+              Drop your app folder here or click to select
             </p>
             <p class="text-sm text-gray-500 mt-2">
               Must contain: appinfo.spixi, app/index.html
