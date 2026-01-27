@@ -545,7 +545,6 @@
                         const zipPath = fullPath.startsWith(rootFolder)
                             ? fullPath.slice(rootFolder.length)
                             : fullPath;
-                        console.log("Found:", zipPath);
                         filesMap.set(zipPath, file);
                         resolve();
                     });
