@@ -1,4 +1,4 @@
-export default defineEventHandler(async (event) => {
+export default defineCachedEventHandler(async (event) => {
     const REPO_OWNER = 'ixian-platform'
     const REPO_NAME = 'Spixi-Mini-Apps'
     const BRANCH = 'master'
@@ -65,4 +65,8 @@ export default defineEventHandler(async (event) => {
         console.error('Error fetching apps from GitHub:', error)
         return []
     }
+}, {
+    maxAge: 3600,
+    name: 'github-apps',
+    getKey: () => 'apps-list'
 })
