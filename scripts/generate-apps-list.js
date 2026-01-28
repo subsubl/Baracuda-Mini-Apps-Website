@@ -25,6 +25,26 @@ function parseAppInfo(text) {
     return info;
 }
 
+function validateAppInfo(info) {
+    const errors = [];
+
+    if (!info.id) {
+        errors.push("Missing 'id'");
+    } else if (!/^[a-zA-Z0-9.-]+$/.test(info.id)) {
+        errors.push(`Invalid 'id' format: "${info.id}"`);
+    }
+
+    if (!info.name || !info.name.trim()) {
+        errors.push("Missing or empty 'name'");
+    }
+
+    if (info.version && !/^\d+\.\d+\.\d+$/.test(info.version)) {
+        errors.push(`Invalid 'version' format: "${info.version}"`);
+    }
+
+    return errors;
+}
+
 if (!fs.existsSync(APPS_DIR)) {
     console.error(`Apps directory not found: ${APPS_DIR}`);
     process.exit(1);
@@ -49,6 +69,12 @@ for (const folder of folders) {
         try {
             const content = fs.readFileSync(appInfoPath, 'utf8');
             const info = parseAppInfo(content);
+
+            const validationErrors = validateAppInfo(info);
+            if (validationErrors.length > 0) {
+                console.warn(`Skipping ${folder}: ${validationErrors.join(', ')}`);
+                continue;
+            }
 
             // Add some basic validation or enrichment if needed
             if (info.id && info.name) {
