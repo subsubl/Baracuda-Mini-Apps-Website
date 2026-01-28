@@ -3,32 +3,62 @@ export default defineEventHandler(async (event) => {
     const REPO_NAME = 'Spixi-Mini-Apps'
     const BRANCH = 'master'
     const APPS_PATH = 'apps'
-    const GITHUB_API_BASE = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${APPS_PATH}`
+    const TREE_API_URL = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/git/trees/${BRANCH}?recursive=1`
     const RAW_BASE = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${APPS_PATH}`
     const TREE_BASE = `https://github.com/${REPO_OWNER}/${REPO_NAME}/tree/${BRANCH}/${APPS_PATH}`
 
     try {
-        // Fetch list of apps (directories)
-        const appsListResponse = await fetch(GITHUB_API_BASE)
-        if (!appsListResponse.ok) {
-            throw new Error(`Failed to fetch apps list: ${appsListResponse.statusText}`)
+        // Fetch recursive tree
+        const treeResponse = await fetch(TREE_API_URL)
+        if (!treeResponse.ok) {
+            throw new Error(`Failed to fetch repo tree: ${treeResponse.statusText}`)
         }
-        const appsList = await appsListResponse.json()
+        const treeData = await treeResponse.json()
 
-        const apps = await Promise.all(appsList.filter((item: any) => item.type === 'dir').map(async (appDir: any) => {
-            const appId = appDir.name
-            const appUrl = appDir.url
+        if (treeData.truncated) {
+             console.warn('GitHub tree response was truncated. Some apps might be missing.')
+        }
+
+        // Group files by app
+        const appFiles: Record<string, Set<string>> = {}
+
+        for (const item of treeData.tree) {
+             // Only look at files under apps/
+             if (!item.path.startsWith(APPS_PATH + '/')) continue
+
+             // Extract app ID and file name
+             const relativePath = item.path.substring(APPS_PATH.length + 1)
+             const parts = relativePath.split('/')
+
+             // We are looking for files directly inside the app folder: apps/{appId}/{filename}
+             if (parts.length === 2) {
+                 const appId = parts[0]
+                 const fileName = parts[1]
+
+                 if (!appFiles[appId]) {
+                     appFiles[appId] = new Set()
+                 }
+                 appFiles[appId].add(fileName)
+             }
+        }
+
+        const apps = await Promise.all(Object.keys(appFiles).map(async (appId) => {
+            const files = appFiles[appId]
+
+            // Check for icon
+            let iconUrl = null
+            if (files.has('icon.png')) {
+                iconUrl = `${RAW_BASE}/${appId}/icon.png`
+            } else if (files.has('icon.svg')) {
+                iconUrl = `${RAW_BASE}/${appId}/icon.svg`
+            }
+
+            // Check for appinfo.spixi
+            if (!files.has('appinfo.spixi')) {
+                return null
+            }
 
             try {
-                // Fetch app contents to find icon
-                const appContentsResponse = await fetch(appUrl)
-                if (!appContentsResponse.ok) return null
-                const appContents = await appContentsResponse.json()
-
-                // Find icon file (png or svg)
-                const iconFile = appContents.find((file: any) => file.name === 'icon.png' || file.name === 'icon.svg')
-                const iconUrl = iconFile ? iconFile.download_url : null
-
                 // Fetch appinfo.spixi
                 const appInfoUrl = `${RAW_BASE}/${appId}/appinfo.spixi`
                 const infoResponse = await fetch(appInfoUrl)
