@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import QrcodeVue from 'qrcode.vue'
 
 const { t } = useI18n()
+const colorMode = useColorMode()
 
 // Fetch apps data
 const { data: apps, pending } = await useFetch('/api/apps')
@@ -81,8 +82,24 @@ function handleModalClick(e) {
           </div>
           <div class="md:w-1/2 hidden md:flex justify-center pr-8 relative">
             <div class="absolute inset-0 bg-accent/20 blur-[100px] rounded-full pointer-events-none"></div>
-            <NuxtImg src="/img/mini-l.png" class="dark:hidden relative z-10 drop-shadow-2xl" alt="Spixi Mini Apps Light"/>
-            <NuxtImg src="/img/mini-d.png" class="hidden dark:block relative z-10 drop-shadow-2xl" alt="Spixi Mini Apps Dark"/>
+            <NuxtImg
+              src="/img/mini-d.png"
+              class="relative z-10 drop-shadow-2xl hidden dark:block"
+              alt="Spixi Mini Apps"
+              width="800"
+              format="webp"
+              preload
+              sizes="sm:100vw md:50vw lg:800px"
+            />
+            <NuxtImg
+              src="/img/mini-l.png"
+              class="relative z-10 drop-shadow-2xl block dark:hidden"
+              alt="Spixi Mini Apps"
+              width="800"
+              format="webp"
+              preload
+              sizes="sm:100vw md:50vw lg:800px"
+            />
           </div>
         </div>
       </div>
@@ -198,7 +215,17 @@ function handleModalClick(e) {
           <div class="flex items-start justify-between mb-3">
             <div class="relative">
                 <div class="absolute inset-0 bg-accent/20 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <img :src="app.icon" :alt="app.name" @error="$event.target.style.display='none'" class="relative w-14 h-14 rounded-xl object-cover bg-[#1A202C]">
+                <NuxtImg
+                  :src="app.icon"
+                  :alt="app.name"
+                  @error="$event.target.style.display='none'"
+                  class="relative w-14 h-14 rounded-xl object-cover bg-[#1A202C]"
+                  width="56"
+                  height="56"
+                  format="webp"
+                  fit="cover"
+                  loading="lazy"
+                />
             </div>
             <div class="flex flex-col items-end gap-1">
               <span class="px-2.5 py-1 text-[10px] uppercase font-bold tracking-wider bg-white/5 text-gray-400 rounded-md border border-white/5">
@@ -388,21 +415,31 @@ function handleModalClick(e) {
              @click.stop>
           <!-- Blurred Icon Background -->
           <div class="absolute inset-0 overflow-hidden">
-            <img v-if="selectedApp?.icon" 
-                 :src="selectedApp.icon" 
-                 class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full object-cover opacity-10 blur-3xl scale-150"
-                 @error="$event.target.style.display='none'">
+            <NuxtImg
+              v-if="selectedApp?.icon"
+              :src="selectedApp.icon"
+              class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full object-cover opacity-10 blur-3xl scale-150"
+              width="100"
+              format="webp"
+              @error="$event.target.style.display='none'"
+            />
           </div>
           
           <!-- Modal Content -->
           <div class="relative z-10 flex flex-col items-center gap-4">
             <!-- App Icon -->
             <div class="w-20 h-20 rounded-2xl overflow-hidden bg-[#1A202C] shadow-xl mb-2">
-              <img v-if="selectedApp?.icon" 
-                   :src="selectedApp.icon" 
-                   :alt="selectedApp?.name"
-                   class="w-full h-full object-cover"
-                   @error="$event.target.style.display='none'">
+              <NuxtImg
+                v-if="selectedApp?.icon"
+                :src="selectedApp.icon"
+                :alt="selectedApp?.name"
+                class="w-full h-full object-cover"
+                width="80"
+                height="80"
+                format="webp"
+                fit="cover"
+                @error="$event.target.style.display='none'"
+              />
             </div>
             
             <!-- App Name -->

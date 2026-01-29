@@ -26,6 +26,10 @@ export default defineNuxtConfig({
         "nuxt-icon",
     ],
 
+    image: {
+        domains: ['raw.githubusercontent.com'],
+    },
+
     i18n: {
         locales: [
             { code: 'en', file: 'en.json' },
