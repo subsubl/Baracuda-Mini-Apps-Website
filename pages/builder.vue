@@ -7,6 +7,8 @@ const filesMap = ref<Map<string, File>>(new Map());
 const processing = ref(false);
 const error = ref<string | null>(null);
 const success = ref(false);
+const showForm = ref(false);
+const appFormData = ref<Record<string, string>>({});
 
 const generatedZSpixi = ref<{ url: string; name: string } | null>(null);
 const generatedSpixi = ref<{ url: string; name: string } | null>(null);
@@ -72,10 +74,11 @@ const onFileSelect = (e: Event) => {
   input.value = '';
 };
 
-const processInputFiles = (files: FileList) => {
+const processInputFiles = async (files: FileList) => {
     isDragging.value = false;
     error.value = null;
     success.value = false;
+    showForm.value = false;
     filesMap.value.clear();
     processing.value = true;
 
@@ -104,7 +107,7 @@ const processInputFiles = (files: FileList) => {
                 filesMap.value.set(zipPath, file);
             }
         }
-        validateFiles();
+        await validateFiles();
     } catch (err) {
         console.error(err);
         error.value = "Error reading files. Please try again.";
@@ -117,6 +120,7 @@ const onDrop = async (e: DragEvent) => {
   isDragging.value = false;
   error.value = null;
   success.value = false;
+  showForm.value = false;
   filesMap.value.clear();
   
   if (e.dataTransfer?.items) {
@@ -132,7 +136,7 @@ const onDrop = async (e: DragEvent) => {
                 await readEntry(entry, '', rootFolder);
             }
         }
-        validateFiles();
+        await validateFiles();
     } catch (err) {
         console.error(err);
         error.value = "Error reading files. Please try again.";
@@ -142,7 +146,7 @@ const onDrop = async (e: DragEvent) => {
   }
 };
 
-const validateFiles = () => {
+const validateFiles = async () => {
     let hasAppInfo = false;
     let hasIndexHtml = false;
 
@@ -158,6 +162,23 @@ const validateFiles = () => {
         error.value = "Missing 'app/index.html'. Please ensure your structure is correct.";
     } else {
         error.value = null;
+        // Parse appinfo.spixi
+        const appInfoFile = Array.from(filesMap.value.entries()).find(
+            ([path]) => path.toLowerCase() === 'appinfo.spixi'
+        )?.[1];
+
+        if (appInfoFile) {
+            const text = await appInfoFile.text();
+            const info = parseAppInfo(text);
+            appFormData.value = info;
+
+            const baseName = (info.id || '').trim().replace(/\s+/g, '-').toLowerCase();
+            if (baseName) {
+                 appFormData.value.image = `${baseName}.png`;
+                 appFormData.value.contentUrl = `${baseName}.zspixiapp`;
+            }
+            showForm.value = true;
+        }
     }
 };
 
@@ -199,26 +220,17 @@ const packApp = async () => {
     success.value = false;
 
     try {
-        const appInfoFile = Array.from(filesMap.value.entries()).find(
-            ([path]) => path.toLowerCase() === 'appinfo.spixi'
-        )?.[1];
-        
         const iconFile = Array.from(filesMap.value.entries()).find(
             ([path]) => path.toLowerCase() === 'icon.png'
         )?.[1];
 
-        if (!appInfoFile) {
-            throw new Error("Missing required file: appinfo.spixi");
-        }
-
-        // Read app info
-        const appInfoText = await appInfoFile.text();
-        const appInfo = parseAppInfo(appInfoText);
+        // Use data from form
+        const appInfo = appFormData.value;
+        const baseName = (appInfo.id || 'app').trim().replace(/\s+/g, '-').toLowerCase();
         
-        const baseName = (appInfo.name || 'app').trim().replace(/\s+/g, '-').toLowerCase();
-        // According to new logic, image and contentUrl are forced derived from name if existing
-        const imageUrl = `${baseName}.png`;
-        const contentUrl = `${baseName}.zspixiapp`;
+        // Use values from form
+        const imageUrl = appInfo.image;
+        const contentUrl = appInfo.contentUrl;
 
         // Create Zip
         const zip = new JSZip();
@@ -357,6 +369,38 @@ contentSize = ${zipSize}`;
           </div>
           <div v-else class="mt-4">
              <p class="text-green-500 font-medium">Structure Valid. Ready to pack!</p>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="showForm && !success" class="mt-8 bg-white dark:bg-gray-800 p-6 rounded-lg shadow border border-gray-200 dark:border-gray-700">
+        <h2 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">App Configuration</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Read-only fields -->
+          <div class="col-span-1">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
+            <input type="text" :value="appFormData.name" readonly class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 shadow-sm sm:text-sm text-gray-500 dark:text-gray-400 cursor-not-allowed px-3 py-2" />
+          </div>
+           <div class="col-span-1">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Version</label>
+            <input type="text" :value="appFormData.version" readonly class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 shadow-sm sm:text-sm text-gray-500 dark:text-gray-400 cursor-not-allowed px-3 py-2" />
+          </div>
+           <div class="col-span-1">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">App ID</label>
+            <input type="text" :value="appFormData.id" readonly class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 shadow-sm sm:text-sm text-gray-500 dark:text-gray-400 cursor-not-allowed px-3 py-2" />
+          </div>
+           <div class="col-span-1">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Publisher</label>
+            <input type="text" :value="appFormData.publisher" readonly class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 shadow-sm sm:text-sm text-gray-500 dark:text-gray-400 cursor-not-allowed px-3 py-2" />
+          </div>
+           <!-- Editable fields -->
+           <div class="col-span-1 md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Image URL</label>
+            <input type="text" v-model="appFormData.image" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-900 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm text-gray-900 dark:text-white px-3 py-2" />
+          </div>
+           <div class="col-span-1 md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Content URL (zip file)</label>
+            <input type="text" v-model="appFormData.contentUrl" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-900 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm text-gray-900 dark:text-white px-3 py-2" />
           </div>
         </div>
       </div>
