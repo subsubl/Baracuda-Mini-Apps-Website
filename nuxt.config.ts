@@ -23,7 +23,6 @@ export default defineNuxtConfig({
         "@nuxt/image",
         "@nuxtjs/google-fonts",
         "@nuxtjs/device",
-        "nuxt-icon",
     ],
 
     image: {
