@@ -63,7 +63,7 @@ function handleModalClick(e) {
     <!-- Hero Section -->
     <div class="pt-6 pb-4 px-4 md:px-8 max-w-7xl mx-auto">
       <div class="bg-hero-gradient rounded-3xl relative overflow-hidden text-white shadow-2xl">
-        <img src="/img/pattern.png" class="absolute object-cover top-0 right-0 h-full opacity-30 pointer-events-none mix-blend-overlay" alt="Pattern">
+        <NuxtImg src="/img/pattern.png" class="absolute object-cover top-0 right-0 h-full opacity-30 pointer-events-none mix-blend-overlay" alt="Pattern" format="webp" />
         <div class="flex flex-col md:flex-row items-center justify-between gap-10 relative z-10">
           <div class="md:w-1/2 inline-flex flex-col gap-6 justify-between item p-12">
             <div>
@@ -388,7 +388,7 @@ function handleModalClick(e) {
     <!-- Spixi Summary/Footer CTA -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div class="bg-hero-gradient rounded-3xl relative overflow-hidden text-white shadow-2xl p-12 flex flex-col md:flex-row items-center justify-between">
-           <img src="/img/pattern.png" class="absolute object-cover top-0 left-0 w-full h-full opacity-20 pointer-events-none mix-blend-overlay" alt="Pattern">
+           <NuxtImg src="/img/pattern.png" class="absolute object-cover top-0 left-0 w-full h-full opacity-20 pointer-events-none mix-blend-overlay" alt="Pattern" format="webp" loading="lazy" />
            <div class="md:w-1/2 relative z-10">
                <h2 class="text-4xl font-lexend font-bold mb-4">{{ t('pages.mini-apps.cta.title') }}</h2>
                <p class="text-lg text-gray-300 mb-8 max-w-md">{{ t('pages.mini-apps.cta.desc') }}</p>
@@ -400,7 +400,7 @@ function handleModalClick(e) {
            </div>
            <div class="md:w-1/2 relative z-10 flex justify-end mt-10 md:mt-0">
                <!-- Reusing SpixiSummary Logic or Image -->
-                <NuxtImg class="w-[400px] drop-shadow-2xl" src="/img/SpixiSummaryDark.png" />
+                <NuxtImg class="w-[400px] drop-shadow-2xl" src="/img/SpixiSummaryDark.png" format="webp" width="400" />
            </div>
         </div>
     </div>
