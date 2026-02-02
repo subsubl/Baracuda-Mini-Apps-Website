@@ -1,6 +1,8 @@
 <script setup>
-import { ref, computed } from 'vue'
-import QrcodeVue from 'qrcode.vue'
+import { ref, computed, defineAsyncComponent } from 'vue'
+
+// ⚡ Bolt Optimization: Lazy load QrcodeVue to reduce initial bundle size
+const QrcodeVue = defineAsyncComponent(() => import('qrcode.vue'))
 
 const { t } = useI18n()
 const colorMode = useColorMode()
@@ -82,13 +84,13 @@ function handleModalClick(e) {
           </div>
           <div class="md:w-1/2 hidden md:flex justify-center pr-8 relative">
             <div class="absolute inset-0 bg-accent/20 blur-[100px] rounded-full pointer-events-none"></div>
+            <!-- ⚡ Bolt Optimization: Removed preload to avoid double download of hero images -->
             <NuxtImg
               src="/img/mini-d.png"
               class="relative z-10 drop-shadow-2xl hidden dark:block"
               alt="Spixi Mini Apps"
               width="800"
               format="webp"
-              preload
               sizes="sm:100vw md:50vw lg:800px"
             />
             <NuxtImg
@@ -97,7 +99,6 @@ function handleModalClick(e) {
               alt="Spixi Mini Apps"
               width="800"
               format="webp"
-              preload
               sizes="sm:100vw md:50vw lg:800px"
             />
           </div>
