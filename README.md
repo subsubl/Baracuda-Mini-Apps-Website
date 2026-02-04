@@ -13,8 +13,7 @@ The official repository for the Spixi Mini Apps directory and builder tools. Thi
 ## 🛠️ Technology Stack
 
 - **Framework**: [Nuxt 3](https://nuxt.com)
-- **UI**: [Tailwind CSS](https://tailwindcss.com) & [Flowbite](https://flowbite.com)
-- **Animations**: [GSAP](https://gsap.com)
+- **UI**: [Tailwind CSS](https://tailwindcss.com)
 - **Language**: TypeScript & Vue 3 Composition API
 - **Utilities**: [JSZip](https://stuk.github.io/jszip/) (Archiving), [qrcode.vue](https://github.com/scopewu/qrcode.vue) (QR Generation)
 - **Deployment**: GitHub Pages
