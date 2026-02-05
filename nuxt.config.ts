@@ -74,10 +74,6 @@ export default defineNuxtConfig({
         },
     },
 
-    plugins: [
-        { src: '~/plugins/utils.client.js', ssr: false },
-    ],
-
     app: {
         baseURL: '/Spixi-Mini-Apps-Website/',
         pageTransition: false,

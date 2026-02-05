@@ -219,7 +219,7 @@ function handleModalClick(e) {
                 <NuxtImg
                   :src="app.icon"
                   :alt="app.name"
-                  @error="$event.target.style.display='none'"
+                  @error="$event.target && ($event.target.style.display='none')"
                   class="relative w-14 h-14 rounded-xl object-cover bg-[#1A202C]"
                   width="56"
                   height="56"
@@ -422,7 +422,7 @@ function handleModalClick(e) {
               class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full object-cover opacity-10 blur-3xl scale-150"
               width="100"
               format="webp"
-              @error="$event.target.style.display='none'"
+              @error="$event.target && ($event.target.style.display='none')"
             />
           </div>
           
@@ -439,7 +439,7 @@ function handleModalClick(e) {
                 height="80"
                 format="webp"
                 fit="cover"
-                @error="$event.target.style.display='none'"
+              @error="$event.target && ($event.target.style.display='none')"
               />
             </div>
             
