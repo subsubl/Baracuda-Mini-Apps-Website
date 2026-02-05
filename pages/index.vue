@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, defineAsyncComponent } from 'vue'
+import { ref, computed, defineAsyncComponent, watch, onBeforeUnmount } from 'vue'
 
 // ⚡ Bolt Optimization: Lazy load QrcodeVue to reduce initial bundle size
 const QrcodeVue = defineAsyncComponent(() => import('qrcode.vue'))
@@ -12,8 +12,22 @@ const { data: apps, pending } = await useFetch('/api/apps')
 
 // Search and filter state
 const searchQuery = ref('')
+const debouncedSearchQuery = ref('')
 const selectedCategory = ref('All')
 const categories = ['All', 'Games', 'Productivity', 'Tools', 'Social']
+
+// ⚡ Bolt Optimization: Debounce search to avoid expensive filtering on every keystroke
+let debounceTimer = null
+watch(searchQuery, (newVal) => {
+  clearTimeout(debounceTimer)
+  debounceTimer = setTimeout(() => {
+    debouncedSearchQuery.value = newVal
+  }, 300)
+})
+
+onBeforeUnmount(() => {
+  if (debounceTimer) clearTimeout(debounceTimer)
+})
 
 // Filtered apps as computed (Vue will track reactivity)
 const filteredApps = computed(() => {
@@ -27,8 +41,8 @@ const filteredApps = computed(() => {
   }
   
   // Filter by search with null safety
-  if (searchQuery.value && searchQuery.value.trim()) {
-    const q = searchQuery.value.toLowerCase()
+  if (debouncedSearchQuery.value && debouncedSearchQuery.value.trim()) {
+    const q = debouncedSearchQuery.value.toLowerCase()
     result = result.filter(app => 
       (app.name || '').toLowerCase().includes(q) ||
       (app.description || '').toLowerCase().includes(q)
