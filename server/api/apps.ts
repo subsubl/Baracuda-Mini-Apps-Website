@@ -1,3 +1,7 @@
+// In-memory cache for appinfo.spixi content (SHA -> Content)
+const appInfoCache = new Map<string, string>()
+const MAX_CACHE_SIZE = 1000
+
 export default defineCachedEventHandler(async (event) => {
     const REPO_OWNER = 'ixian-platform'
     const REPO_NAME = 'Spixi-Mini-Apps'
@@ -134,7 +138,7 @@ export default defineCachedEventHandler(async (event) => {
         }
 
         // Group files by app
-        const appFiles: Record<string, Set<string>> = {}
+        const appFiles: Record<string, Map<string, string>> = {}
 
         for (const item of treeData.tree) {
              // Only look at files under apps/
@@ -150,9 +154,9 @@ export default defineCachedEventHandler(async (event) => {
                  const fileName = parts[1]
 
                  if (!appFiles[appId]) {
-                     appFiles[appId] = new Set()
+                     appFiles[appId] = new Map()
                  }
-                 appFiles[appId].add(fileName)
+                 appFiles[appId].set(fileName, item.sha)
              }
         }
 
@@ -172,12 +176,28 @@ export default defineCachedEventHandler(async (event) => {
                 return null
             }
 
+            const infoSha = files.get('appinfo.spixi')
+
             try {
                 // Fetch appinfo.spixi
+                let infoText: string
                 const appInfoUrl = `${RAW_BASE}/${appId}/appinfo.spixi`
-                const infoResponse = await fetch(appInfoUrl)
-                if (!infoResponse.ok) return null
-                const infoText = await infoResponse.text()
+
+                if (infoSha && appInfoCache.has(infoSha)) {
+                    infoText = appInfoCache.get(infoSha)!
+                } else {
+                    const infoResponse = await fetch(appInfoUrl)
+                    if (!infoResponse.ok) return null
+                    infoText = await infoResponse.text()
+
+                    if (infoSha) {
+                        // Prevent cache from growing indefinitely
+                        if (appInfoCache.size >= MAX_CACHE_SIZE) {
+                            appInfoCache.clear()
+                        }
+                        appInfoCache.set(infoSha, infoText)
+                    }
+                }
 
                 const info = parseAppInfo(infoText)
 
