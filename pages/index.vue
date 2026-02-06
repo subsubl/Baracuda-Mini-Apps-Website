@@ -29,11 +29,21 @@ onBeforeUnmount(() => {
   if (debounceTimer) clearTimeout(debounceTimer)
 })
 
+// ⚡ Bolt Optimization: Pre-compute lowercase strings to improve search performance
+const searchableApps = computed(() => {
+  if (!apps.value) return []
+  return apps.value.map(app => ({
+    ...app,
+    _searchName: (app.name || '').toLowerCase(),
+    _searchDescription: (app.description || '').toLowerCase()
+  }))
+})
+
 // Filtered apps as computed (Vue will track reactivity)
 const filteredApps = computed(() => {
-  if (!apps.value) return []
+  if (!searchableApps.value.length) return []
   
-  let result = [...apps.value] // Clone to avoid mutation
+  let result = searchableApps.value
   
   // Filter by category
   if (selectedCategory.value !== 'All') {
@@ -44,8 +54,8 @@ const filteredApps = computed(() => {
   if (debouncedSearchQuery.value && debouncedSearchQuery.value.trim()) {
     const q = debouncedSearchQuery.value.toLowerCase()
     result = result.filter(app => 
-      (app.name || '').toLowerCase().includes(q) ||
-      (app.description || '').toLowerCase().includes(q)
+      app._searchName.includes(q) ||
+      app._searchDescription.includes(q)
     )
   }
   
