@@ -156,7 +156,8 @@ export default defineCachedEventHandler(async (event) => {
              }
         }
 
-        const apps = await Promise.all(Object.keys(appFiles).map(async (appId) => {
+        const limit = pLimit(10)
+        const apps = await Promise.all(Object.keys(appFiles).map((appId) => limit(async () => {
             const files = appFiles[appId]
 
             // Check for icon
@@ -194,7 +195,7 @@ export default defineCachedEventHandler(async (event) => {
                 console.error(`Error processing app ${appId}:`, e)
                 return null
             }
-        }))
+        })))
 
         return apps.filter(app => app !== null)
 
