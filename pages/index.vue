@@ -29,11 +29,21 @@ onBeforeUnmount(() => {
   if (debounceTimer) clearTimeout(debounceTimer)
 })
 
+// ⚡ Bolt Optimization: Pre-compute lowercase strings for search to avoid O(N*L) during filtering
+const searchableApps = computed(() => {
+  if (!apps.value) return []
+  return apps.value.map(app => ({
+    ...app,
+    _searchName: (app.name || '').toLowerCase(),
+    _searchDescription: (app.description || '').toLowerCase()
+  }))
+})
+
 // Filtered apps as computed (Vue will track reactivity)
 const filteredApps = computed(() => {
-  if (!apps.value) return []
+  if (!searchableApps.value) return []
   
-  let result = [...apps.value] // Clone to avoid mutation
+  let result = searchableApps.value
   
   // Filter by category
   if (selectedCategory.value !== 'All') {
@@ -43,9 +53,10 @@ const filteredApps = computed(() => {
   // Filter by search with null safety
   if (debouncedSearchQuery.value && debouncedSearchQuery.value.trim()) {
     const q = debouncedSearchQuery.value.toLowerCase()
+    // ⚡ Bolt Optimization: Use pre-computed lowercase strings
     result = result.filter(app => 
-      (app.name || '').toLowerCase().includes(q) ||
-      (app.description || '').toLowerCase().includes(q)
+      app._searchName.includes(q) ||
+      app._searchDescription.includes(q)
     )
   }
   
