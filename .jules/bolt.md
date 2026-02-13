@@ -5,3 +5,7 @@
 ## 2025-05-23 - [Inline SVG Bloat]
 **Learning:** Inline SVGs in Vue components, especially those exported directly from design tools without optimization, can be excessively large (e.g., 10KB+ for a single icon). This bloats the initial HTML payload and bundle size.
 **Action:** Always inspect inline SVGs in critical components (like Headers/Footers). Replace complex paths with optimized standard icons (e.g., Heroicons) or use an SVG optimization tool.
+
+## 2025-05-24 - [Broken Data in API Prevents Optimization]
+**Learning:** Attempting to optimize a filtering algorithm (O(3N) -> O(N)) revealed that the underlying data (category field) was missing from the API response, rendering the filter effectively useless (always empty). Optimization without correctness is meaningless.
+**Action:** Always verify that the data required for an algorithm is actually present in the source before optimizing the algorithm itself. Fix the data source first if necessary.
