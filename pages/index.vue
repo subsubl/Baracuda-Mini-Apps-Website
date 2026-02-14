@@ -32,24 +32,24 @@ onBeforeUnmount(() => {
 // Filtered apps as computed (Vue will track reactivity)
 const filteredApps = computed(() => {
   if (!apps.value) return []
-  
-  let result = [...apps.value] // Clone to avoid mutation
-  
-  // Filter by category
-  if (selectedCategory.value !== 'All') {
-    result = result.filter(app => app.category === selectedCategory.value)
-  }
-  
-  // Filter by search with null safety
-  if (debouncedSearchQuery.value && debouncedSearchQuery.value.trim()) {
-    const q = debouncedSearchQuery.value.toLowerCase()
-    result = result.filter(app => 
-      (app.name || '').toLowerCase().includes(q) ||
-      (app.description || '').toLowerCase().includes(q)
-    )
-  }
-  
-  return result
+
+  const category = selectedCategory.value
+  const query = debouncedSearchQuery.value ? debouncedSearchQuery.value.trim().toLowerCase() : ''
+
+  // ⚡ Bolt Optimization: Single pass filtering to reduce memory allocation and iteration overhead (O(N) vs O(3N))
+  return apps.value.filter(app => {
+    // Category check
+    if (category !== 'All' && app.category !== category) return false
+
+    // Search check
+    if (query) {
+      const name = (app.name || '').toLowerCase()
+      const desc = (app.description || '').toLowerCase()
+      if (!name.includes(query) && !desc.includes(query)) return false
+    }
+
+    return true
+  })
 })
 
 // Modal state

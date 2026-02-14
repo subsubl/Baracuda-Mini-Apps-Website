@@ -104,6 +104,7 @@ export default defineCachedEventHandler(async (event) => {
                     name: info.name || appId,
                     description: info.description || "Spixi Mini App",
                     version: info.version || '1.0.0',
+                    category: info.category,
                     icon: iconUrl,
                     downloadUrl: `${RAW_BASE}/${appId}/appinfo.spixi`,
                     sourceUrl: `${TREE_BASE}/${appId}`
@@ -186,6 +187,7 @@ export default defineCachedEventHandler(async (event) => {
                     name: info.name || appId,
                     description: info.description || "Spixi Mini App",
                     version: info.version || '1.0.0',
+                    category: info.category,
                     icon: iconUrl || `${RAW_BASE}/${appId}/icon.svg`, // Fallback
                     downloadUrl: appInfoUrl,
                     sourceUrl: `${TREE_BASE}/${appId}`
