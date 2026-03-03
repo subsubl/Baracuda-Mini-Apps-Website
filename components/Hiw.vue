@@ -17,8 +17,9 @@ let images = {
             <div class="text-base text-spixi dark:text-spixi-dark my-4" v-html="content"></div>
         </div>
         <div class="md:w-3/5 w-full flex justify-center">
-            <NuxtImg v-if="images.light && $colorMode.value === 'light'" :src="images.light" class="w-50 md:w-full rounded-[40px]" />
-            <NuxtImg v-if="images.dark && $colorMode.value === 'dark'" :src="images.dark" class="w-50 md:w-full rounded-[40px]" />
+            <!-- ⚡ Bolt Optimization: Replace v-if on $colorMode with CSS visibility for SSR performance and avoiding hydration mismatch -->
+            <NuxtImg v-if="images.light" :src="images.light" class="w-50 md:w-full rounded-[40px] block dark:hidden" format="webp" loading="lazy" />
+            <NuxtImg v-if="images.dark" :src="images.dark" class="w-50 md:w-full rounded-[40px] hidden dark:block" format="webp" loading="lazy" />
         </div>
     </div>
 </template>
