@@ -8,7 +8,17 @@ const { t } = useI18n()
 const colorMode = useColorMode()
 
 // Fetch apps data
-const { data: apps, pending } = await useFetch('/api/apps')
+// ⚡ Bolt Optimization: Use transform to pre-compute lowercased search strings once during fetch,
+// avoiding repeated string allocations inside the reactive filteredApps computed loop.
+const { data: apps, pending } = await useFetch('/api/apps', {
+  transform: (appsData) => {
+    return appsData.map(app => ({
+      ...app,
+      _searchName: (app.name || '').toLowerCase(),
+      _searchDesc: (app.description || '').toLowerCase()
+    }))
+  }
+})
 
 // Search and filter state
 const searchQuery = ref('')
@@ -42,10 +52,10 @@ const filteredApps = computed(() => {
     if (category !== 'All' && app.category !== category) return false
 
     // Search check
+    // ⚡ Bolt Optimization: Using pre-computed _searchName and _searchDesc from useFetch transform
+    // avoids repeated O(N) string lowercasing operations on every search keystroke
     if (query) {
-      const name = (app.name || '').toLowerCase()
-      const desc = (app.description || '').toLowerCase()
-      if (!name.includes(query) && !desc.includes(query)) return false
+      if (!app._searchName.includes(query) && !app._searchDesc.includes(query)) return false
     }
 
     return true
