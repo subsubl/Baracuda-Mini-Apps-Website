@@ -5,3 +5,7 @@
 ## 2025-05-23 - [Inline SVG Bloat]
 **Learning:** Inline SVGs in Vue components, especially those exported directly from design tools without optimization, can be excessively large (e.g., 10KB+ for a single icon). This bloats the initial HTML payload and bundle size.
 **Action:** Always inspect inline SVGs in critical components (like Headers/Footers). Replace complex paths with optimized standard icons (e.g., Heroicons) or use an SVG optimization tool.
+
+## 2024-11-20 - [Optimize Array Allocations in string parsing loop]
+**Learning:** Found string parsing loops inside `server/api/apps.ts` which repeatedly created array allocations using `.split('=')` and `.join('=')` on every line of config files, causing potential GC pressure on the backend.
+**Action:** Replaced `.split('=')` / `.join('=')` with `.indexOf('=')` and `.substring()`. This avoids the unnecessary array allocations, speeding up the backend parsing of custom file formats.
