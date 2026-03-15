@@ -8,7 +8,16 @@ const { t } = useI18n()
 const colorMode = useColorMode()
 
 // Fetch apps data
-const { data: apps, pending } = await useFetch('/api/apps')
+const { data: apps, pending } = await useFetch('/api/apps', {
+  transform: (apps) => {
+    return apps.map(app => ({
+      ...app,
+      // ⚡ Bolt Optimization: Pre-compute lowercase strings for faster search filtering
+      _searchName: (app.name || '').toLowerCase(),
+      _searchDesc: (app.description || '').toLowerCase()
+    }))
+  }
+})
 
 // Search and filter state
 const searchQuery = ref('')
@@ -43,8 +52,8 @@ const filteredApps = computed(() => {
 
     // Search check
     if (query) {
-      const name = (app.name || '').toLowerCase()
-      const desc = (app.description || '').toLowerCase()
+      const name = app._searchName || ''
+      const desc = app._searchDesc || ''
       if (!name.includes(query) && !desc.includes(query)) return false
     }
 
