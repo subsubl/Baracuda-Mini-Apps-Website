@@ -11,10 +11,16 @@ export default defineCachedEventHandler(async (event) => {
     // Helper to parse appinfo.spixi content
     const parseAppInfo = (infoText: string) => {
         const info: Record<string, string> = {}
+        // ⚡ Bolt Optimization: Use indexOf and substring instead of split and join
+        // to avoid unnecessary array allocations and string joins, reducing GC pressure.
         infoText.split('\n').forEach(line => {
-            const [key, ...values] = line.split('=')
-            if (key && values.length) {
-                info[key.trim()] = values.join('=').trim()
+            const eqIndex = line.indexOf('=')
+            if (eqIndex !== -1) {
+                const key = line.substring(0, eqIndex).trim()
+                const value = line.substring(eqIndex + 1).trim()
+                if (key) {
+                    info[key] = value
+                }
             }
         })
         return info
