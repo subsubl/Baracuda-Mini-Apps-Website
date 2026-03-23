@@ -12,9 +12,13 @@ export default defineCachedEventHandler(async (event) => {
     const parseAppInfo = (infoText: string) => {
         const info: Record<string, string> = {}
         infoText.split('\n').forEach(line => {
-            const [key, ...values] = line.split('=')
-            if (key && values.length) {
-                info[key.trim()] = values.join('=').trim()
+            const eqIndex = line.indexOf('=')
+            if (eqIndex !== -1) {
+                const key = line.substring(0, eqIndex).trim()
+                const value = line.substring(eqIndex + 1).trim()
+                if (key) {
+                    info[key] = value
+                }
             }
         })
         return info
@@ -23,25 +27,15 @@ export default defineCachedEventHandler(async (event) => {
     // GraphQL Optimization
     if (token) {
         try {
-            const query = `
+            // Step 1: Fetch list of app directories
+            const dirQuery = `
                 query {
                     repository(owner: "${REPO_OWNER}", name: "${REPO_NAME}") {
                         object(expression: "${BRANCH}:${APPS_PATH}") {
                             ... on Tree {
                                 entries {
                                     name
-                                    object {
-                                        ... on Tree {
-                                            entries {
-                                                name
-                                                object {
-                                                    ... on Blob {
-                                                        text
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
+                                    type
                                 }
                             }
                         }
@@ -49,46 +43,92 @@ export default defineCachedEventHandler(async (event) => {
                 }
             `
 
-            const response = await fetch('https://api.github.com/graphql', {
+            const dirResponse = await fetch('https://api.github.com/graphql', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ query })
+                body: JSON.stringify({ query: dirQuery })
             })
 
-            if (!response.ok) {
-                throw new Error(`GraphQL request failed: ${response.statusText}`)
+            if (!dirResponse.ok) {
+                throw new Error(`GraphQL directory request failed: ${dirResponse.statusText}`)
             }
 
-            const data = await response.json()
-            if (data.errors) {
-                throw new Error(`GraphQL errors: ${JSON.stringify(data.errors)}`)
+            const dirData = await dirResponse.json()
+            if (dirData.errors) {
+                throw new Error(`GraphQL errors: ${JSON.stringify(dirData.errors)}`)
             }
 
-            const entries = data.data?.repository?.object?.entries
-
+            const entries = dirData.data?.repository?.object?.entries
             if (!Array.isArray(entries)) {
-                console.warn('Unexpected GraphQL response structure, falling back to REST')
+                console.warn('Unexpected GraphQL directory response structure, falling back to REST')
                 throw new Error('Invalid GraphQL response')
             }
 
-            const apps = entries.map((appDir: any) => {
-                if (!appDir.object || !appDir.object.entries) return null
+            const appFolderNames = entries
+                .filter((e: any) => e.type === 'tree')
+                .map((e: any) => e.name)
 
-                const appId = appDir.name
-                const files = appDir.object.entries
+            if (appFolderNames.length === 0) {
+                return []
+            }
 
-                const appInfoFile = files.find((f: any) => f.name === 'appinfo.spixi')
-                if (!appInfoFile || !appInfoFile.object || typeof appInfoFile.object.text !== 'string') {
+            // Step 2: Fetch app details using batched index-based aliases
+            const aliasQueries = appFolderNames.map((appId: string, index: number) => `
+                app${index}_info: object(expression: "${BRANCH}:${APPS_PATH}/${appId}/appinfo.spixi") {
+                    ... on Blob { text }
+                }
+                app${index}_icon_png: object(expression: "${BRANCH}:${APPS_PATH}/${appId}/icon.png") {
+                    oid
+                }
+                app${index}_icon_svg: object(expression: "${BRANCH}:${APPS_PATH}/${appId}/icon.svg") {
+                    oid
+                }
+            `).join('\n')
+
+            const detailQuery = `
+                query {
+                    repository(owner: "${REPO_OWNER}", name: "${REPO_NAME}") {
+                        ${aliasQueries}
+                    }
+                }
+            `
+
+            const detailResponse = await fetch('https://api.github.com/graphql', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ query: detailQuery })
+            })
+
+            if (!detailResponse.ok) {
+                throw new Error(`GraphQL detail request failed: ${detailResponse.statusText}`)
+            }
+
+            const detailData = await detailResponse.json()
+            if (detailData.errors) {
+                throw new Error(`GraphQL detail errors: ${JSON.stringify(detailData.errors)}`)
+            }
+
+            const repoData = detailData.data?.repository
+            if (!repoData) {
+                throw new Error('Invalid GraphQL detail response')
+            }
+
+            const apps = appFolderNames.map((appId: string, index: number) => {
+                const infoBlob = repoData[`app${index}_info`]
+                if (!infoBlob || typeof infoBlob.text !== 'string') {
                     return null
                 }
 
-                const info = parseAppInfo(appInfoFile.object.text)
+                const info = parseAppInfo(infoBlob.text)
 
-                const hasIconPng = files.some((f: any) => f.name === 'icon.png')
-                const hasIconSvg = files.some((f: any) => f.name === 'icon.svg')
+                const hasIconPng = !!repoData[`app${index}_icon_png`]
+                const hasIconSvg = !!repoData[`app${index}_icon_svg`]
 
                 let iconUrl = null
                 if (hasIconPng) {
