@@ -194,13 +194,18 @@ const bytesToNice = (n: number) => {
     return `${v.toFixed(v < 10 && i > 0 ? 2 : 0)} ${units[i]}`;
 };
 
+// Optimized: using indexOf and substring instead of regex to avoid unnecessary array allocations
 const parseAppInfo = (text: string) => {
     const lines = text.split(/\r?\n/);
     const info: Record<string, string> = {};
     for (const line of lines) {
-        const match = line.match(/^\s*([^=]+?)\s*=\s*(.*?)\s*$/);
-        if (match) {
-            info[match[1]] = match[2];
+        const eqIndex = line.indexOf('=');
+        if (eqIndex !== -1) {
+            const key = line.substring(0, eqIndex).trim();
+            const value = line.substring(eqIndex + 1).trim();
+            if (key) {
+                info[key] = value;
+            }
         }
     }
     return info;
