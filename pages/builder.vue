@@ -194,13 +194,17 @@ const bytesToNice = (n: number) => {
     return `${v.toFixed(v < 10 && i > 0 ? 2 : 0)} ${units[i]}`;
 };
 
+// ⚡ Bolt Optimization: Use .indexOf('=') and .substring() to avoid regex overhead, allocating array for regex match array result per line and O(N) allocations for strings.
 const parseAppInfo = (text: string) => {
     const lines = text.split(/\r?\n/);
     const info: Record<string, string> = {};
     for (const line of lines) {
-        const match = line.match(/^\s*([^=]+?)\s*=\s*(.*?)\s*$/);
-        if (match) {
-            info[match[1]] = match[2];
+        const eqIndex = line.indexOf('=');
+        if (eqIndex !== -1) {
+            const key = line.substring(0, eqIndex).trim();
+            if (key) {
+                info[key] = line.substring(eqIndex + 1).trim();
+            }
         }
     }
     return info;

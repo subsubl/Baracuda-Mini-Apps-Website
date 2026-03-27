@@ -13,13 +13,17 @@ const APPS_DIR = sourceArg;
 const DEST_APPS_DIR = path.join(__dirname, '../public/apps');
 const OUTPUT_FILE = path.join(__dirname, '../public/apps.json');
 
+// ⚡ Bolt Optimization: Replace regex and avoid repeated short-lived array allocations using .indexOf('=') and .substring() when parsing spixi app info
 function parseAppInfo(text) {
     const lines = text.split(/\r?\n/);
     const info = {};
     for (const line of lines) {
-        const match = line.match(/^\s*([^=]+?)\s*=\s*(.*?)\s*$/);
-        if (match) {
-            info[match[1]] = match[2];
+        const eqIndex = line.indexOf('=');
+        if (eqIndex !== -1) {
+            const key = line.substring(0, eqIndex).trim();
+            if (key) {
+                info[key] = line.substring(eqIndex + 1).trim();
+            }
         }
     }
     return info;
