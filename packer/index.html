@@ -562,14 +562,20 @@
             }
         }
 
+        // ⚡ Bolt Optimization: Use .indexOf('=') and .substring() instead of slow regex matching
+        // to avoid unnecessary object allocations and regex execution overhead.
         async function parseSpixiFile(file) {
             const text = await file.text();
             const lines = text.split(/\r?\n/);
             const spixi = {};
-            for (const line of lines) {
-                const match = line.match(/^\s*([^=]+?)\s*=\s*(.*?)\s*$/);
-                if (match) {
-                    spixi[match[1]] = match[2];
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                const eqIdx = line.indexOf('=');
+                if (eqIdx !== -1) {
+                    const key = line.substring(0, eqIdx).trim();
+                    if (key) {
+                        spixi[key] = line.substring(eqIdx + 1).trim();
+                    }
                 }
             }
             const form = document.getElementById('spixiForm');
