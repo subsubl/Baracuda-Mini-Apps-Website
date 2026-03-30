@@ -562,14 +562,18 @@
             }
         }
 
+        // ⚡ Bolt Optimization: Replaced regex .match() with .indexOf('=') and .substring() to avoid expensive regex execution and array allocations
         async function parseSpixiFile(file) {
             const text = await file.text();
             const lines = text.split(/\r?\n/);
             const spixi = {};
             for (const line of lines) {
-                const match = line.match(/^\s*([^=]+?)\s*=\s*(.*?)\s*$/);
-                if (match) {
-                    spixi[match[1]] = match[2];
+                const idx = line.indexOf('=');
+                if (idx !== -1) {
+                    const key = line.substring(0, idx).trim();
+                    if (key) {
+                        spixi[key] = line.substring(idx + 1).trim();
+                    }
                 }
             }
             const form = document.getElementById('spixiForm');
