@@ -163,9 +163,13 @@ const validateFiles = async () => {
     } else {
         error.value = null;
         // Parse appinfo.spixi
-        const appInfoFile = Array.from(filesMap.value.entries()).find(
-            ([path]) => path.toLowerCase() === 'appinfo.spixi'
-        )?.[1];
+        let appInfoFile: File | undefined;
+        for (const [path, file] of filesMap.value.entries()) {
+            if (path.toLowerCase() === 'appinfo.spixi') {
+                appInfoFile = file;
+                break;
+            }
+        }
 
         if (appInfoFile) {
             const text = await appInfoFile.text();
@@ -198,9 +202,12 @@ const parseAppInfo = (text: string) => {
     const lines = text.split(/\r?\n/);
     const info: Record<string, string> = {};
     for (const line of lines) {
-        const match = line.match(/^\s*([^=]+?)\s*=\s*(.*?)\s*$/);
-        if (match) {
-            info[match[1]] = match[2];
+        const eqIndex = line.indexOf('=');
+        if (eqIndex !== -1) {
+            const key = line.substring(0, eqIndex).trim();
+            if (key) {
+                info[key] = line.substring(eqIndex + 1).trim();
+            }
         }
     }
     return info;
@@ -220,9 +227,13 @@ const packApp = async () => {
     success.value = false;
 
     try {
-        const iconFile = Array.from(filesMap.value.entries()).find(
-            ([path]) => path.toLowerCase() === 'icon.png'
-        )?.[1];
+        let iconFile: File | undefined;
+        for (const [path, file] of filesMap.value.entries()) {
+            if (path.toLowerCase() === 'icon.png') {
+                iconFile = file;
+                break;
+            }
+        }
 
         // Use data from form
         const appInfo = appFormData.value;
