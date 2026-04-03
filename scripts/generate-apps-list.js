@@ -13,13 +13,19 @@ const APPS_DIR = sourceArg;
 const DEST_APPS_DIR = path.join(__dirname, '../public/apps');
 const OUTPUT_FILE = path.join(__dirname, '../public/apps.json');
 
+// ⚡ Bolt Optimization: Use .indexOf('=') and .substring() instead of .match() regex
+// to reduce unnecessary array allocations and garbage collection pressure.
 function parseAppInfo(text) {
     const lines = text.split(/\r?\n/);
     const info = {};
-    for (const line of lines) {
-        const match = line.match(/^\s*([^=]+?)\s*=\s*(.*?)\s*$/);
-        if (match) {
-            info[match[1]] = match[2];
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const idx = line.indexOf('=');
+        if (idx !== -1) {
+            const key = line.substring(0, idx).trim();
+            if (key) {
+                info[key] = line.substring(idx + 1).trim();
+            }
         }
     }
     return info;

@@ -9,3 +9,7 @@
 ## 2025-03-25 - [Vue Computed Search Optimizations]
 **Learning:** Reactive computed loops that filter over arrays on every keystroke in Vue (like search) can cause unnecessary CPU overhead and garbage collection pressure due to repeatedly calling `.toLowerCase()` and allocating new strings.
 **Action:** Use Nuxt's `useFetch` `transform` option to pre-compute and store these derived strings (e.g., `_searchName`) when the data is initially fetched, so the reactive filter only does simple substring checks.
+
+## 2025-06-18 - [AppInfo Parsing Overhead]
+**Learning:** Using regex (`.match`) or array splitting (`.split('=')`) to parse key-value pairs in `appinfo.spixi` files creates unnecessary string and array allocations. When processing large volumes of these files or parsing them on the fly, this leads to significant garbage collection pressure. Benchmark testing showed `.indexOf('=')` with `.substring()` is roughly ~1.7x to 2x faster than regex and `.split()` approaches in this environment.
+**Action:** Use `.indexOf('=')` and `.substring()` instead of `.split()` or regex when parsing simple, predictable key-value text formats like `.spixi` to minimize overhead.
