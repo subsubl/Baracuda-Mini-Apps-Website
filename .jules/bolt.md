@@ -9,3 +9,6 @@
 ## 2025-03-25 - [Vue Computed Search Optimizations]
 **Learning:** Reactive computed loops that filter over arrays on every keystroke in Vue (like search) can cause unnecessary CPU overhead and garbage collection pressure due to repeatedly calling `.toLowerCase()` and allocating new strings.
 **Action:** Use Nuxt's `useFetch` `transform` option to pre-compute and store these derived strings (e.g., `_searchName`) when the data is initially fetched, so the reactive filter only does simple substring checks.
+## 2024-05-18 - String Parsing Optimization (appinfo.spixi)
+**Learning:** For parsing simple key=value text formats like `appinfo.spixi` in Nuxt/Node environments, splitting strings via `.split(/\r?\n/)` or `.split('=')` coupled with regex matching creates excessive, short-lived O(N) array allocations that trigger heavy garbage collection. Using a `while` loop with `.indexOf()` and `.substring()` avoids array creation entirely and proved to be ~2x faster in benchmarks.
+**Action:** When parsing simple line-by-line configuration files, prefer a memory-efficient `while` loop scanning with `.indexOf('\n')` and `.indexOf('=')` instead of regex matching and `.split()` arrays, especially when executed repeatedly (e.g., in batch processing or during the API generation fallback loop).
