@@ -163,9 +163,14 @@ const validateFiles = async () => {
     } else {
         error.value = null;
         // Parse appinfo.spixi
-        const appInfoFile = Array.from(filesMap.value.entries()).find(
-            ([path]) => path.toLowerCase() === 'appinfo.spixi'
-        )?.[1];
+        // ⚡ Bolt Optimization: Use for...of loop over map entries instead of Array.from() to prevent O(N) array allocation overhead
+        let appInfoFile;
+        for (const [path, file] of filesMap.value.entries()) {
+            if (path.toLowerCase() === 'appinfo.spixi') {
+                appInfoFile = file;
+                break;
+            }
+        }
 
         if (appInfoFile) {
             const text = await appInfoFile.text();
@@ -194,14 +199,28 @@ const bytesToNice = (n: number) => {
     return `${v.toFixed(v < 10 && i > 0 ? 2 : 0)} ${units[i]}`;
 };
 
+// ⚡ Bolt Optimization: Replace regex and .split() with a manual parser loop to avoid O(N) intermediate array generation and garbage collection pressure
 const parseAppInfo = (text: string) => {
-    const lines = text.split(/\r?\n/);
     const info: Record<string, string> = {};
-    for (const line of lines) {
-        const match = line.match(/^\s*([^=]+?)\s*=\s*(.*?)\s*$/);
-        if (match) {
-            info[match[1]] = match[2];
+    let pos = 0;
+    const len = text.length;
+
+    while (pos < len) {
+        let end = text.indexOf('\n', pos);
+        if (end === -1) end = len;
+
+        const line = text.substring(pos, end);
+        const eqIdx = line.indexOf('=');
+
+        if (eqIdx !== -1) {
+            const key = line.substring(0, eqIdx).trim();
+            if (key) {
+                const val = line.substring(eqIdx + 1).trim();
+                info[key] = val;
+            }
         }
+
+        pos = end + 1;
     }
     return info;
 };
@@ -220,9 +239,14 @@ const packApp = async () => {
     success.value = false;
 
     try {
-        const iconFile = Array.from(filesMap.value.entries()).find(
-            ([path]) => path.toLowerCase() === 'icon.png'
-        )?.[1];
+        // ⚡ Bolt Optimization: Use for...of loop over map entries instead of Array.from() to prevent O(N) array allocation overhead
+        let iconFile;
+        for (const [path, file] of filesMap.value.entries()) {
+            if (path.toLowerCase() === 'icon.png') {
+                iconFile = file;
+                break;
+            }
+        }
 
         // Use data from form
         const appInfo = appFormData.value;
