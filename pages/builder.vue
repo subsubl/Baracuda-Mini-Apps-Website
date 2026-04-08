@@ -194,13 +194,27 @@ const bytesToNice = (n: number) => {
     return `${v.toFixed(v < 10 && i > 0 ? 2 : 0)} ${units[i]}`;
 };
 
+// ⚡ Bolt Optimization: Memory-efficient parsing avoiding array and regex allocations
 const parseAppInfo = (text: string) => {
-    const lines = text.split(/\r?\n/);
     const info: Record<string, string> = {};
-    for (const line of lines) {
-        const match = line.match(/^\s*([^=]+?)\s*=\s*(.*?)\s*$/);
-        if (match) {
-            info[match[1]] = match[2];
+    let start = 0;
+    const len = text.length;
+
+    while (start < len) {
+        let end = text.indexOf('\n', start);
+        if (end === -1) end = len;
+
+        const line = text.substring(start, end).trim();
+        start = end + 1;
+
+        if (!line) continue;
+
+        const eqIdx = line.indexOf('=');
+        if (eqIdx !== -1) {
+            const key = line.substring(0, eqIdx).trim();
+            if (key) {
+                info[key] = line.substring(eqIdx + 1).trim();
+            }
         }
     }
     return info;

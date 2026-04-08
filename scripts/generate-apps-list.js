@@ -13,13 +13,27 @@ const APPS_DIR = sourceArg;
 const DEST_APPS_DIR = path.join(__dirname, '../public/apps');
 const OUTPUT_FILE = path.join(__dirname, '../public/apps.json');
 
+// ⚡ Bolt Optimization: Memory-efficient parsing avoiding array and regex allocations
 function parseAppInfo(text) {
-    const lines = text.split(/\r?\n/);
     const info = {};
-    for (const line of lines) {
-        const match = line.match(/^\s*([^=]+?)\s*=\s*(.*?)\s*$/);
-        if (match) {
-            info[match[1]] = match[2];
+    let start = 0;
+    const len = text.length;
+
+    while (start < len) {
+        let end = text.indexOf('\n', start);
+        if (end === -1) end = len;
+
+        const line = text.substring(start, end).trim();
+        start = end + 1;
+
+        if (!line) continue;
+
+        const eqIdx = line.indexOf('=');
+        if (eqIdx !== -1) {
+            const key = line.substring(0, eqIdx).trim();
+            if (key) {
+                info[key] = line.substring(eqIdx + 1).trim();
+            }
         }
     }
     return info;
