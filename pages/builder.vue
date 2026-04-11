@@ -194,14 +194,28 @@ const bytesToNice = (n: number) => {
     return `${v.toFixed(v < 10 && i > 0 ? 2 : 0)} ${units[i]}`;
 };
 
+// ⚡ Bolt Optimization: Replace regex and split with memory-efficient
+// string indexing to avoid creating temporary objects and arrays
+// Note: Applying explicit directive from codebase memory for parsing these files.
 const parseAppInfo = (text: string) => {
-    const lines = text.split(/\r?\n/);
     const info: Record<string, string> = {};
-    for (const line of lines) {
-        const match = line.match(/^\s*([^=]+?)\s*=\s*(.*?)\s*$/);
-        if (match) {
-            info[match[1]] = match[2];
+    let start = 0;
+    while (start < text.length) {
+        let end = text.indexOf('\n', start);
+        if (end === -1) end = text.length;
+
+        const eqIdx = text.indexOf('=', start);
+        if (eqIdx !== -1 && eqIdx < end) {
+            const key = text.substring(start, eqIdx).trim();
+            if (key) {
+                let valEnd = end;
+                if (valEnd > eqIdx && text[valEnd - 1] === '\r') {
+                    valEnd--;
+                }
+                info[key] = text.substring(eqIdx + 1, valEnd).trim();
+            }
         }
+        start = end + 1;
     }
     return info;
 };

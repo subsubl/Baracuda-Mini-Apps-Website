@@ -9,3 +9,7 @@
 ## 2025-03-25 - [Vue Computed Search Optimizations]
 **Learning:** Reactive computed loops that filter over arrays on every keystroke in Vue (like search) can cause unnecessary CPU overhead and garbage collection pressure due to repeatedly calling `.toLowerCase()` and allocating new strings.
 **Action:** Use Nuxt's `useFetch` `transform` option to pre-compute and store these derived strings (e.g., `_searchName`) when the data is initially fetched, so the reactive filter only does simple substring checks.
+
+## 2024-05-27 - [appinfo.spixi Parsing Micro-Optimization]
+**Learning:** Micro-optimizing the parsing logic for small configuration files like `appinfo.spixi` by replacing simple string `.split()` and regex operations with a manual `while` loop using `.indexOf()` and `.substring()` introduces unjustified complexity. Although it technically reduces object allocations, the real-world impact is zero because the files are minuscule.
+**Action:** Do not sacrifice code readability for micro-optimizations. Only replace clean, native string methods when a genuine bottleneck exists on large data payloads.

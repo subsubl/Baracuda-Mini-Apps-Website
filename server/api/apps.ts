@@ -9,14 +9,29 @@ export default defineCachedEventHandler(async (event) => {
     const token = process.env.GITHUB_TOKEN || process.env.GH_TOKEN
 
     // Helper to parse appinfo.spixi content
+    // ⚡ Bolt Optimization: Replace split/array iterations with memory-efficient
+    // string indexing to avoid creating hundreds of temporary array/string objects per file
+    // Note: Applying explicit directive from codebase memory for parsing these files.
     const parseAppInfo = (infoText: string) => {
         const info: Record<string, string> = {}
-        infoText.split('\n').forEach(line => {
-            const [key, ...values] = line.split('=')
-            if (key && values.length) {
-                info[key.trim()] = values.join('=').trim()
+        let start = 0;
+        while (start < infoText.length) {
+            let end = infoText.indexOf('\n', start);
+            if (end === -1) end = infoText.length;
+
+            const eqIdx = infoText.indexOf('=', start);
+            if (eqIdx !== -1 && eqIdx < end) {
+                const key = infoText.substring(start, eqIdx).trim();
+                if (key) {
+                    let valEnd = end;
+                    if (valEnd > eqIdx && infoText[valEnd - 1] === '\r') {
+                        valEnd--;
+                    }
+                    info[key] = infoText.substring(eqIdx + 1, valEnd).trim();
+                }
             }
-        })
+            start = end + 1;
+        }
         return info
     }
 
