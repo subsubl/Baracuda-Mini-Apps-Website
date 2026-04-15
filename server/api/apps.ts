@@ -23,25 +23,16 @@ export default defineCachedEventHandler(async (event) => {
     // GraphQL Optimization
     if (token) {
         try {
-            const query = `
+            // ⚡ Bolt Optimization: First get the list of directories to avoid massive deep tree query payloads
+            // This replaces a single huge query with two smaller, much faster targeted queries.
+            const dirQuery = `
                 query {
                     repository(owner: "${REPO_OWNER}", name: "${REPO_NAME}") {
                         object(expression: "${BRANCH}:${APPS_PATH}") {
                             ... on Tree {
                                 entries {
                                     name
-                                    object {
-                                        ... on Tree {
-                                            entries {
-                                                name
-                                                object {
-                                                    ... on Blob {
-                                                        text
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
+                                    type
                                 }
                             }
                         }
@@ -49,44 +40,80 @@ export default defineCachedEventHandler(async (event) => {
                 }
             `
 
-            const response = await fetch('https://api.github.com/graphql', {
+            const dirResponse = await fetch('https://api.github.com/graphql', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ query })
+                body: JSON.stringify({ query: dirQuery })
             })
 
-            if (!response.ok) {
-                throw new Error(`GraphQL request failed: ${response.statusText}`)
+            if (!dirResponse.ok) {
+                throw new Error(`GraphQL dir request failed: ${dirResponse.statusText}`)
             }
 
-            const data = await response.json()
-            if (data.errors) {
-                throw new Error(`GraphQL errors: ${JSON.stringify(data.errors)}`)
+            const dirData = await dirResponse.json()
+            if (dirData.errors) {
+                throw new Error(`GraphQL dir errors: ${JSON.stringify(dirData.errors)}`)
             }
 
-            const entries = data.data?.repository?.object?.entries
-
-            if (!Array.isArray(entries)) {
+            const rootEntries = dirData.data?.repository?.object?.entries
+            if (!Array.isArray(rootEntries)) {
                 console.warn('Unexpected GraphQL response structure, falling back to REST')
-                throw new Error('Invalid GraphQL response')
+                throw new Error('Invalid GraphQL dir response')
             }
 
-            const apps = entries.map((appDir: any) => {
-                if (!appDir.object || !appDir.object.entries) return null
+            const appFolders = rootEntries
+                .filter((e: any) => e.type === 'tree')
+                .map((e: any) => e.name)
 
-                const appId = appDir.name
-                const files = appDir.object.entries
+            if (appFolders.length === 0) {
+                return []
+            }
 
-                const appInfoFile = files.find((f: any) => f.name === 'appinfo.spixi')
-                if (!appInfoFile || !appInfoFile.object || typeof appInfoFile.object.text !== 'string') {
+            // ⚡ Bolt Optimization: Batch queries with aliases to fetch exactly what we need (appinfo.spixi and directory list for icons)
+            // This drastically reduces payload size and parsing time compared to fetching the contents of all files in the tree.
+            let batchQuery = `query { repository(owner: "${REPO_OWNER}", name: "${REPO_NAME}") {`
+            appFolders.forEach((name, i) => {
+                batchQuery += `
+                    app${i}_info: object(expression: "${BRANCH}:${APPS_PATH}/${name}/appinfo.spixi") { ... on Blob { text } }
+                    app${i}_tree: object(expression: "${BRANCH}:${APPS_PATH}/${name}") { ... on Tree { entries { name } } }
+                `
+            })
+            batchQuery += ` } }`
+
+            const batchResponse = await fetch('https://api.github.com/graphql', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ query: batchQuery })
+            })
+
+            if (!batchResponse.ok) {
+                throw new Error(`GraphQL batch request failed: ${batchResponse.statusText}`)
+            }
+
+            const batchData = await batchResponse.json()
+            if (batchData.errors) {
+                throw new Error(`GraphQL batch errors: ${JSON.stringify(batchData.errors)}`)
+            }
+
+            const repoData = batchData.data?.repository
+
+            const apps = appFolders.map((appId, index) => {
+                const infoObj = repoData[`app${index}_info`]
+                const treeObj = repoData[`app${index}_tree`]
+
+                if (!infoObj || typeof infoObj.text !== 'string' || !treeObj || !Array.isArray(treeObj.entries)) {
                     return null
                 }
 
-                const info = parseAppInfo(appInfoFile.object.text)
+                const info = parseAppInfo(infoObj.text)
 
+                const files = treeObj.entries
                 const hasIconPng = files.some((f: any) => f.name === 'icon.png')
                 const hasIconSvg = files.some((f: any) => f.name === 'icon.svg')
 
