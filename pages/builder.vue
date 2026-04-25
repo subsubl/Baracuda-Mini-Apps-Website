@@ -163,9 +163,14 @@ const validateFiles = async () => {
     } else {
         error.value = null;
         // Parse appinfo.spixi
-        const appInfoFile = Array.from(filesMap.value.entries()).find(
-            ([path]) => path.toLowerCase() === 'appinfo.spixi'
-        )?.[1];
+        let appInfoFile;
+        // ⚡ Bolt Optimization: Use for...of instead of Array.from(...).find() to avoid O(N) array allocation
+        for (const [path, file] of filesMap.value.entries()) {
+            if (path.toLowerCase() === 'appinfo.spixi') {
+                appInfoFile = file;
+                break;
+            }
+        }
 
         if (appInfoFile) {
             const text = await appInfoFile.text();
@@ -220,9 +225,14 @@ const packApp = async () => {
     success.value = false;
 
     try {
-        const iconFile = Array.from(filesMap.value.entries()).find(
-            ([path]) => path.toLowerCase() === 'icon.png'
-        )?.[1];
+        let iconFile;
+        // ⚡ Bolt Optimization: Use for...of instead of Array.from(...).find() to avoid O(N) array allocation
+        for (const [path, file] of filesMap.value.entries()) {
+            if (path.toLowerCase() === 'icon.png') {
+                iconFile = file;
+                break;
+            }
+        }
 
         // Use data from form
         const appInfo = appFormData.value;
