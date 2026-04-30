@@ -149,11 +149,19 @@ const onDrop = async (e: DragEvent) => {
 const validateFiles = async () => {
     let hasAppInfo = false;
     let hasIndexHtml = false;
+    let appInfoFile: File | undefined;
 
-    for (const path of filesMap.value.keys()) {
+    // ⚡ Bolt Optimization: Single pass iteration over map entries
+    // Combines validation and file lookup into one loop, avoiding O(N) Array.from() allocation
+    for (const [path, file] of filesMap.value.entries()) {
         const p = path.toLowerCase();
-        if (p === 'appinfo.spixi') hasAppInfo = true;
-        if (p === 'app/index.html') hasIndexHtml = true;
+        if (p === 'appinfo.spixi') {
+            hasAppInfo = true;
+            appInfoFile = file;
+        }
+        if (p === 'app/index.html') {
+            hasIndexHtml = true;
+        }
     }
 
     if (!hasAppInfo) {
@@ -162,10 +170,6 @@ const validateFiles = async () => {
         error.value = "Missing 'app/index.html'. Please ensure your structure is correct.";
     } else {
         error.value = null;
-        // Parse appinfo.spixi
-        const appInfoFile = Array.from(filesMap.value.entries()).find(
-            ([path]) => path.toLowerCase() === 'appinfo.spixi'
-        )?.[1];
 
         if (appInfoFile) {
             const text = await appInfoFile.text();
@@ -220,9 +224,15 @@ const packApp = async () => {
     success.value = false;
 
     try {
-        const iconFile = Array.from(filesMap.value.entries()).find(
-            ([path]) => path.toLowerCase() === 'icon.png'
-        )?.[1];
+        // ⚡ Bolt Optimization: Replace Array.from().find() with an efficient O(N) loop with early exit
+        // Prevents unnecessary array allocation and garbage collection overhead
+        let iconFile: File | undefined;
+        for (const [path, file] of filesMap.value.entries()) {
+            if (path.toLowerCase() === 'icon.png') {
+                iconFile = file;
+                break;
+            }
+        }
 
         // Use data from form
         const appInfo = appFormData.value;
