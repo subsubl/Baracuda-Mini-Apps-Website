@@ -23,25 +23,15 @@ export default defineCachedEventHandler(async (event) => {
     // GraphQL Optimization
     if (token) {
         try {
-            const query = `
+            // Step 1: List directory contents to get app folder names
+            const listQuery = `
                 query {
                     repository(owner: "${REPO_OWNER}", name: "${REPO_NAME}") {
                         object(expression: "${BRANCH}:${APPS_PATH}") {
                             ... on Tree {
                                 entries {
                                     name
-                                    object {
-                                        ... on Tree {
-                                            entries {
-                                                name
-                                                object {
-                                                    ... on Blob {
-                                                        text
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
+                                    type
                                 }
                             }
                         }
@@ -49,43 +39,94 @@ export default defineCachedEventHandler(async (event) => {
                 }
             `
 
-            const response = await fetch('https://api.github.com/graphql', {
+            const listResponse = await fetch('https://api.github.com/graphql', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ query })
+                body: JSON.stringify({ query: listQuery })
             })
 
-            if (!response.ok) {
-                throw new Error(`GraphQL request failed: ${response.statusText}`)
+            if (!listResponse.ok) {
+                throw new Error(`GraphQL list request failed: ${listResponse.statusText}`)
             }
 
-            const data = await response.json()
-            if (data.errors) {
-                throw new Error(`GraphQL errors: ${JSON.stringify(data.errors)}`)
+            const listData = await listResponse.json()
+            if (listData.errors) {
+                throw new Error(`GraphQL list errors: ${JSON.stringify(listData.errors)}`)
             }
 
-            const entries = data.data?.repository?.object?.entries
-
+            const entries = listData.data?.repository?.object?.entries
             if (!Array.isArray(entries)) {
-                console.warn('Unexpected GraphQL response structure, falling back to REST')
-                throw new Error('Invalid GraphQL response')
+                throw new Error('Invalid GraphQL list response structure')
             }
 
-            const apps = entries.map((appDir: any) => {
-                if (!appDir.object || !appDir.object.entries) return null
+            // Extract only tree entries (directories)
+            const appFolders = entries
+                .filter((entry: any) => entry.type === 'tree')
+                .map((entry: any) => entry.name)
 
-                const appId = appDir.name
-                const files = appDir.object.entries
+            if (appFolders.length === 0) {
+                return []
+            }
 
-                const appInfoFile = files.find((f: any) => f.name === 'appinfo.spixi')
-                if (!appInfoFile || !appInfoFile.object || typeof appInfoFile.object.text !== 'string') {
+            // Step 2: Batch query for appinfo.spixi and icon files using index-based aliases
+            // ⚡ OPTIMIZATION: Avoids a recursive deep query fetching entire file trees.
+            // Uses index-based aliases mapped to the array of folders for fast retrieval.
+            const queryParts = appFolders.map((folder: string, index: number) => `
+                app${index}_info: object(expression: "${BRANCH}:${APPS_PATH}/${folder}/appinfo.spixi") {
+                    ... on Blob { text }
+                }
+                app${index}_tree: object(expression: "${BRANCH}:${APPS_PATH}/${folder}") {
+                    ... on Tree {
+                        entries { name }
+                    }
+                }
+            `).join('\n')
+
+            const batchQuery = `
+                query {
+                    repository(owner: "${REPO_OWNER}", name: "${REPO_NAME}") {
+                        ${queryParts}
+                    }
+                }
+            `
+
+            const batchResponse = await fetch('https://api.github.com/graphql', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ query: batchQuery })
+            })
+
+            if (!batchResponse.ok) {
+                throw new Error(`GraphQL batch request failed: ${batchResponse.statusText}`)
+            }
+
+            const batchData = await batchResponse.json()
+            if (batchData.errors) {
+                throw new Error(`GraphQL batch errors: ${JSON.stringify(batchData.errors)}`)
+            }
+
+            const repoData = batchData.data?.repository
+            if (!repoData) {
+                throw new Error('Invalid GraphQL batch response structure')
+            }
+
+            const apps = appFolders.map((appId: string, index: number) => {
+                const infoObj = repoData[`app${index}_info`]
+                const treeObj = repoData[`app${index}_tree`]
+
+                if (!infoObj || typeof infoObj.text !== 'string' || !treeObj || !Array.isArray(treeObj.entries)) {
                     return null
                 }
 
-                const info = parseAppInfo(appInfoFile.object.text)
+                const infoText = infoObj.text
+                const info = parseAppInfo(infoText)
+                const files = treeObj.entries
 
                 const hasIconPng = files.some((f: any) => f.name === 'icon.png')
                 const hasIconSvg = files.some((f: any) => f.name === 'icon.svg')
