@@ -9,3 +9,7 @@
 ## 2025-03-25 - [Vue Computed Search Optimizations]
 **Learning:** Reactive computed loops that filter over arrays on every keystroke in Vue (like search) can cause unnecessary CPU overhead and garbage collection pressure due to repeatedly calling `.toLowerCase()` and allocating new strings.
 **Action:** Use Nuxt's `useFetch` `transform` option to pre-compute and store these derived strings (e.g., `_searchName`) when the data is initially fetched, so the reactive filter only does simple substring checks.
+
+## 2025-05-23 - [Nuxt SSR Hydration Optimizations for Theme Icons]
+**Learning:** Using `<client-only>` and `v-if="$colorMode.value === 'dark'"` for frequently toggled elements like logos or theme switchers causes SSR to delay rendering, leading to layout shifts and hydration mismatches.
+**Action:** Avoid `<client-only>` for theme-dependent icons. Instead, include both SVG paths/elements or use CSS `currentColor`, and utilize Tailwind CSS visibility classes (e.g., `hidden dark:block` and `block dark:hidden`) to handle theming instantly during SSR.
