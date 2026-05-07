@@ -23,25 +23,15 @@ export default defineCachedEventHandler(async (event) => {
     // GraphQL Optimization
     if (token) {
         try {
-            const query = `
+            // Step 1: Fetch list of directories
+            const listQuery = `
                 query {
                     repository(owner: "${REPO_OWNER}", name: "${REPO_NAME}") {
                         object(expression: "${BRANCH}:${APPS_PATH}") {
                             ... on Tree {
                                 entries {
                                     name
-                                    object {
-                                        ... on Tree {
-                                            entries {
-                                                name
-                                                object {
-                                                    ... on Blob {
-                                                        text
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
+                                    type
                                 }
                             }
                         }
@@ -49,51 +39,90 @@ export default defineCachedEventHandler(async (event) => {
                 }
             `
 
-            const response = await fetch('https://api.github.com/graphql', {
+            const listResponse = await fetch('https://api.github.com/graphql', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ query })
+                body: JSON.stringify({ query: listQuery })
             })
 
-            if (!response.ok) {
-                throw new Error(`GraphQL request failed: ${response.statusText}`)
+            if (!listResponse.ok) {
+                throw new Error(`GraphQL list request failed: ${listResponse.statusText}`)
             }
 
-            const data = await response.json()
-            if (data.errors) {
-                throw new Error(`GraphQL errors: ${JSON.stringify(data.errors)}`)
+            const listData = await listResponse.json()
+            if (listData.errors) {
+                throw new Error(`GraphQL list errors: ${JSON.stringify(listData.errors)}`)
             }
 
-            const entries = data.data?.repository?.object?.entries
-
-            if (!Array.isArray(entries)) {
-                console.warn('Unexpected GraphQL response structure, falling back to REST')
-                throw new Error('Invalid GraphQL response')
+            const rootEntries = listData.data?.repository?.object?.entries
+            if (!Array.isArray(rootEntries)) {
+                throw new Error('Invalid GraphQL list response structure')
             }
 
-            const apps = entries.map((appDir: any) => {
-                if (!appDir.object || !appDir.object.entries) return null
+            const appDirs = rootEntries.filter((e: any) => e.type === 'tree').map((e: any) => e.name)
 
-                const appId = appDir.name
-                const files = appDir.object.entries
+            if (appDirs.length === 0) {
+                return []
+            }
 
-                const appInfoFile = files.find((f: any) => f.name === 'appinfo.spixi')
-                if (!appInfoFile || !appInfoFile.object || typeof appInfoFile.object.text !== 'string') {
+            // Step 2: Build batch query for specific files using index-based aliases
+            let batchQuery = `query { repository(owner: "${REPO_OWNER}", name: "${REPO_NAME}") {`
+            appDirs.forEach((appId: string, index: number) => {
+                batchQuery += `
+                    app${index}_info: object(expression: "${BRANCH}:${APPS_PATH}/${appId}/appinfo.spixi") {
+                        ... on Blob { text }
+                    }
+                    app${index}_icon_png: object(expression: "${BRANCH}:${APPS_PATH}/${appId}/icon.png") {
+                        oid
+                    }
+                    app${index}_icon_svg: object(expression: "${BRANCH}:${APPS_PATH}/${appId}/icon.svg") {
+                        oid
+                    }
+                `
+            })
+            batchQuery += `} }`
+
+            const batchResponse = await fetch('https://api.github.com/graphql', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ query: batchQuery })
+            })
+
+            if (!batchResponse.ok) {
+                throw new Error(`GraphQL batch request failed: ${batchResponse.statusText}`)
+            }
+
+            const batchData = await batchResponse.json()
+            if (batchData.errors) {
+                throw new Error(`GraphQL batch errors: ${JSON.stringify(batchData.errors)}`)
+            }
+
+            const repoData = batchData.data?.repository
+            if (!repoData) {
+                throw new Error('Invalid GraphQL batch response structure')
+            }
+
+            const apps = appDirs.map((appId: string, index: number) => {
+                const infoObj = repoData[`app${index}_info`]
+                const pngObj = repoData[`app${index}_icon_png`]
+                const svgObj = repoData[`app${index}_icon_svg`]
+
+                if (!infoObj || typeof infoObj.text !== 'string') {
                     return null
                 }
 
-                const info = parseAppInfo(appInfoFile.object.text)
-
-                const hasIconPng = files.some((f: any) => f.name === 'icon.png')
-                const hasIconSvg = files.some((f: any) => f.name === 'icon.svg')
+                const info = parseAppInfo(infoObj.text)
 
                 let iconUrl = null
-                if (hasIconPng) {
+                if (pngObj && pngObj.oid) {
                     iconUrl = `${RAW_BASE}/${appId}/icon.png`
-                } else if (hasIconSvg) {
+                } else if (svgObj && svgObj.oid) {
                     iconUrl = `${RAW_BASE}/${appId}/icon.svg`
                 } else {
                     iconUrl = `${RAW_BASE}/${appId}/icon.svg` // Fallback
