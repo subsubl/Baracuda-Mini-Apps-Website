@@ -149,11 +149,22 @@ const onDrop = async (e: DragEvent) => {
 const validateFiles = async () => {
     let hasAppInfo = false;
     let hasIndexHtml = false;
+    let appInfoFile = null;
 
-    for (const path of filesMap.value.keys()) {
+    // ⚡ Bolt Optimization: Combine validation and file lookup into a single O(N) pass
+    // over map entries, avoiding costly Array.from() allocations and multiple iterations.
+    for (const [path, file] of filesMap.value.entries()) {
         const p = path.toLowerCase();
-        if (p === 'appinfo.spixi') hasAppInfo = true;
-        if (p === 'app/index.html') hasIndexHtml = true;
+        if (p === 'appinfo.spixi') {
+            hasAppInfo = true;
+            appInfoFile = file;
+        } else if (p === 'app/index.html') {
+            hasIndexHtml = true;
+        }
+        // Early exit optimization if both files are found and we have the appinfo file
+        if (hasAppInfo && hasIndexHtml && appInfoFile) {
+            break;
+        }
     }
 
     if (!hasAppInfo) {
@@ -162,10 +173,6 @@ const validateFiles = async () => {
         error.value = "Missing 'app/index.html'. Please ensure your structure is correct.";
     } else {
         error.value = null;
-        // Parse appinfo.spixi
-        const appInfoFile = Array.from(filesMap.value.entries()).find(
-            ([path]) => path.toLowerCase() === 'appinfo.spixi'
-        )?.[1];
 
         if (appInfoFile) {
             const text = await appInfoFile.text();
@@ -220,9 +227,15 @@ const packApp = async () => {
     success.value = false;
 
     try {
-        const iconFile = Array.from(filesMap.value.entries()).find(
-            ([path]) => path.toLowerCase() === 'icon.png'
-        )?.[1];
+        let iconFile = null;
+
+        // ⚡ Bolt Optimization: Replace O(N) Array.from() allocation with direct iterator
+        for (const [path, file] of filesMap.value.entries()) {
+            if (path.toLowerCase() === 'icon.png') {
+                iconFile = file;
+                break;
+            }
+        }
 
         // Use data from form
         const appInfo = appFormData.value;
