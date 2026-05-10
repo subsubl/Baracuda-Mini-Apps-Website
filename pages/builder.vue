@@ -149,11 +149,21 @@ const onDrop = async (e: DragEvent) => {
 const validateFiles = async () => {
     let hasAppInfo = false;
     let hasIndexHtml = false;
+    let appInfoFile: File | null = null;
 
-    for (const path of filesMap.value.keys()) {
+    // ⚡ Bolt Optimization: Combine file existence checks and file extraction into a single Map iteration.
+    // This avoids creating intermediate arrays via Array.from() and reduces O(N) passes over the Map entries.
+    for (const [path, file] of filesMap.value.entries()) {
         const p = path.toLowerCase();
-        if (p === 'appinfo.spixi') hasAppInfo = true;
-        if (p === 'app/index.html') hasIndexHtml = true;
+        if (p === 'appinfo.spixi') {
+            hasAppInfo = true;
+            appInfoFile = file;
+        } else if (p === 'app/index.html') {
+            hasIndexHtml = true;
+        }
+        // Early exit if we found everything we need to check validity (though we still need to process the rest of the files when packing)
+        // Note: For large folders, we might still want to iterate all to ensure no invalid files exist,
+        // but current logic only checks for the presence of these two.
     }
 
     if (!hasAppInfo) {
@@ -162,10 +172,6 @@ const validateFiles = async () => {
         error.value = "Missing 'app/index.html'. Please ensure your structure is correct.";
     } else {
         error.value = null;
-        // Parse appinfo.spixi
-        const appInfoFile = Array.from(filesMap.value.entries()).find(
-            ([path]) => path.toLowerCase() === 'appinfo.spixi'
-        )?.[1];
 
         if (appInfoFile) {
             const text = await appInfoFile.text();
@@ -220,9 +226,16 @@ const packApp = async () => {
     success.value = false;
 
     try {
-        const iconFile = Array.from(filesMap.value.entries()).find(
-            ([path]) => path.toLowerCase() === 'icon.png'
-        )?.[1];
+        let iconFile: File | undefined = undefined;
+
+        // ⚡ Bolt Optimization: Replace Array.from(filesMap.value.entries()).find() with a direct for...of loop
+        // to avoid O(N) array allocation and unnecessary garbage collection.
+        for (const [path, file] of filesMap.value.entries()) {
+            if (path.toLowerCase() === 'icon.png') {
+                iconFile = file;
+                break; // Early exit once found
+            }
+        }
 
         // Use data from form
         const appInfo = appFormData.value;
