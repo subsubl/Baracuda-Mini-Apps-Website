@@ -508,11 +508,17 @@
 
             let hasAppInfo = false;
             let hasIndexHtml = false;
+            let appInfoFile;
 
-            for (const path of filesMap.keys()) {
+            // ⚡ Bolt Optimization: Combined file lookups into a single for...of loop
+            for (const [path, file] of filesMap.entries()) {
                 const p = path.toLowerCase();
-                if (p === 'appinfo.spixi') hasAppInfo = true;
-                if (p === 'app/index.html') hasIndexHtml = true;
+                if (p === 'appinfo.spixi') {
+                    hasAppInfo = true;
+                    appInfoFile = file;
+                } else if (p === 'app/index.html') {
+                    hasIndexHtml = true;
+                }
             }
 
             if (!hasAppInfo || !hasIndexHtml) {
@@ -529,11 +535,8 @@
             packButton.disabled = false;
 
             // Auto-parse appinfo file
-            for (const [path, file] of filesMap.entries()) {
-                if (path.toLowerCase() === 'appinfo.spixi') {
-                    parseSpixiFile(file);
-                    break;
-                }
+            if (appInfoFile) {
+                parseSpixiFile(appInfoFile);
             }
         });
 
