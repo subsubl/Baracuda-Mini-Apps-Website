@@ -149,11 +149,19 @@ const onDrop = async (e: DragEvent) => {
 const validateFiles = async () => {
     let hasAppInfo = false;
     let hasIndexHtml = false;
+    let appInfoFile = null;
 
-    for (const path of filesMap.value.keys()) {
+    // ⚡ Bolt Optimization: Use a single for...of loop over map entries
+    // to avoid O(N) array allocation from Array.from() and multiple iterations.
+    for (const [path, file] of filesMap.value.entries()) {
         const p = path.toLowerCase();
-        if (p === 'appinfo.spixi') hasAppInfo = true;
-        if (p === 'app/index.html') hasIndexHtml = true;
+        if (p === 'appinfo.spixi') {
+            hasAppInfo = true;
+            appInfoFile = file;
+        }
+        if (p === 'app/index.html') {
+            hasIndexHtml = true;
+        }
     }
 
     if (!hasAppInfo) {
@@ -163,10 +171,6 @@ const validateFiles = async () => {
     } else {
         error.value = null;
         // Parse appinfo.spixi
-        const appInfoFile = Array.from(filesMap.value.entries()).find(
-            ([path]) => path.toLowerCase() === 'appinfo.spixi'
-        )?.[1];
-
         if (appInfoFile) {
             const text = await appInfoFile.text();
             const info = parseAppInfo(text);
@@ -220,9 +224,15 @@ const packApp = async () => {
     success.value = false;
 
     try {
-        const iconFile = Array.from(filesMap.value.entries()).find(
-            ([path]) => path.toLowerCase() === 'icon.png'
-        )?.[1];
+        let iconFile = null;
+        // ⚡ Bolt Optimization: Use a for...of loop with early break instead of Array.from().find()
+        // to prevent full map iteration and O(N) memory allocation.
+        for (const [path, file] of filesMap.value.entries()) {
+            if (path.toLowerCase() === 'icon.png') {
+                iconFile = file;
+                break;
+            }
+        }
 
         // Use data from form
         const appInfo = appFormData.value;
