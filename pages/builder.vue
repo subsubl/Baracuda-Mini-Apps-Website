@@ -147,38 +147,36 @@ const onDrop = async (e: DragEvent) => {
 };
 
 const validateFiles = async () => {
-    let hasAppInfo = false;
+    // ⚡ Bolt Optimization: Combine file checks and retrieval into a single loop over entries().
+    // This removes the O(N) array allocation from Array.from() and O(N) find lookup.
+    let appInfoFile: File | undefined;
     let hasIndexHtml = false;
 
-    for (const path of filesMap.value.keys()) {
+    for (const [path, file] of filesMap.value.entries()) {
         const p = path.toLowerCase();
-        if (p === 'appinfo.spixi') hasAppInfo = true;
-        if (p === 'app/index.html') hasIndexHtml = true;
+        if (p === 'appinfo.spixi') appInfoFile = file;
+        else if (p === 'app/index.html') hasIndexHtml = true;
+
+        if (appInfoFile && hasIndexHtml) break;
     }
 
-    if (!hasAppInfo) {
+    if (!appInfoFile) {
         error.value = "Missing 'appinfo.spixi'. Please include it in the root of your folder.";
     } else if (!hasIndexHtml) {
         error.value = "Missing 'app/index.html'. Please ensure your structure is correct.";
     } else {
         error.value = null;
         // Parse appinfo.spixi
-        const appInfoFile = Array.from(filesMap.value.entries()).find(
-            ([path]) => path.toLowerCase() === 'appinfo.spixi'
-        )?.[1];
+        const text = await appInfoFile.text();
+        const info = parseAppInfo(text);
+        appFormData.value = info;
 
-        if (appInfoFile) {
-            const text = await appInfoFile.text();
-            const info = parseAppInfo(text);
-            appFormData.value = info;
-
-            const baseName = (info.id || '').trim().replace(/\s+/g, '-').toLowerCase();
-            if (baseName) {
-                 appFormData.value.image = `${baseName}.png`;
-                 appFormData.value.contentUrl = `${baseName}.zspixiapp`;
-            }
-            showForm.value = true;
+        const baseName = (info.id || '').trim().replace(/\s+/g, '-').toLowerCase();
+        if (baseName) {
+             appFormData.value.image = `${baseName}.png`;
+             appFormData.value.contentUrl = `${baseName}.zspixiapp`;
         }
+        showForm.value = true;
     }
 };
 

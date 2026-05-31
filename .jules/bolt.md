@@ -9,3 +9,6 @@
 ## 2025-03-25 - [Vue Computed Search Optimizations]
 **Learning:** Reactive computed loops that filter over arrays on every keystroke in Vue (like search) can cause unnecessary CPU overhead and garbage collection pressure due to repeatedly calling `.toLowerCase()` and allocating new strings.
 **Action:** Use Nuxt's `useFetch` `transform` option to pre-compute and store these derived strings (e.g., `_searchName`) when the data is initially fetched, so the reactive filter only does simple substring checks.
+## $(date +%Y-%m-%d) - [Do not commit generated files]
+**Learning:** Generated diffs or patch files from applying file patches can accidentally be tracked or disrupt repository cleanliness.
+**Action:** Always clean up temporary tools, artifacts, and diff files like `patch.diff` before requesting code reviews or proceeding with pre-commit steps.
