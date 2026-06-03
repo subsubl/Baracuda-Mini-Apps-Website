@@ -21,27 +21,18 @@ export default defineCachedEventHandler(async (event) => {
     }
 
     // GraphQL Optimization
+    // ⚡ Bolt: Optimized GraphQL query to avoid fetching full repository tree depth
     if (token) {
         try {
-            const query = `
+            // Step 1: Fetch list of directories in apps/
+            const dirQuery = `
                 query {
                     repository(owner: "${REPO_OWNER}", name: "${REPO_NAME}") {
                         object(expression: "${BRANCH}:${APPS_PATH}") {
                             ... on Tree {
                                 entries {
                                     name
-                                    object {
-                                        ... on Tree {
-                                            entries {
-                                                name
-                                                object {
-                                                    ... on Blob {
-                                                        text
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
+                                    type
                                 }
                             }
                         }
@@ -49,67 +40,100 @@ export default defineCachedEventHandler(async (event) => {
                 }
             `
 
-            const response = await fetch('https://api.github.com/graphql', {
+            const dirResponse = await fetch('https://api.github.com/graphql', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ query })
+                body: JSON.stringify({ query: dirQuery })
             })
 
-            if (!response.ok) {
-                throw new Error(`GraphQL request failed: ${response.statusText}`)
+            if (!dirResponse.ok) {
+                throw new Error(`GraphQL directory request failed: ${dirResponse.statusText}`)
             }
 
-            const data = await response.json()
-            if (data.errors) {
-                throw new Error(`GraphQL errors: ${JSON.stringify(data.errors)}`)
+            const dirData = await dirResponse.json()
+            if (dirData.errors) {
+                throw new Error(`GraphQL errors: ${JSON.stringify(dirData.errors)}`)
             }
 
-            const entries = data.data?.repository?.object?.entries
-
+            const entries = dirData.data?.repository?.object?.entries
             if (!Array.isArray(entries)) {
-                console.warn('Unexpected GraphQL response structure, falling back to REST')
-                throw new Error('Invalid GraphQL response')
+                console.warn('Unexpected GraphQL directory response structure, falling back to REST')
+                throw new Error('Invalid GraphQL directory response')
             }
 
-            const apps = entries.map((appDir: any) => {
-                if (!appDir.object || !appDir.object.entries) return null
+            const appDirs = entries.filter((e: any) => e.type === 'tree').map((e: any) => e.name)
 
-                const appId = appDir.name
-                const files = appDir.object.entries
+            // Step 2: Batch fetch appinfo.spixi and icon presence for each app
+            const appsChunks = []
+            for (let i = 0; i < appDirs.length; i += 50) {
+                appsChunks.push(appDirs.slice(i, i + 50))
+            }
 
-                const appInfoFile = files.find((f: any) => f.name === 'appinfo.spixi')
-                if (!appInfoFile || !appInfoFile.object || typeof appInfoFile.object.text !== 'string') {
-                    return null
+            const apps = []
+
+            for (const chunk of appsChunks) {
+                let batchQuery = `query { repository(owner: "${REPO_OWNER}", name: "${REPO_NAME}") { `
+                chunk.forEach((appId: string, i: number) => {
+                    batchQuery += `
+                        app${i}_info: object(expression: "${BRANCH}:${APPS_PATH}/${appId}/appinfo.spixi") { ... on Blob { text } }
+                        app${i}_png: object(expression: "${BRANCH}:${APPS_PATH}/${appId}/icon.png") { ... on Blob { byteSize } }
+                        app${i}_svg: object(expression: "${BRANCH}:${APPS_PATH}/${appId}/icon.svg") { ... on Blob { byteSize } }
+                    `
+                })
+                batchQuery += `} }`
+
+                const batchResponse = await fetch('https://api.github.com/graphql', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ query: batchQuery })
+                })
+
+                if (!batchResponse.ok) {
+                    throw new Error(`GraphQL batch request failed: ${batchResponse.statusText}`)
                 }
 
-                const info = parseAppInfo(appInfoFile.object.text)
-
-                const hasIconPng = files.some((f: any) => f.name === 'icon.png')
-                const hasIconSvg = files.some((f: any) => f.name === 'icon.svg')
-
-                let iconUrl = null
-                if (hasIconPng) {
-                    iconUrl = `${RAW_BASE}/${appId}/icon.png`
-                } else if (hasIconSvg) {
-                    iconUrl = `${RAW_BASE}/${appId}/icon.svg`
-                } else {
-                    iconUrl = `${RAW_BASE}/${appId}/icon.svg` // Fallback
+                const batchData = await batchResponse.json()
+                if (batchData.errors) {
+                    throw new Error(`GraphQL batch errors: ${JSON.stringify(batchData.errors)}`)
                 }
 
-                return {
-                    id: info.id || appId,
-                    name: info.name || appId,
-                    description: info.description || "Spixi Mini App",
-                    version: info.version || '1.0.0',
-                    category: info.category,
-                    icon: iconUrl,
-                    downloadUrl: `${RAW_BASE}/${appId}/appinfo.spixi`,
-                    sourceUrl: `${TREE_BASE}/${appId}`
-                }
-            }).filter((app: any) => app !== null)
+                chunk.forEach((appId: string, i: number) => {
+                    const infoObj = batchData.data?.repository?.[`app${i}_info`]
+                    if (!infoObj || typeof infoObj.text !== 'string') return
+
+                    const infoText = infoObj.text
+                    const info = parseAppInfo(infoText)
+
+                    const hasIconPng = !!batchData.data?.repository?.[`app${i}_png`]
+                    const hasIconSvg = !!batchData.data?.repository?.[`app${i}_svg`]
+
+                    let iconUrl = null
+                    if (hasIconPng) {
+                        iconUrl = `${RAW_BASE}/${appId}/icon.png`
+                    } else if (hasIconSvg) {
+                        iconUrl = `${RAW_BASE}/${appId}/icon.svg`
+                    } else {
+                        iconUrl = `${RAW_BASE}/${appId}/icon.svg` // Fallback
+                    }
+
+                    apps.push({
+                        id: info.id || appId,
+                        name: info.name || appId,
+                        description: info.description || "Spixi Mini App",
+                        version: info.version || '1.0.0',
+                        category: info.category,
+                        icon: iconUrl,
+                        downloadUrl: `${RAW_BASE}/${appId}/appinfo.spixi`,
+                        sourceUrl: `${TREE_BASE}/${appId}`
+                    })
+                })
+            }
 
             return apps
 

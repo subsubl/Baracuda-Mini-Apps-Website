@@ -9,3 +9,7 @@
 ## 2025-03-25 - [Vue Computed Search Optimizations]
 **Learning:** Reactive computed loops that filter over arrays on every keystroke in Vue (like search) can cause unnecessary CPU overhead and garbage collection pressure due to repeatedly calling `.toLowerCase()` and allocating new strings.
 **Action:** Use Nuxt's `useFetch` `transform` option to pre-compute and store these derived strings (e.g., `_searchName`) when the data is initially fetched, so the reactive filter only does simple substring checks.
+
+## 2024-05-18 - GitHub GraphQL Optimization: Avoid fetching binary blobs
+**Learning:** In `server/api/apps.ts`, querying the GitHub GraphQL API for `text` on `Blob` objects representing binary files (like `icon.png`) downloads large payloads unnecessarily and causes API slowdowns and memory pressure.
+**Action:** When checking for the existence of files without needing their content (e.g., verifying if an icon exists), query for `byteSize` instead of `text`.
