@@ -9,3 +9,7 @@
 ## 2025-03-25 - [Vue Computed Search Optimizations]
 **Learning:** Reactive computed loops that filter over arrays on every keystroke in Vue (like search) can cause unnecessary CPU overhead and garbage collection pressure due to repeatedly calling `.toLowerCase()` and allocating new strings.
 **Action:** Use Nuxt's `useFetch` `transform` option to pre-compute and store these derived strings (e.g., `_searchName`) when the data is initially fetched, so the reactive filter only does simple substring checks.
+
+## 2025-05-23 - [SSR Optimization with SVGs]
+**Learning:** Wrapping SVGs containing theme logic (`v-if="$colorMode.value === 'dark'"`) with `<client-only>` prevents SSR from rendering them initially, causing layout shifts and hydration delays. Duplicating large SVG paths inside the component for each theme also unnecessarily bloats the bundle size.
+**Action:** Remove `<client-only>`. For SVGs, consolidate duplicate paths and use `fill="currentColor"` along with Tailwind CSS color classes (e.g., `text-spixi dark:text-white`) so that the theme color switches instantly via CSS, eliminating the need for Vue to re-render the paths. If icons differ completely between themes, use CSS visibility toggling (`hidden dark:block`) rather than `v-if`.
