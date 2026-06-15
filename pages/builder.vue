@@ -149,11 +149,18 @@ const onDrop = async (e: DragEvent) => {
 const validateFiles = async () => {
     let hasAppInfo = false;
     let hasIndexHtml = false;
+    let appInfoFile: File | undefined = undefined;
 
-    for (const path of filesMap.value.keys()) {
+    // Bolt: Combined O(N) loops and removed Array.from allocation for performance
+    for (const [path, file] of filesMap.value.entries()) {
         const p = path.toLowerCase();
-        if (p === 'appinfo.spixi') hasAppInfo = true;
-        if (p === 'app/index.html') hasIndexHtml = true;
+        if (p === 'appinfo.spixi') {
+            hasAppInfo = true;
+            appInfoFile = file;
+        } else if (p === 'app/index.html') {
+            hasIndexHtml = true;
+        }
+        if (hasAppInfo && hasIndexHtml) break; // Early exit
     }
 
     if (!hasAppInfo) {
@@ -162,10 +169,6 @@ const validateFiles = async () => {
         error.value = "Missing 'app/index.html'. Please ensure your structure is correct.";
     } else {
         error.value = null;
-        // Parse appinfo.spixi
-        const appInfoFile = Array.from(filesMap.value.entries()).find(
-            ([path]) => path.toLowerCase() === 'appinfo.spixi'
-        )?.[1];
 
         if (appInfoFile) {
             const text = await appInfoFile.text();
@@ -220,9 +223,14 @@ const packApp = async () => {
     success.value = false;
 
     try {
-        const iconFile = Array.from(filesMap.value.entries()).find(
-            ([path]) => path.toLowerCase() === 'icon.png'
-        )?.[1];
+        // Bolt: Replaced Array.from().find with for...of to avoid O(N) allocation for performance
+        let iconFile: File | undefined = undefined;
+        for (const [path, file] of filesMap.value.entries()) {
+            if (path.toLowerCase() === 'icon.png') {
+                iconFile = file;
+                break;
+            }
+        }
 
         // Use data from form
         const appInfo = appFormData.value;
