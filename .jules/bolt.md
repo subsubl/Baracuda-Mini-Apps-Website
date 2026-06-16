@@ -9,3 +9,6 @@
 ## 2025-03-25 - [Vue Computed Search Optimizations]
 **Learning:** Reactive computed loops that filter over arrays on every keystroke in Vue (like search) can cause unnecessary CPU overhead and garbage collection pressure due to repeatedly calling `.toLowerCase()` and allocating new strings.
 **Action:** Use Nuxt's `useFetch` `transform` option to pre-compute and store these derived strings (e.g., `_searchName`) when the data is initially fetched, so the reactive filter only does simple substring checks.
+## 2024-05-14 - Map Iteration Performance in Vue/Nuxt
+**Learning:** Using `Array.from(map.entries()).find(...)` or performing multiple separate iterations over map keys/entries is extremely inefficient compared to a single `for...of` loop over `map.entries()`. The array allocation is O(N) and creates unnecessary garbage collection pressure, especially for maps tracking many files during drag-and-drop operations (as in `pages/builder.vue`).
+**Action:** Combine multiple validations and lookups into a single `for...of` loop with early exits (`break`) to eliminate the `Array.from()` overhead and multiple passes.
