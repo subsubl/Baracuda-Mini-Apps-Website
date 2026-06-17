@@ -9,3 +9,7 @@
 ## 2025-03-25 - [Vue Computed Search Optimizations]
 **Learning:** Reactive computed loops that filter over arrays on every keystroke in Vue (like search) can cause unnecessary CPU overhead and garbage collection pressure due to repeatedly calling `.toLowerCase()` and allocating new strings.
 **Action:** Use Nuxt's `useFetch` `transform` option to pre-compute and store these derived strings (e.g., `_searchName`) when the data is initially fetched, so the reactive filter only does simple substring checks.
+
+## 2025-06-17 - [Nuxt Client-Only Hydration Optimization]
+**Learning:** Using `<client-only>` to wrap SVGs with reactive `v-if="$colorMode.value"` based on the theme causes a flash of unstyled content and hydration layout shifts during Server-Side Rendering (SSR). Removing the wrapper and relying solely on `v-if` causes a major hydration mismatch bug if the user's local preference differs from the server.
+**Action:** Remove `<client-only>` and `v-if`. Instead, consolidate identical light/dark SVG paths into a single path using `fill="currentColor"`, and apply Tailwind CSS text color classes (e.g., `text-spixi dark:text-white`). For entirely different SVGs, render both and use CSS visibility classes (`hidden dark:block`, `block dark:hidden`) to handle theming. This ensures the correct element is immediately visible without client-side hydration delays.
