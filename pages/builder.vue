@@ -147,26 +147,26 @@ const onDrop = async (e: DragEvent) => {
 };
 
 const validateFiles = async () => {
-    let hasAppInfo = false;
     let hasIndexHtml = false;
+    let appInfoFile: File | undefined = undefined;
 
-    for (const path of filesMap.value.keys()) {
+    // ⚡ Bolt: Single pass validation to avoid multiple iterations and Array.from allocations
+    for (const [path, file] of filesMap.value.entries()) {
         const p = path.toLowerCase();
-        if (p === 'appinfo.spixi') hasAppInfo = true;
-        if (p === 'app/index.html') hasIndexHtml = true;
+        if (p === 'appinfo.spixi') {
+            appInfoFile = file;
+        } else if (p === 'app/index.html') {
+            hasIndexHtml = true;
+        }
     }
 
-    if (!hasAppInfo) {
+    if (!appInfoFile) {
         error.value = "Missing 'appinfo.spixi'. Please include it in the root of your folder.";
     } else if (!hasIndexHtml) {
         error.value = "Missing 'app/index.html'. Please ensure your structure is correct.";
     } else {
         error.value = null;
         // Parse appinfo.spixi
-        const appInfoFile = Array.from(filesMap.value.entries()).find(
-            ([path]) => path.toLowerCase() === 'appinfo.spixi'
-        )?.[1];
-
         if (appInfoFile) {
             const text = await appInfoFile.text();
             const info = parseAppInfo(text);
