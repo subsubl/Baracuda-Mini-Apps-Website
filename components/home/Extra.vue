@@ -34,7 +34,8 @@ let images = {
                 {{ description }}
             </p>
         </div>
-        <NuxtImg v-if="images.light && $colorMode.value === 'light'" :src="images.light" class="w-40" />
-        <NuxtImg v-if="images.dark && $colorMode.value === 'dark'" :src="images.dark" class="w-40" />
+        <!-- ⚡ Bolt Optimization: Use CSS visibility classes instead of v-if="$colorMode.value === '...'" for SSR -->
+        <NuxtImg v-if="images.light" :src="images.light" class="w-40 block dark:hidden" />
+        <NuxtImg v-if="images.dark" :src="images.dark" class="w-40 hidden dark:block" />
     </div>
 </template>

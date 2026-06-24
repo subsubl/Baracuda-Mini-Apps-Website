@@ -20,8 +20,9 @@ const { t } = useI18n()
                 </div>
             </div>
             <div class="md:w-1/2 flex justify-end">
-                <NuxtImg class="w-[432px]" src="/img/SpixiSummaryLight.png" v-if="$colorMode.value === 'light'" />
-                <NuxtImg class="w-[432px]" src="/img/SpixiSummaryDark.png" v-if="$colorMode.value === 'dark'" />
+                <!-- ⚡ Bolt Optimization: Use CSS visibility classes instead of v-if="$colorMode.value === '...'" for SSR -->
+                <NuxtImg class="w-[432px] block dark:hidden" src="/img/SpixiSummaryLight.png" />
+                <NuxtImg class="w-[432px] hidden dark:block" src="/img/SpixiSummaryDark.png" />
             </div>
         </div>
     </div>
