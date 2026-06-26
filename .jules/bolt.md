@@ -13,3 +13,7 @@
 ## 2026-05-02 - [Map Iteration Array Allocation Optimization]
 **Learning:** Using `Array.from(map.entries()).find()` for search lookups in a Vue component generates unnecessary O(N) array allocations and puts pressure on garbage collection. Direct iteration via `for...of` over `map.entries()` is significantly faster for lookups.
 **Action:** When performing searches or single-pass extractions from Maps, replace `Array.from()` conversions with native `for...of` loops and use `break` for early exits to improve iteration speed and reduce memory overhead.
+
+## 2025-05-23 - [Vue Hydration Client-Only Theme Swapper]
+**Learning:** Using `<client-only>` to toggle simple SVG icons for light/dark themes causes layout shifts and delays hydration on Server-Side Rendered (SSR) apps.
+**Action:** Replace `<client-only>` and `v-if` conditionals in theme toggles with CSS visibility classes (e.g., `hidden dark:block`, `block dark:hidden`). This allows the server to send both SVGs, letting the browser instantly show the correct one based on CSS without waiting for Vue to hydrate.
