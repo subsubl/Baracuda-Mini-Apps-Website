@@ -23,25 +23,15 @@ export default defineCachedEventHandler(async (event) => {
     // GraphQL Optimization
     if (token) {
         try {
-            const query = `
+            // ⚡ Bolt Optimization: Step 1 - Fetch directory list
+            const dirQuery = `
                 query {
                     repository(owner: "${REPO_OWNER}", name: "${REPO_NAME}") {
                         object(expression: "${BRANCH}:${APPS_PATH}") {
                             ... on Tree {
                                 entries {
                                     name
-                                    object {
-                                        ... on Tree {
-                                            entries {
-                                                name
-                                                object {
-                                                    ... on Blob {
-                                                        text
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
+                                    type
                                 }
                             }
                         }
@@ -49,67 +39,109 @@ export default defineCachedEventHandler(async (event) => {
                 }
             `
 
-            const response = await fetch('https://api.github.com/graphql', {
+            const dirResponse = await fetch('https://api.github.com/graphql', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ query })
+                body: JSON.stringify({ query: dirQuery })
             })
 
-            if (!response.ok) {
-                throw new Error(`GraphQL request failed: ${response.statusText}`)
+            if (!dirResponse.ok) {
+                throw new Error(`GraphQL dir request failed: ${dirResponse.statusText}`)
             }
 
-            const data = await response.json()
-            if (data.errors) {
-                throw new Error(`GraphQL errors: ${JSON.stringify(data.errors)}`)
+            const dirData = await dirResponse.json()
+            if (dirData.errors) {
+                throw new Error(`GraphQL errors: ${JSON.stringify(dirData.errors)}`)
             }
 
-            const entries = data.data?.repository?.object?.entries
+            const entries = dirData.data?.repository?.object?.entries
 
             if (!Array.isArray(entries)) {
                 console.warn('Unexpected GraphQL response structure, falling back to REST')
                 throw new Error('Invalid GraphQL response')
             }
 
-            const apps = entries.map((appDir: any) => {
-                if (!appDir.object || !appDir.object.entries) return null
+            const appDirs = entries.filter((e: any) => e.type === 'tree').map((e: any) => e.name)
 
-                const appId = appDir.name
-                const files = appDir.object.entries
+            // ⚡ Bolt Optimization: Step 2 - Batch alias queries in chunks
+            const CHUNK_SIZE = 50
+            const apps: any[] = []
 
-                const appInfoFile = files.find((f: any) => f.name === 'appinfo.spixi')
-                if (!appInfoFile || !appInfoFile.object || typeof appInfoFile.object.text !== 'string') {
-                    return null
-                }
+            for (let i = 0; i < appDirs.length; i += CHUNK_SIZE) {
+                const chunk = appDirs.slice(i, i + CHUNK_SIZE)
 
-                const info = parseAppInfo(appInfoFile.object.text)
+                let aliasQueries = ''
+                chunk.forEach((appId, index) => {
+                    // Use index-based aliases to safely handle batching without character sanitization issues
+                    // Query byteSize for images to avoid downloading large binary payloads
+                    aliasQueries += `
+                        app${index}_info: object(expression: "${BRANCH}:${APPS_PATH}/${appId}/appinfo.spixi") {
+                            ... on Blob { text }
+                        }
+                        app${index}_png: object(expression: "${BRANCH}:${APPS_PATH}/${appId}/icon.png") {
+                            ... on Blob { byteSize }
+                        }
+                        app${index}_svg: object(expression: "${BRANCH}:${APPS_PATH}/${appId}/icon.svg") {
+                            ... on Blob { byteSize }
+                        }
+                    `
+                })
 
-                const hasIconPng = files.some((f: any) => f.name === 'icon.png')
-                const hasIconSvg = files.some((f: any) => f.name === 'icon.svg')
+                const batchQuery = `
+                    query {
+                        repository(owner: "${REPO_OWNER}", name: "${REPO_NAME}") {
+                            ${aliasQueries}
+                        }
+                    }
+                `
 
-                let iconUrl = null
-                if (hasIconPng) {
-                    iconUrl = `${RAW_BASE}/${appId}/icon.png`
-                } else if (hasIconSvg) {
-                    iconUrl = `${RAW_BASE}/${appId}/icon.svg`
-                } else {
-                    iconUrl = `${RAW_BASE}/${appId}/icon.svg` // Fallback
-                }
+                const batchResponse = await fetch('https://api.github.com/graphql', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ query: batchQuery })
+                })
 
-                return {
-                    id: info.id || appId,
-                    name: info.name || appId,
-                    description: info.description || "Spixi Mini App",
-                    version: info.version || '1.0.0',
-                    category: info.category,
-                    icon: iconUrl,
-                    downloadUrl: `${RAW_BASE}/${appId}/appinfo.spixi`,
-                    sourceUrl: `${TREE_BASE}/${appId}`
-                }
-            }).filter((app: any) => app !== null)
+                if (!batchResponse.ok) throw new Error(`GraphQL batch request failed: ${batchResponse.statusText}`)
+                const batchData = await batchResponse.json()
+                if (batchData.errors) throw new Error(`GraphQL batch errors: ${JSON.stringify(batchData.errors)}`)
+
+                const repoData = batchData.data?.repository
+                if (!repoData) continue
+
+                chunk.forEach((appId, index) => {
+                    const infoObj = repoData[`app${index}_info`]
+                    const pngObj = repoData[`app${index}_png`]
+                    const svgObj = repoData[`app${index}_svg`]
+
+                    if (!infoObj || typeof infoObj.text !== 'string') return
+
+                    const info = parseAppInfo(infoObj.text)
+
+                    let iconUrl = `${RAW_BASE}/${appId}/icon.svg` // Fallback
+                    if (pngObj && pngObj.byteSize) {
+                        iconUrl = `${RAW_BASE}/${appId}/icon.png`
+                    } else if (svgObj && svgObj.byteSize) {
+                        iconUrl = `${RAW_BASE}/${appId}/icon.svg`
+                    }
+
+                    apps.push({
+                        id: info.id || appId,
+                        name: info.name || appId,
+                        description: info.description || "Spixi Mini App",
+                        version: info.version || '1.0.0',
+                        category: info.category,
+                        icon: iconUrl,
+                        downloadUrl: `${RAW_BASE}/${appId}/appinfo.spixi`,
+                        sourceUrl: `${TREE_BASE}/${appId}`
+                    })
+                })
+            }
 
             return apps
 
