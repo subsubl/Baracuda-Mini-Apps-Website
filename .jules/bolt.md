@@ -13,3 +13,7 @@
 ## 2026-05-02 - [Map Iteration Array Allocation Optimization]
 **Learning:** Using `Array.from(map.entries()).find()` for search lookups in a Vue component generates unnecessary O(N) array allocations and puts pressure on garbage collection. Direct iteration via `for...of` over `map.entries()` is significantly faster for lookups.
 **Action:** When performing searches or single-pass extractions from Maps, replace `Array.from()` conversions with native `for...of` loops and use `break` for early exits to improve iteration speed and reduce memory overhead.
+
+## 2026-05-02 - [GraphQL Image Payload Optimization]
+**Learning:** Querying the `text` field for binary files (like images) on GitHub's GraphQL API causes the entire binary payload to be stringified and downloaded, resulting in massive bandwidth waste and high memory pressure.
+**Action:** When using GitHub GraphQL API to verify the existence or properties of a binary file, always query the `byteSize` attribute rather than the `text` attribute to drastically reduce the payload size and improve API response times.
