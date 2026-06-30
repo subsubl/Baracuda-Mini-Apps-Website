@@ -13,3 +13,7 @@
 ## 2026-05-02 - [Map Iteration Array Allocation Optimization]
 **Learning:** Using `Array.from(map.entries()).find()` for search lookups in a Vue component generates unnecessary O(N) array allocations and puts pressure on garbage collection. Direct iteration via `for...of` over `map.entries()` is significantly faster for lookups.
 **Action:** When performing searches or single-pass extractions from Maps, replace `Array.from()` conversions with native `for...of` loops and use `break` for early exits to improve iteration speed and reduce memory overhead.
+
+## 2024-07-28 - [GraphQL Recursive Tree vs Batch Alias Optimization]
+**Learning:** Using a deep recursive tree query in GraphQL to fetch the existence of specific files (like binary images) across many directories results in downloading massive, unnecessary payloads, especially if querying the `text` field on `Blob` objects.
+**Action:** When file existence checks are needed across multiple directories in GraphQL, use a two-step approach: first list directories, then construct a chunked batch query (e.g., 50 items per batch) using index-based aliases (e.g., `app0_info`). For binary files, query `byteSize` instead of `text` to verify existence without downloading the payload.
