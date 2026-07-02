@@ -13,3 +13,7 @@
 ## 2026-05-02 - [Map Iteration Array Allocation Optimization]
 **Learning:** Using `Array.from(map.entries()).find()` for search lookups in a Vue component generates unnecessary O(N) array allocations and puts pressure on garbage collection. Direct iteration via `for...of` over `map.entries()` is significantly faster for lookups.
 **Action:** When performing searches or single-pass extractions from Maps, replace `Array.from()` conversions with native `for...of` loops and use `break` for early exits to improve iteration speed and reduce memory overhead.
+
+## 2026-07-02 - [ClientOnly Hydration Bottleneck]
+**Learning:** Wrapping theme-dependent SVGs or icons in `<client-only>` in Nuxt/Vue causes hydration delays and layout shifts because the component isn't rendered on the server.
+**Action:** Remove `<client-only>` for theme toggles and instead use Tailwind CSS visibility classes (e.g., `hidden dark:block`) or CSS custom properties to handle theme-specific rendering natively on the client without blocking hydration.
