@@ -13,3 +13,7 @@
 ## 2026-05-02 - [Map Iteration Array Allocation Optimization]
 **Learning:** Using `Array.from(map.entries()).find()` for search lookups in a Vue component generates unnecessary O(N) array allocations and puts pressure on garbage collection. Direct iteration via `for...of` over `map.entries()` is significantly faster for lookups.
 **Action:** When performing searches or single-pass extractions from Maps, replace `Array.from()` conversions with native `for...of` loops and use `break` for early exits to improve iteration speed and reduce memory overhead.
+
+## 2025-06-25 - [SSR Layout Shifts via ColorMode]
+**Learning:** Using `<client-only>` or Vue `v-if` conditionals with `$colorMode.value` for theming critical visuals (like logos and hero images) delays their rendering until client-side hydration completes, causing noticeable layout shifts and layout pop-in during SSR.
+**Action:** Always favor native CSS toggle visibility (`hidden dark:block`, `block dark:hidden`) combined with CSS `fill="currentColor"` for SVG theming. This ensures elements are present and correctly themed in the initial static HTML payload sent by the server.
