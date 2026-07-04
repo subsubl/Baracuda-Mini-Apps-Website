@@ -13,3 +13,7 @@
 ## 2026-05-02 - [Map Iteration Array Allocation Optimization]
 **Learning:** Using `Array.from(map.entries()).find()` for search lookups in a Vue component generates unnecessary O(N) array allocations and puts pressure on garbage collection. Direct iteration via `for...of` over `map.entries()` is significantly faster for lookups.
 **Action:** When performing searches or single-pass extractions from Maps, replace `Array.from()` conversions with native `for...of` loops and use `break` for early exits to improve iteration speed and reduce memory overhead.
+
+## 2024-07-04 - [SSR Safe Theming Optimization]
+**Learning:** Using `<client-only>` or Vue `v-if` directives bound to color mode (e.g., `v-if="$colorMode.value === 'dark'"`) for theme-dependent visuals like logos, icons, and hero images causes hydration delays and layout shifts during Server-Side Rendering (SSR). This prevents critical above-the-fold content from rendering immediately.
+**Action:** Avoid `<client-only>` and `v-if` for theme-dependent visuals. Instead, render elements for both themes using CSS visibility toggling (`class="hidden dark:block"` and `class="block dark:hidden"`) or consolidate SVGs using `fill="currentColor"` with Tailwind classes (`fill-spixi dark:fill-white`) to ensure instant SSR rendering without hydration mismatch.
