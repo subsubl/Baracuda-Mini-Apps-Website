@@ -13,3 +13,7 @@
 ## 2026-05-02 - [Map Iteration Array Allocation Optimization]
 **Learning:** Using `Array.from(map.entries()).find()` for search lookups in a Vue component generates unnecessary O(N) array allocations and puts pressure on garbage collection. Direct iteration via `for...of` over `map.entries()` is significantly faster for lookups.
 **Action:** When performing searches or single-pass extractions from Maps, replace `Array.from()` conversions with native `for...of` loops and use `break` for early exits to improve iteration speed and reduce memory overhead.
+
+## 2025-05-23 - [<client-only> SSR Hydration Delay]
+**Learning:** Using `<client-only>` to wrap SVGs for theme toggling (e.g., logo colors and theme switchers) causes Nuxt to skip rendering the component on the server. This results in an empty placeholder during SSR and causes a noticeable "flash of unstyled content" (FOUC) and layout shift when hydration finally kicks in on the client.
+**Action:** Remove `<client-only>` for theme-dependent components. Instead, render all variations of the SVGs/paths and rely on CSS visibility toggling (`hidden dark:block`, `block dark:hidden`) or inherit the color using Tailwind (`fill-spixi dark:fill-white`) to resolve the theme natively via CSS immediately upon browser load.
