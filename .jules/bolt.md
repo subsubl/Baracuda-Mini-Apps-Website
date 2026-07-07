@@ -13,3 +13,7 @@
 ## 2026-05-02 - [Map Iteration Array Allocation Optimization]
 **Learning:** Using `Array.from(map.entries()).find()` for search lookups in a Vue component generates unnecessary O(N) array allocations and puts pressure on garbage collection. Direct iteration via `for...of` over `map.entries()` is significantly faster for lookups.
 **Action:** When performing searches or single-pass extractions from Maps, replace `Array.from()` conversions with native `for...of` loops and use `break` for early exits to improve iteration speed and reduce memory overhead.
+
+## 2026-07-07 - BaseLogo SVG Corrupted During Optimization
+**Learning:** When attempting to remove `<client-only>` and `v-if` for theme-dependent SVG components, it is critical not to accidentally truncate complex vector geometries or omit required `<path>`s. `BaseLogo.vue` contained two distinct SVG paths (for logo mark and text) that must be fully preserved with exactly the same `d` paths and `fill-rule` attributes. Applying CSS color classes to the parent `<svg>` is correct, but manipulating the paths via simple search-replace can lead to severe visual regressions if not verified visually.
+**Action:** Use extreme caution when transforming large SVG blocks. Always verify the resulting UI visually in both modes, and do not remove the `fix-*.js` transient scripts before calling frontend validation, but do remove them before pushing.
