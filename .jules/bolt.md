@@ -13,3 +13,7 @@
 ## 2026-05-02 - [Map Iteration Array Allocation Optimization]
 **Learning:** Using `Array.from(map.entries()).find()` for search lookups in a Vue component generates unnecessary O(N) array allocations and puts pressure on garbage collection. Direct iteration via `for...of` over `map.entries()` is significantly faster for lookups.
 **Action:** When performing searches or single-pass extractions from Maps, replace `Array.from()` conversions with native `for...of` loops and use `break` for early exits to improve iteration speed and reduce memory overhead.
+
+## 2025-05-23 - [Regex Find and Replace Safety]
+**Learning:** Using simple string `replace()` or regex `sub()` with overly broad or improperly matched patterns on large blocks of code (like complex SVG paths) without verifying the exact lines first often leads to destroying sections of the code, as seen when an SVG was cut in half.
+**Action:** Always prefer the `replace_with_git_merge_diff` tool for precision file edits over quick script replacements. If a script must be used, copy the exact targeted lines from a fresh read and verify the file diff (`git diff`) immediately before committing.
