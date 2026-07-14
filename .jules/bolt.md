@@ -13,3 +13,7 @@
 ## 2026-05-02 - [Map Iteration Array Allocation Optimization]
 **Learning:** Using `Array.from(map.entries()).find()` for search lookups in a Vue component generates unnecessary O(N) array allocations and puts pressure on garbage collection. Direct iteration via `for...of` over `map.entries()` is significantly faster for lookups.
 **Action:** When performing searches or single-pass extractions from Maps, replace `Array.from()` conversions with native `for...of` loops and use `break` for early exits to improve iteration speed and reduce memory overhead.
+
+## 2024-07-14 - SSR Optimization for Theme Switchers
+**Learning:** In Nuxt 3 with Tailwind and `@nuxtjs/color-mode`, using `<client-only>` to wrap SVG icons conditionally rendered by `$colorMode.value` causes delayed hydration and visual popping (flash of unstyled content) because the server doesn't know the client's theme.
+**Action:** Remove `<client-only>` and use CSS visibility classes (`hidden dark:block`, `block dark:hidden`) or text coloring (`fill-current dark:fill-white`, `text-spixi dark:text-white`) so the styling handles the theme state natively as soon as the HTML loads.
