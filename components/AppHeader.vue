@@ -4,46 +4,24 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 const { setLocale, t, locale, locales } = useI18n()
 
+// ⚡ Bolt Optimization: Use O(1) static map for locale names instead of unused switch and nested O(N) ternaries
+const LOCALE_NAMES = {
+    en: "English",
+    es: "Español",
+    pt: "Português",
+    fr: "Français",
+    it: "Italiano",
+    de: "Deutsch",
+    ru: "Русский",
+    ja: "日本語",
+    zh: "中文",
+    id: "Bahasa Indonesia"
+}
+
 const availableLocales = computed(() => {
-    let lang = "Unknown";
-    switch (locale.value) {
-        case "en":
-            lang = "English";
-            break;
-        case "es":
-            lang = "Español";
-            break;
-        case "pt":
-            lang = "Português";
-            break;
-        case "fr":
-            lang = "Français";
-            break;
-        case "it":
-            lang = "Italiano";
-            break;
-        case "de":
-            lang = "Deutsch";
-            break;
-        case "ru":
-            lang = "Русский";
-            break;
-        case "ja":
-            lang = "日本語";
-            break;
-        case "zh":
-            lang = "中文";
-            break;
-        case "id":
-            lang = "Bahasa Indonesia";
-            break;
-        default:
-            lang = "Unknown";
-            break;
-    }
     return locales.value.map(i => ({
         ...i,
-        name: (i.code === "en" ? "English" : (i.code === "es" ? "Español" : (i.code === "pt" ? "Português" : (i.code === "fr" ? "Français" : (i.code === "it" ? "Italiano" : (i.code === "de" ? "Deutsch" : (i.code === "ru" ? "Русский" : (i.code === "ja" ? "日本語" : (i.code === "zh" ? "中文" : (i.code === "id" ? "Bahasa Indonesia" : "Unknown")))))))))),
+        name: LOCALE_NAMES[i.code] || "Unknown",
         active: i.code === locale.value
     }))
 })
