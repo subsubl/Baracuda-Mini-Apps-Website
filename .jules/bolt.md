@@ -13,3 +13,6 @@
 ## 2026-05-02 - [Map Iteration Array Allocation Optimization]
 **Learning:** Using `Array.from(map.entries()).find()` for search lookups in a Vue component generates unnecessary O(N) array allocations and puts pressure on garbage collection. Direct iteration via `for...of` over `map.entries()` is significantly faster for lookups.
 **Action:** When performing searches or single-pass extractions from Maps, replace `Array.from()` conversions with native `for...of` loops and use `break` for early exits to improve iteration speed and reduce memory overhead.
+## 2026-07-18 - [Vue Switch Statement and Nested Ternary Optimization]
+**Learning:** Using a massive switch statement to determine an intermediate variable that goes unused, alongside a heavily nested O(N) ternary chain inside a reactive `.map()` iteration (like formatting localized text), causes severe readability issues and unnecessary re-evaluations during Vue updates.
+**Action:** Replace nested ternary mapping structures and redundant switch logic with a simple O(1) JavaScript dictionary (object mapping). This dramatically improves code clarity and eliminates repetitive logic branches on every reactive update.
