@@ -13,3 +13,7 @@
 ## 2026-05-02 - [Map Iteration Array Allocation Optimization]
 **Learning:** Using `Array.from(map.entries()).find()` for search lookups in a Vue component generates unnecessary O(N) array allocations and puts pressure on garbage collection. Direct iteration via `for...of` over `map.entries()` is significantly faster for lookups.
 **Action:** When performing searches or single-pass extractions from Maps, replace `Array.from()` conversions with native `for...of` loops and use `break` for early exits to improve iteration speed and reduce memory overhead.
+
+## 2026-06-23 - [Vue SSR SVG Optimization with Tailwind]
+**Learning:** Using `<client-only>` wrappers to handle light/dark mode SVGs (where the SVG contents or `v-if="$colorMode.value === 'dark'"` change based on theme) prevents the component from rendering on the server, resulting in a flash of unstyled content and hydration overhead.
+**Action:** Remove `<client-only>` wrappers. Consolidate duplicate SVG paths by assigning Tailwind CSS visibility classes (e.g., `hidden dark:block`, `block dark:hidden`) or fill classes (e.g., `fill-spixi dark:fill-white`) directly to the elements. This allows both themes to be server-rendered correctly and instantly respond to the user's system preference before Vue hydrates. When refactoring complex SVGs, ensure structural attributes like `fill-rule` and `clip-rule` are preserved.
