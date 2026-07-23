@@ -13,3 +13,6 @@
 ## 2026-05-02 - [Map Iteration Array Allocation Optimization]
 **Learning:** Using `Array.from(map.entries()).find()` for search lookups in a Vue component generates unnecessary O(N) array allocations and puts pressure on garbage collection. Direct iteration via `for...of` over `map.entries()` is significantly faster for lookups.
 **Action:** When performing searches or single-pass extractions from Maps, replace `Array.from()` conversions with native `for...of` loops and use `break` for early exits to improve iteration speed and reduce memory overhead.
+## 2024-06-25 - Replace Deeply Nested Ternaries with Static Maps
+**Learning:** Found an extremely inefficient, deeply nested ternary operator (10 levels deep) evaluating inside an `O(N)` `.map` loop within a Vue `computed` property for language localization names. This pattern allocates redundant processing cycles for simple mapping tasks and degrades readability severely.
+**Action:** Always replace deeply nested ternaries with static O(1) object lookup maps placed outside the reactive context.
