@@ -13,3 +13,7 @@
 ## 2026-05-02 - [Map Iteration Array Allocation Optimization]
 **Learning:** Using `Array.from(map.entries()).find()` for search lookups in a Vue component generates unnecessary O(N) array allocations and puts pressure on garbage collection. Direct iteration via `for...of` over `map.entries()` is significantly faster for lookups.
 **Action:** When performing searches or single-pass extractions from Maps, replace `Array.from()` conversions with native `for...of` loops and use `break` for early exits to improve iteration speed and reduce memory overhead.
+
+## 2024-05-18 - [Vue Computed Scope Object Maps]
+**Learning:** Placing static O(1) object maps (like `languageMap`) inside a reactive `computed` property triggers unnecessary allocations every time dependencies change, even if the map itself is constant.
+**Action:** Move static lookup maps outside of reactive contexts (like `computed` or `watch`) to the module scope to improve performance and prevent redundant processing cycles.
