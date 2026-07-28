@@ -13,3 +13,6 @@
 ## 2026-05-02 - [Map Iteration Array Allocation Optimization]
 **Learning:** Using `Array.from(map.entries()).find()` for search lookups in a Vue component generates unnecessary O(N) array allocations and puts pressure on garbage collection. Direct iteration via `for...of` over `map.entries()` is significantly faster for lookups.
 **Action:** When performing searches or single-pass extractions from Maps, replace `Array.from()` conversions with native `for...of` loops and use `break` for early exits to improve iteration speed and reduce memory overhead.
+## 2024-05-24 - Module-scoped constants in Vue SFCs
+**Learning:** In Vue 3 Single File Components using `<script setup>`, declaring static O(1) lookup objects directly inside the `<script setup>` block can still cause them to be recreated per component instance depending on compilation. Adding a separate, standard `<script>` block alongside the `<script setup>` block is an idiomatic way to declare module-level constants that execute only once, preventing redundant object allocations and keeping reactive scopes clean.
+**Action:** When extracting static lookup maps or constants from reactive scopes (like `computed` properties) to optimize memory allocations, place them in a standard `<script>` block above the `<script setup>` block to ensure they remain module-scoped.
