@@ -20,8 +20,8 @@ const { t } = useI18n()
                 </div>
             </div>
             <div class="md:w-1/2 flex justify-end">
-                <NuxtImg class="w-[432px]" src="/img/SpixiSummaryLight.png" v-if="$colorMode.value === 'light'" />
-                <NuxtImg class="w-[432px]" src="/img/SpixiSummaryDark.png" v-if="$colorMode.value === 'dark'" />
+                <NuxtImg src="/img/SpixiSummaryLight.png" class="w-[432px] block dark:hidden" />
+                <NuxtImg src="/img/SpixiSummaryDark.png" class="w-[432px] hidden dark:block" />
             </div>
         </div>
     </div>

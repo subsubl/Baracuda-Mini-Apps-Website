@@ -13,3 +13,7 @@
 ## 2026-05-02 - [Map Iteration Array Allocation Optimization]
 **Learning:** Using `Array.from(map.entries()).find()` for search lookups in a Vue component generates unnecessary O(N) array allocations and puts pressure on garbage collection. Direct iteration via `for...of` over `map.entries()` is significantly faster for lookups.
 **Action:** When performing searches or single-pass extractions from Maps, replace `Array.from()` conversions with native `for...of` loops and use `break` for early exits to improve iteration speed and reduce memory overhead.
+
+## 2024-07-30 - [SSR Optimization via CSS for Theme-Dependent Components]
+**Learning:** Using Vue's `<client-only>` wrappers to conditionally render light/dark mode SVGs and images delays the initial paint and forces the client to download and hydrate the component before rendering. This causes Layout Shifts and delays First Contentful Paint (FCP).
+**Action:** Remove `<client-only>` wrappers. Instead, render both SVG paths or image elements and use Tailwind CSS visibility classes (e.g., `hidden dark:block` and `block dark:hidden`) to let the browser handle the initial display. For SVGs sharing the same paths, use `fill-currentColor` or classes like `fill-spixi dark:fill-white` to consolidate them into a single path, reducing payload size.
