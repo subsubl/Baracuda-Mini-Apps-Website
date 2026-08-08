@@ -17,3 +17,7 @@
 ## 2024-07-30 - [SSR Optimization via CSS for Theme-Dependent Components]
 **Learning:** Using Vue's `<client-only>` wrappers to conditionally render light/dark mode SVGs and images delays the initial paint and forces the client to download and hydrate the component before rendering. This causes Layout Shifts and delays First Contentful Paint (FCP).
 **Action:** Remove `<client-only>` wrappers. Instead, render both SVG paths or image elements and use Tailwind CSS visibility classes (e.g., `hidden dark:block` and `block dark:hidden`) to let the browser handle the initial display. For SVGs sharing the same paths, use `fill-currentColor` or classes like `fill-spixi dark:fill-white` to consolidate them into a single path, reducing payload size.
+
+## 2026-08-08 - [GraphQL Binary Payload Optimization]
+**Learning:** Using GitHub GraphQL to deeply fetch a recursive file tree and reading `text` from `Blob`s for binary files (like images) results in enormous data payloads. This wastes memory by representing binary data as large strings, causing parsing overhead and risking truncation or query limits.
+**Action:** Always fetch file metadata separately from large file contents. First, list the files or directories, then use batched alias queries explicitly fetching the `byteSize` of the blob to determine existence rather than requesting the `text` content, avoiding massive binary payloads entirely.
