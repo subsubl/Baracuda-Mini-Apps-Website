@@ -44,6 +44,12 @@ const filteredApps = computed(() => {
   const category = selectedCategory.value
   const query = debouncedSearchQuery.value ? debouncedSearchQuery.value.trim().toLowerCase() : ''
 
+  // ⚡ Bolt Optimization: Early return original array when no filters are active
+  // Skips O(N) filter iteration and prevents unnecessary array allocation on initial load and empty searches
+  if (category === 'All' && !query) {
+    return apps.value
+  }
+
   // ⚡ Bolt Optimization: Single pass filtering to reduce memory allocation and iteration overhead (O(N) vs O(3N))
   return apps.value.filter(app => {
     // Category check
