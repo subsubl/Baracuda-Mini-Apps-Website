@@ -21,3 +21,7 @@
 ## 2026-08-08 - [GraphQL Binary Payload Optimization]
 **Learning:** Using GitHub GraphQL to deeply fetch a recursive file tree and reading `text` from `Blob`s for binary files (like images) results in enormous data payloads. This wastes memory by representing binary data as large strings, causing parsing overhead and risking truncation or query limits.
 **Action:** Always fetch file metadata separately from large file contents. First, list the files or directories, then use batched alias queries explicitly fetching the `byteSize` of the blob to determine existence rather than requesting the `text` content, avoiding massive binary payloads entirely.
+
+## 2025-06-19 - [Native Lazy Loading for CSS-Hidden Theme Images]
+**Learning:** While using Tailwind CSS classes (`hidden dark:block`, `block dark:hidden`) is the right way to handle SSR theme-dependent images without layout shifts, browsers will eagerly download *both* images (light and dark) on initial load by default because the image tag exists in the DOM.
+**Action:** Always add `loading="lazy"` to these CSS-hidden theme variants. The browser's native lazy loading defers the fetch until the image is about to enter the viewport. Since the inactive theme image has `display: none` (via `hidden`), it never intersects the viewport, and the browser cleanly avoids downloading the hidden variant entirely until the theme is actually toggled.

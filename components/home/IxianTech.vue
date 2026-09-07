@@ -6,8 +6,9 @@ const { t } = useI18n()
         <div class="flex flex-col md:flex-row items-center justify-between py-7 px-10 relative overflow-hidden rounded-2xl">
             <div class="md:w-2/3">
                 <!-- ⚡ Bolt Optimization: Replaced v-if="$colorMode.value" with Tailwind classes for SSR and no layout shifts -->
-                <NuxtImg src="/img/IxianTechLight.svg" class="block dark:hidden" />
-                <NuxtImg src="/img/IxianTechDark.svg" class="hidden dark:block" />
+                <!-- ⚡ Bolt Optimization: Added lazy loading to CSS-hidden theme images to prevent unnecessary eager downloading of both themes -->
+                <NuxtImg src="/img/IxianTechLight.svg" class="block dark:hidden" loading="lazy" />
+                <NuxtImg src="/img/IxianTechDark.svg" class="hidden dark:block" loading="lazy" />
                 <h2 class="text-5xl font-lexend font-semibold text-black dark:text-spixi-dark pt-4">
                     {{ t('pages.home.features.tech.title') }}
                 </h2>
@@ -22,7 +23,7 @@ const { t } = useI18n()
                 </div>
             </div>
             <div class="md:w-1/3 flex justify-center max-md:hidden">
-                <NuxtImg src="/img/pattern.png" class="absolute object-cover top-0 right-[-40px] h-full"  />
+                <NuxtImg src="/img/pattern.png" class="absolute object-cover top-0 right-[-40px] h-full" loading="lazy" format="webp" />
             </div>
         </div>
     </div>

@@ -427,7 +427,7 @@ function handleModalClick(e) {
            </div>
            <div class="md:w-1/2 relative z-10 flex justify-end mt-10 md:mt-0">
                <!-- Reusing SpixiSummary Logic or Image -->
-                <NuxtImg class="w-[400px] drop-shadow-2xl" src="/img/SpixiSummaryDark.png" format="webp" width="400" />
+                <NuxtImg class="w-[400px] drop-shadow-2xl" src="/img/SpixiSummaryDark.png" format="webp" width="400" loading="lazy" />
            </div>
         </div>
     </div>

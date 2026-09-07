@@ -14,8 +14,9 @@ let images = {
 <template>
     <div class="flex flex-col items-left justify-center dark:text-white">
         <!-- ⚡ Bolt Optimization: Replaced v-if="$colorMode.value" with Tailwind classes for SSR and no layout shifts -->
-        <NuxtImg v-if="images.light" :src="images.light" class="w-[180px] h-auto block dark:hidden" />
-        <NuxtImg v-if="images.dark" :src="images.dark" class="w-[180px] h-auto hidden dark:block" />
+        <!-- ⚡ Bolt Optimization: Added lazy loading to CSS-hidden theme images to prevent unnecessary eager downloading of both themes -->
+        <NuxtImg v-if="images.light" :src="images.light" class="w-[180px] h-auto block dark:hidden" loading="lazy" />
+        <NuxtImg v-if="images.dark" :src="images.dark" class="w-[180px] h-auto hidden dark:block" loading="lazy" />
         <h3 class="text-2xl font-lexend font-medium pt-10 pb-6">{{ title }}</h3>
         <p class="text-base">{{ description }}</p>
     </div>

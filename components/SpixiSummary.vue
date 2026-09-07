@@ -20,8 +20,9 @@ const { t } = useI18n()
                 </div>
             </div>
             <div class="md:w-1/2 flex justify-end">
-                <NuxtImg src="/img/SpixiSummaryLight.png" class="w-[432px] block dark:hidden" />
-                <NuxtImg src="/img/SpixiSummaryDark.png" class="w-[432px] hidden dark:block" />
+                <!-- ⚡ Bolt Optimization: Added lazy loading and WebP to CSS-hidden theme images to prevent unnecessary eager downloading of both themes -->
+                <NuxtImg src="/img/SpixiSummaryLight.png" class="w-[432px] block dark:hidden" loading="lazy" format="webp" />
+                <NuxtImg src="/img/SpixiSummaryDark.png" class="w-[432px] hidden dark:block" loading="lazy" format="webp" />
             </div>
         </div>
     </div>
