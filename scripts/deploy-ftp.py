@@ -7,22 +7,23 @@ FTP_PORT = 21
 FTP_USER = "baracuda@dronko.si"
 FTP_PASS = "Vpzgn10p.,"
 LOCAL_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.output/public"))
+REMOTE_TARGET = "public_html"
 
 def upload_dir(ftp, local_path, remote_path):
-    print(f"📁 Syncing directory: {remote_path or '/'}")
+    print(f"📁 Syncing to FTP directory: {remote_path}")
     for item in sorted(os.listdir(local_path)):
         local_item = os.path.join(local_path, item)
-        remote_item = f"{remote_path}/{item}" if remote_path else item
+        remote_item = f"{remote_path}/{item}".replace("//", "/")
 
         if os.path.isdir(local_item):
             try:
                 ftp.mkd(remote_item)
                 print(f"  [+] Created directory: {remote_item}")
             except Exception:
-                pass # Already exists
+                pass # Directory already exists, proceed to overwrite contents
             upload_dir(ftp, local_item, remote_item)
         else:
-            print(f"  [↑] Uploading: {remote_item}")
+            print(f"  [↑] Overwriting: {remote_item}")
             with open(local_item, "rb") as f:
                 ftp.storbinary(f"STOR {remote_item}", f)
 
@@ -35,8 +36,15 @@ def main():
         ftp.set_pasv(True)
         print("✅ FTP Authentication successful!")
 
-        upload_dir(ftp, LOCAL_DIR, "")
-        print("🎉 Production FTP deployment finished successfully!")
+        # Ensure public_html directory exists
+        try:
+            ftp.mkd(REMOTE_TARGET)
+            print(f"  [+] Created {REMOTE_TARGET}")
+        except Exception:
+            pass # Already exists
+
+        upload_dir(ftp, LOCAL_DIR, REMOTE_TARGET)
+        print(f"🎉 Production FTP deployment into '{REMOTE_TARGET}' finished successfully!")
         ftp.quit()
     except Exception as e:
         print(f"❌ Error during FTP deployment: {e}")
