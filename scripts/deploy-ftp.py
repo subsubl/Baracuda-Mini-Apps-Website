@@ -4,23 +4,23 @@ from ftplib import FTP
 
 FTP_HOST = "ftp.dronko.si"
 FTP_PORT = 21
-FTP_USER = "baracuda@dronko.si"
+FTP_USER = "agent@dronko.si"
 FTP_PASS = "Vpzgn10p.,"
 LOCAL_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.output/public"))
-REMOTE_TARGET = "public_html"
+REMOTE_TARGET = "" # Direct to FTP root (web root)
 
 def upload_dir(ftp, local_path, remote_path):
-    print(f"📁 Syncing to FTP directory: {remote_path}")
+    print(f"📁 Syncing to FTP path: '{remote_path or '/'}'")
     for item in sorted(os.listdir(local_path)):
         local_item = os.path.join(local_path, item)
-        remote_item = f"{remote_path}/{item}".replace("//", "/")
+        remote_item = f"{remote_path}/{item}".strip("/") if remote_path else item
 
         if os.path.isdir(local_item):
             try:
                 ftp.mkd(remote_item)
                 print(f"  [+] Created directory: {remote_item}")
             except Exception:
-                pass # Directory already exists, proceed to overwrite contents
+                pass # Directory already exists
             upload_dir(ftp, local_item, remote_item)
         else:
             print(f"  [↑] Overwriting: {remote_item}")
@@ -28,23 +28,20 @@ def upload_dir(ftp, local_path, remote_path):
                 ftp.storbinary(f"STOR {remote_item}", f)
 
 def main():
-    print(f"🚀 Connecting to Production FTP server {FTP_HOST}:{FTP_PORT} as {FTP_USER}...")
+    print(f"🚀 Connecting to FTP server {FTP_HOST}:{FTP_PORT} as {FTP_USER}...")
     try:
         ftp = FTP()
         ftp.connect(FTP_HOST, FTP_PORT, timeout=30)
         ftp.login(FTP_USER, FTP_PASS)
         ftp.set_pasv(True)
         print("✅ FTP Authentication successful!")
-
-        # Ensure public_html directory exists
-        try:
-            ftp.mkd(REMOTE_TARGET)
-            print(f"  [+] Created {REMOTE_TARGET}")
-        except Exception:
-            pass # Already exists
+        print(f"Current working directory: {ftp.pwd()}")
+        
+        print("Existing root contents:")
+        ftp.dir()
 
         upload_dir(ftp, LOCAL_DIR, REMOTE_TARGET)
-        print(f"🎉 Production FTP deployment into '{REMOTE_TARGET}' finished successfully!")
+        print(f"🎉 Production FTP deployment directly to root finished successfully!")
         ftp.quit()
     except Exception as e:
         print(f"❌ Error during FTP deployment: {e}")

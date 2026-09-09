@@ -8,9 +8,9 @@
   },
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev",
-    "devhost": "nuxt dev --host",
-    "generate": "nuxt generate",
+    "dev": "node scripts/generate-apps-list.js && nuxt dev",
+    "devhost": "node scripts/generate-apps-list.js && nuxt dev --host",
+    "generate": "node scripts/generate-apps-list.js && nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },

@@ -74,7 +74,6 @@ onUnmounted(() => {
                 </NuxtLink>
 
                 <div class="flex justify-end items-center">
-                    <BaseThemeSwitcher />
                     
                     <!-- Language Dropdown Wrapper -->
                     <div class="relative">
@@ -135,7 +134,7 @@ onUnmounted(() => {
 
             <div
                 :class="{'flex': isMenuOpen, 'hidden': !isMenuOpen}"
-                class="w-full bg-gradient-to-b from-[#00000000] to-[#1A6FBD59] dark:to-[#3770a659] h-svh justify-center"
+                class="w-full fixed inset-x-0 top-[75px] z-50 bg-gradient-to-b from-white to-[#1A6FBD59] dark:from-[#0D141C] dark:to-[#3770a659] h-[calc(100vh-75px)] justify-center"
                 id="navbar-hamburger">
                 <div class="flex flex-col md:flex-row font-medium mt-4 rounded-lg max-w-4xl h-[calc(100%-10rem)] justify-center md:gap-40">
                     <ul class="flex flex-col justify-center">
