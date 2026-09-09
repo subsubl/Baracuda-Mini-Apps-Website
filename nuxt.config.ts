@@ -76,7 +76,7 @@ export default defineNuxtConfig({
     },
 
     app: {
-        baseURL: '/Baracuda-Mini-Apps-Website/',
+        baseURL: process.env.NUXT_APP_BASE_URL || '/',
         pageTransition: false,
         head: {
             title: 'Baracuda Mini Apps | Unofficial Spixi Mini Apps Hub',

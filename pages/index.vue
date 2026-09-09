@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, defineAsyncComponent, watch, onBeforeUnmount } from 'vue'
+import { ref, computed, defineAsyncComponent, watch, onMounted, onBeforeUnmount } from 'vue'
 import AppSimulatorModal from '~/components/AppSimulatorModal.vue'
 
 // Lazy load QrcodeVue to reduce initial bundle size
@@ -20,7 +20,13 @@ const { data: apps, pending } = await useFetch('/api/apps', {
 const searchQuery = ref('')
 const debouncedSearchQuery = ref('')
 const selectedCategory = ref('All')
-const categories = ['All', 'Games', 'Tools', 'Utilities', 'Social']
+const categories = [
+  { name: 'All', icon: '✨' },
+  { name: 'Games', icon: '🎮' },
+  { name: 'Tools', icon: '🛠️' },
+  { name: 'Utilities', icon: '🧰' },
+  { name: 'Social', icon: '💬' }
+]
 
 // Debounce search
 let debounceTimer = null
@@ -28,7 +34,7 @@ watch(searchQuery, (newVal) => {
   clearTimeout(debounceTimer)
   debounceTimer = setTimeout(() => {
     debouncedSearchQuery.value = newVal
-  }, 300)
+  }, 250)
 })
 
 onBeforeUnmount(() => {
@@ -64,18 +70,34 @@ const showSimulatorModal = ref(false)
 const testingApp = ref(null)
 
 function openModal(app) {
+  if (!app) return
   selectedApp.value = app
   showModal.value = true
+  if (typeof window !== 'undefined') {
+    window.location.hash = `app=${app.id}`
+  }
 }
 
 function closeModal() {
   showModal.value = false
   selectedApp.value = null
+  if (typeof window !== 'undefined' && window.location.hash.includes('app=')) {
+    history.pushState('', document.title, window.location.pathname + window.location.search)
+  }
 }
 
 function startSimulator(app) {
+  if (!app) return
   testingApp.value = app
   showSimulatorModal.value = true
+}
+
+function copyShareLink(app) {
+  if (!app || typeof window === 'undefined') return
+  const url = `${window.location.origin}${window.location.pathname}#app=${app.id}`
+  navigator.clipboard.writeText(url).then(() => {
+    alert(`Copied link for ${app.name} to clipboard!`)
+  })
 }
 
 function handleModalClick(e) {
@@ -83,6 +105,19 @@ function handleModalClick(e) {
     closeModal()
   }
 }
+
+// Deep link hash check on mount
+onMounted(() => {
+  if (typeof window !== 'undefined' && window.location.hash) {
+    const match = window.location.hash.match(/app=([a-zA-Z0-9.-]+)/)
+    if (match && match[1] && apps.value) {
+      const targetApp = apps.value.find(a => a.id === match[1])
+      if (targetApp) {
+        openModal(targetApp)
+      }
+    }
+  }
+})
 </script>
 
 <template>
@@ -90,25 +125,23 @@ function handleModalClick(e) {
     <!-- Hero Section -->
     <div class="pt-8 pb-4 px-4 md:px-8 max-w-7xl mx-auto">
       <div class="bg-gradient-to-r from-gray-900 via-blue-950/40 to-gray-900 border border-gray-800 rounded-3xl relative overflow-hidden text-white shadow-2xl p-8 md:p-12">
-        <NuxtImg src="/img/pattern.png" class="absolute object-cover top-0 right-0 h-full opacity-20 pointer-events-none mix-blend-overlay" alt="Pattern" format="webp" />
+        <img src="/img/pattern.png" class="absolute object-cover top-0 right-0 h-full opacity-20 pointer-events-none mix-blend-overlay" alt="Pattern" />
         <div class="flex flex-col md:flex-row items-center justify-between gap-10 relative z-10">
           <div class="md:w-3/5 inline-flex flex-col gap-6 justify-between">
             <div>
               <span class="px-3 py-1 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-full uppercase tracking-widest text-xs font-bold mb-3 inline-block">
-                Unified Spixi Mini Apps Hub
+                Baracuda & Ixian P2P Ecosystem
               </span>
               <h1 class="text-3xl md:text-5xl font-lexend font-extrabold leading-tight tracking-tight text-white">
-                Baracuda <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-400">Mini Apps</span>
+                Baracuda <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400">Mini Apps</span>
               </h1>
             </div>
             <p class="text-lg text-gray-300 leading-relaxed max-w-2xl">
-              Unified directory for Spixi decentralized P2P web mini apps aggregated from 
-              <span class="text-blue-400 font-mono text-xs">subsubl/Spixi-mini-APPs</span> & 
-              <span class="text-indigo-400 font-mono text-xs">ixian-platform/Spixi-Mini-Apps</span>.
+              Explore, test live in your browser, and build decentralized peer-to-peer web mini apps aggregated from official and community repositories.
             </p>
             <div class="flex flex-wrap gap-4 mt-2">
               <a href="#featured" class="glow-button text-white px-6 py-3.5 rounded-xl font-bold transition-transform flex items-center gap-2">
-                <span>⚡ Explore Catalog</span>
+                <span>⚡ Browse Catalog</span>
               </a>
               <NuxtLink to="/builder" class="bg-gray-800/80 hover:bg-gray-700 text-gray-200 border border-gray-700 px-6 py-3.5 rounded-xl font-semibold transition-colors flex items-center gap-2">
                 <span>📦 Open App Packer</span>
@@ -118,11 +151,11 @@ function handleModalClick(e) {
 
           <div class="md:w-2/5 hidden md:flex justify-center relative">
             <div class="w-72 h-72 bg-blue-600/20 blur-[90px] rounded-full absolute pointer-events-none"></div>
-            <NuxtImg
+            <img
               src="/img/mini-d.png"
-              class="relative z-10 drop-shadow-2xl max-w-sm rounded-2xl border border-gray-800"
+              class="relative z-10 drop-shadow-2xl max-w-sm rounded-2xl border border-gray-800 object-cover"
               alt="Baracuda Mini Apps"
-              format="webp"
+              @error="$event.target.style.display='none'"
             />
           </div>
         </div>
@@ -134,8 +167,8 @@ function handleModalClick(e) {
           <div class="w-14 h-14 bg-blue-500/20 text-blue-400 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-blue-500/30 text-2xl">
             📱
           </div>
-          <h3 class="text-white font-bold text-base mb-1">1. Get Spixi</h3>
-          <p class="text-xs text-gray-400">Install Spixi decentralized messenger on Android or iOS</p>
+          <h3 class="text-white font-bold text-base mb-1">1. Install Spixi</h3>
+          <p class="text-xs text-gray-400">Download Spixi decentralized messenger on Android or iOS</p>
         </div>
         
         <div class="glass-card rounded-2xl p-6 text-center border border-gray-800">
@@ -150,7 +183,7 @@ function handleModalClick(e) {
           <div class="w-14 h-14 bg-purple-500/20 text-purple-400 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-purple-500/30 text-2xl">
             🚀
           </div>
-          <h3 class="text-white font-bold text-base mb-1">3. Scan & Enjoy</h3>
+          <h3 class="text-white font-bold text-base mb-1">3. Scan & Run</h3>
           <p class="text-xs text-gray-400">Scan QR codes directly inside Spixi to add any app instantly</p>
         </div>
       </div>
@@ -161,7 +194,10 @@ function handleModalClick(e) {
       <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
         <div>
           <h2 class="text-2xl md:text-3xl font-extrabold text-white">Baracuda & Ixian Mini Apps</h2>
-          <p class="text-sm text-gray-400">P2P mini apps aggregated from official & community repositories without duplicates.</p>
+          <p class="text-sm text-gray-400">Peer-to-peer applications without duplicates, ready for instant testing and installation.</p>
+        </div>
+        <div v-if="apps" class="text-xs font-mono text-blue-400 bg-blue-950/40 border border-blue-800/60 px-3.5 py-2 rounded-xl self-start md:self-auto">
+          Showing {{ filteredApps.length }} of {{ apps.length }} mini apps
         </div>
       </div>
 
@@ -181,17 +217,18 @@ function handleModalClick(e) {
 
         <div class="flex flex-wrap gap-2">
           <button
-            v-for="category in categories"
-            :key="category"
-            @click="selectedCategory = category"
+            v-for="cat in categories"
+            :key="cat.name"
+            @click="selectedCategory = cat.name"
             :class="[
-              'px-4 py-2 rounded-xl text-xs font-semibold transition-all',
-              selectedCategory === category
+              'px-4 py-2 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5',
+              selectedCategory === cat.name
                 ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30'
                 : 'bg-gray-900/80 text-gray-400 hover:bg-gray-800 hover:text-white border border-gray-800'
             ]"
           >
-            {{ category }}
+            <span>{{ cat.icon }}</span>
+            <span>{{ cat.name }}</span>
           </button>
         </div>
       </div>
@@ -204,7 +241,7 @@ function handleModalClick(e) {
       <!-- Empty State -->
       <div v-else-if="apps && filteredApps.length === 0" class="text-center py-16 glass-panel rounded-2xl border border-gray-800 max-w-md mx-auto">
         <div class="text-5xl mb-3">🔍</div>
-        <h3 class="text-xl font-bold text-white mb-1">No apps found</h3>
+        <h3 class="text-xl font-bold text-white mb-1">No mini apps found</h3>
         <p class="text-xs text-gray-400 mb-5">Try resetting search keywords or category filters.</p>
         <button @click="searchQuery = ''; selectedCategory = 'All'" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl transition-colors">
           Reset Filters
@@ -273,10 +310,10 @@ function handleModalClick(e) {
             </button>
             <button
               @click="openModal(app)"
-              class="px-3.5 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700 rounded-xl font-medium text-xs transition-colors"
+              class="px-3.5 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700 rounded-xl font-medium text-xs transition-colors flex items-center gap-1"
               title="View Details & QR Code"
             >
-              📋 Details
+              <span>📋</span> Details
             </button>
           </div>
         </div>
@@ -330,7 +367,7 @@ function handleModalClick(e) {
           </div>
 
           <!-- Modal Action Buttons -->
-          <div class="flex flex-col sm:flex-row gap-3">
+          <div class="flex flex-col sm:flex-row gap-2.5">
             <button @click="closeModal(); startSimulator(selectedApp)" class="flex-1 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl transition-all shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2">
               <span>🧪 Try App (Launch Simulator)</span>
             </button>
@@ -339,9 +376,17 @@ function handleModalClick(e) {
               <span>🔗 Source</span>
             </a>
 
-            <a v-if="selectedApp?.zipUrl" :href="selectedApp.zipUrl" download class="px-4 py-3 bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold text-xs rounded-xl transition-colors flex items-center justify-center gap-1 border border-gray-700">
-              <span>📦 Download .zip</span>
+            <a v-if="selectedApp?.downloadUrl" :href="selectedApp.downloadUrl" download class="px-3.5 py-3 bg-emerald-950/60 hover:bg-emerald-900/80 text-emerald-300 border border-emerald-800/60 font-semibold text-xs rounded-xl transition-colors flex items-center justify-center gap-1">
+              <span>⬇️ .spixi</span>
             </a>
+
+            <a v-if="selectedApp?.zipUrl" :href="selectedApp.zipUrl" download class="px-3.5 py-3 bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold text-xs rounded-xl transition-colors flex items-center justify-center gap-1 border border-gray-700">
+              <span>📦 .zip</span>
+            </a>
+
+            <button @click="copyShareLink(selectedApp)" class="px-3 py-3 bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold text-xs rounded-xl transition-colors flex items-center justify-center border border-gray-700" title="Copy Share Link">
+              🔗
+            </button>
           </div>
         </div>
       </div>

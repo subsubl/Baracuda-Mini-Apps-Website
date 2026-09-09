@@ -420,10 +420,10 @@ contentSize = ${zipSize}`;
         <button
           @click.stop="packApp"
           :disabled="processing"
-          class="px-8 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg shadow transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center mx-auto space-x-2"
+          class="px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl shadow-lg shadow-blue-600/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center mx-auto space-x-2"
         >
           <span v-if="processing">Packing...</span>
-          <span v-else>Pack Mini App</span>
+          <span v-else>📦 Pack Mini App</span>
         </button>
       </div>
 

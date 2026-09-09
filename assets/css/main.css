@@ -3,18 +3,25 @@
 @tailwind utilities;
 
 :root {
-    --bg-dark: #0B0F19;
+    --bg-main: #0B0F19;
+    --text-main: #F3F4F6;
     --card-dark: rgba(17, 24, 39, 0.75);
     --border-dark: rgba(255, 255, 255, 0.1);
     --accent-blue: #3B82F6;
     --accent-glow: rgba(59, 130, 246, 0.35);
 }
 
+html.light {
+    --bg-main: #F8FAFC;
+    --text-main: #0F172A;
+}
+
 html, body {
-    background-color: #0B0F19;
-    color: #F3F4F6;
+    background-color: var(--bg-main);
+    color: var(--text-main);
     font-family: 'Lexend', 'Inter', system-ui, -apple-system, sans-serif;
     min-height: 100vh;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Glassmorphism utility */
@@ -25,11 +32,21 @@ html, body {
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+html.light .glass-panel {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
 .glass-card {
     background: linear-gradient(135deg, rgba(30, 41, 59, 0.6), rgba(15, 23, 42, 0.8));
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.08);
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html.light .glass-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(241, 245, 249, 0.95));
+    border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .glass-card:hover {
@@ -44,7 +61,7 @@ html, body {
     height: 8px;
 }
 ::-webkit-scrollbar-track {
-    background: #0B0F19;
+    background: var(--bg-main);
 }
 ::-webkit-scrollbar-thumb {
     background: #1F2937;
