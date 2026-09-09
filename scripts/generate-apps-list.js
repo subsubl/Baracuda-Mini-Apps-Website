@@ -6,11 +6,9 @@ import JSZip from 'jszip';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const args = process.argv.slice(2);
-const defaultAppsDir = path.resolve(__dirname, '../../Spixi-mini-APPs/apps');
-const sourceArg = args[0] ? path.resolve(args[0]) : defaultAppsDir;
+const subsublAppsDir = path.resolve(__dirname, '../../Spixi-mini-APPs/apps');
+const ixianAppsDir = path.resolve(__dirname, '../../Spixi-Mini-Apps/apps');
 
-const APPS_DIR = sourceArg;
 const DEST_APPS_DIR = path.join(__dirname, '../public/apps');
 const OUTPUT_FILE = path.join(__dirname, '../public/apps.json');
 
@@ -58,37 +56,60 @@ async function addDirectoryToZip(zip, dirPath, zipFolder) {
 }
 
 async function processApps() {
-    if (!fs.existsSync(APPS_DIR)) {
-        console.error(`Apps directory not found: ${APPS_DIR}`);
-        process.exit(1);
-    }
-
     if (!fs.existsSync(DEST_APPS_DIR)) {
         fs.mkdirSync(DEST_APPS_DIR, { recursive: true });
     }
 
-    const apps = [];
-    const folders = fs.readdirSync(APPS_DIR);
+    const sources = [
+        {
+            name: 'Baracuda / Community (subsubl)',
+            dir: subsublAppsDir,
+            repoUrl: 'https://github.com/subsubl/Spixi-mini-APPs',
+            branch: 'main'
+        },
+        {
+            name: 'Ixian Official (ixian-platform)',
+            dir: ixianAppsDir,
+            repoUrl: 'https://github.com/ixian-platform/Spixi-Mini-Apps',
+            branch: 'master'
+        }
+    ];
 
-    console.log(`Scanning ${folders.length} folders from ${APPS_DIR}...`);
+    const appsMap = new Map();
 
-    for (const folder of folders) {
-        const folderPath = path.join(APPS_DIR, folder);
-        const appInfoPath = path.join(folderPath, 'appinfo.spixi');
-        const destFolderPath = path.join(DEST_APPS_DIR, folder);
+    for (const source of sources) {
+        if (!fs.existsSync(source.dir)) {
+            console.warn(`Source directory not found: ${source.dir}`);
+            continue;
+        }
 
-        if (fs.statSync(folderPath).isDirectory() && fs.existsSync(appInfoPath)) {
-            try {
-                const content = fs.readFileSync(appInfoPath, 'utf8');
-                const info = parseAppInfo(content);
+        const folders = fs.readdirSync(source.dir);
+        console.log(`Scanning ${folders.length} folders from ${source.name}...`);
 
-                const validationErrors = validateAppInfo(info);
-                if (validationErrors.length > 0) {
-                    console.warn(`Skipping ${folder}: ${validationErrors.join(', ')}`);
-                    continue;
-                }
+        for (const folder of folders) {
+            const folderPath = path.join(source.dir, folder);
+            const appInfoPath = path.join(folderPath, 'appinfo.spixi');
+            const destFolderPath = path.join(DEST_APPS_DIR, folder);
 
-                if (info.id && info.name) {
+            if (fs.statSync(folderPath).isDirectory() && fs.existsSync(appInfoPath)) {
+                try {
+                    const content = fs.readFileSync(appInfoPath, 'utf8');
+                    const info = parseAppInfo(content);
+
+                    const validationErrors = validateAppInfo(info);
+                    if (validationErrors.length > 0) {
+                        console.warn(`Skipping ${folder}: ${validationErrors.join(', ')}`);
+                        continue;
+                    }
+
+                    if (!info.id || !info.name) continue;
+
+                    // Deduplication check: if app ID already added, skip duplicate
+                    if (appsMap.has(info.id)) {
+                        console.log(`[Deduplicated] Skipping duplicate app ID '${info.id}' from ${source.name}`);
+                        continue;
+                    }
+
                     if (!fs.existsSync(destFolderPath)) {
                         fs.mkdirSync(destFolderPath, { recursive: true });
                     }
@@ -98,22 +119,19 @@ async function processApps() {
                     if (fs.existsSync(iconSrc)) {
                         fs.copyFileSync(iconSrc, path.join(destFolderPath, 'icon.png'));
                         fs.copyFileSync(iconSrc, path.join(DEST_APPS_DIR, `${folder}.png`));
-                    } else {
-                        console.warn(`Icon not found for ${folder}`);
                     }
 
                     // Copy appinfo.spixi
                     fs.copyFileSync(appInfoPath, path.join(destFolderPath, 'appinfo.spixi'));
                     fs.copyFileSync(appInfoPath, path.join(DEST_APPS_DIR, `${folder}.spixi`));
 
-                    // Copy app files to public folder
+                    // Copy app files
                     const appSubFolder = path.join(folderPath, 'app');
                     const targetAppSubFolder = path.join(destFolderPath, 'app');
-                    
+
                     if (fs.existsSync(appSubFolder)) {
                         fs.cpSync(appSubFolder, targetAppSubFolder, { recursive: true });
                     } else {
-                        // If root contains index.html, copy root
                         fs.cpSync(folderPath, destFolderPath, { recursive: true });
                     }
 
@@ -124,36 +142,53 @@ async function processApps() {
                     const zipContent = await zip.generateAsync({ type: 'nodebuffer' });
                     fs.writeFileSync(path.join(DEST_APPS_DIR, `${folder}.zip`), zipContent);
 
-                    // Entrypoint URL for simulator
+                    // Entrypoint URL
                     const hasAppFolder = fs.existsSync(appSubFolder);
                     const appUrl = `apps/${folder}/${hasAppFolder ? 'app/' : ''}index.html`;
 
-                    apps.push({
+                    // Determine category
+                    let category = info.category;
+                    if (!category) {
+                        const lowerFolder = folder.toLowerCase();
+                        if (lowerFolder.includes('game') || lowerFolder.includes('tictactoe') || lowerFolder.includes('doom') || lowerFolder.includes('pong') || lowerFolder.includes('coinflip') || lowerFolder.includes('protocol') || lowerFolder.includes('dentist') || lowerFolder.includes('starwind')) {
+                            category = 'Games';
+                        } else if (lowerFolder.includes('ai') || lowerFolder.includes('kalker') || lowerFolder.includes('manual')) {
+                            category = 'Tools';
+                        } else {
+                            category = 'Utilities';
+                        }
+                    }
+
+                    const appObject = {
                         id: info.id,
                         name: info.name,
                         version: info.version || '1.0.0',
-                        description: info.description || `${info.name} mini app for Spixi and Baracuda platform.`,
-                        publisher: info.publisher || 'Baracuda',
-                        category: info.category || (folder.includes('game') || folder.includes('tictactoe') || folder.includes('doom') || folder.includes('pong') || folder.includes('coinflip') ? 'Games' : 'Tools'),
+                        description: info.description || `${info.name} mini app for Spixi & Baracuda ecosystem.`,
+                        publisher: info.publisher || (source.repoUrl.includes('subsubl') ? 'Baracuda Community' : 'Ixian Platform'),
+                        repoSource: source.name,
+                        category: category,
                         icon: `apps/${folder}/icon.png`,
                         appUrl: appUrl,
                         downloadUrl: `apps/${folder}.spixi`,
                         zipUrl: `apps/${folder}.zip`,
-                        sourceUrl: `https://github.com/subsubl/Spixi-mini-APPs/tree/main/apps/${folder}`,
-                        isNew: folder.includes('coinflip') || folder.includes('aiassistant') || folder.includes('starwind'),
-                        isPopular: folder.includes('tictactoe') || folder.includes('doom') || folder.includes('whiteboard') || folder.includes('pong'),
+                        sourceUrl: `${source.repoUrl}/tree/${source.branch}/apps/${folder}`,
+                        isNew: folder.includes('protocol') || folder.includes('coinflip') || folder.includes('dentist'),
+                        isPopular: folder.includes('protocol') || folder.includes('doom') || folder.includes('tictactoe') || folder.includes('pong') || folder.includes('starwind'),
                         installCount: Math.floor(Math.random() * 800) + 120
-                    });
+                    };
+
+                    appsMap.set(info.id, appObject);
+                } catch (e) {
+                    console.warn(`Failed to parse ${appInfoPath}: ${e.message}`);
                 }
-            } catch (e) {
-                console.warn(`Failed to parse ${appInfoPath}: ${e.message}`);
             }
         }
     }
 
-    const outputContent = JSON.stringify(apps, null, 4);
+    const appsList = Array.from(appsMap.values());
+    const outputContent = JSON.stringify(appsList, null, 4);
     fs.writeFileSync(OUTPUT_FILE, outputContent);
-    console.log(`✅ Generated ${OUTPUT_FILE} with ${apps.length} apps.`);
+    console.log(`✅ Generated ${OUTPUT_FILE} with ${appsList.length} unique apps from both sources.`);
 }
 
 processApps().catch(err => {

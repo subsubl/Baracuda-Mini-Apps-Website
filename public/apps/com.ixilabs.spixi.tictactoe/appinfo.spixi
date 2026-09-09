@@ -1,0 +1,7 @@
+caVersion = 0
+id = com.ixilabs.spixi.tictactoe
+publisher = IXI Labs
+name = Tic-Tac-Toe
+version = 1.0.7
+capabilities = multiUser
+maxUsers = 2

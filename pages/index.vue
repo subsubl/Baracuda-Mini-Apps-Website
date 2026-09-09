@@ -20,7 +20,7 @@ const { data: apps, pending } = await useFetch('/api/apps', {
 const searchQuery = ref('')
 const debouncedSearchQuery = ref('')
 const selectedCategory = ref('All')
-const categories = ['All', 'Games', 'Productivity', 'Tools', 'Social']
+const categories = ['All', 'Games', 'Tools', 'Utilities', 'Social']
 
 // Debounce search
 let debounceTimer = null
@@ -95,18 +95,20 @@ function handleModalClick(e) {
           <div class="md:w-3/5 inline-flex flex-col gap-6 justify-between">
             <div>
               <span class="px-3 py-1 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-full uppercase tracking-widest text-xs font-bold mb-3 inline-block">
-                Unofficial Spixi Mini Apps Hub
+                Unified Spixi Mini Apps Hub
               </span>
               <h1 class="text-3xl md:text-5xl font-lexend font-extrabold leading-tight tracking-tight text-white">
                 Baracuda <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-400">Mini Apps</span>
               </h1>
             </div>
             <p class="text-lg text-gray-300 leading-relaxed max-w-2xl">
-              Explore, test live in your browser, and build decentralized, peer-to-peer web mini apps for Spixi messenger and Baracuda ecosystem.
+              Unified directory for Spixi decentralized P2P web mini apps aggregated from 
+              <span class="text-blue-400 font-mono text-xs">subsubl/Spixi-mini-APPs</span> & 
+              <span class="text-indigo-400 font-mono text-xs">ixian-platform/Spixi-Mini-Apps</span>.
             </p>
             <div class="flex flex-wrap gap-4 mt-2">
               <a href="#featured" class="glow-button text-white px-6 py-3.5 rounded-xl font-bold transition-transform flex items-center gap-2">
-                <span>⚡ Browse Catalog</span>
+                <span>⚡ Explore Catalog</span>
               </a>
               <NuxtLink to="/builder" class="bg-gray-800/80 hover:bg-gray-700 text-gray-200 border border-gray-700 px-6 py-3.5 rounded-xl font-semibold transition-colors flex items-center gap-2">
                 <span>📦 Open App Packer</span>
@@ -140,8 +142,8 @@ function handleModalClick(e) {
           <div class="w-14 h-14 bg-emerald-500/20 text-emerald-400 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-emerald-500/30 text-2xl">
             🧪
           </div>
-          <h3 class="text-white font-bold text-base mb-1">2. Test Live</h3>
-          <p class="text-xs text-gray-400">Click "Test Live" on any app to simulate in your browser</p>
+          <h3 class="text-white font-bold text-base mb-1">2. Try Live</h3>
+          <p class="text-xs text-gray-400">Click "Try App" on any mini app to test live in your browser</p>
         </div>
         
         <div class="glass-card rounded-2xl p-6 text-center border border-gray-800">
@@ -158,8 +160,8 @@ function handleModalClick(e) {
     <main id="featured" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
         <div>
-          <h2 class="text-2xl md:text-3xl font-extrabold text-white">Baracuda Mini Apps Catalog</h2>
-          <p class="text-sm text-gray-400">High-performance P2P mini apps ready for testing & installation.</p>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-white">Baracuda & Ixian Mini Apps</h2>
+          <p class="text-sm text-gray-400">P2P mini apps aggregated from official & community repositories without duplicates.</p>
         </div>
       </div>
 
@@ -169,7 +171,7 @@ function handleModalClick(e) {
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="Search mini apps by name, description or author..."
+            placeholder="Search mini apps by name, description, publisher or ID..."
             class="w-full px-5 py-3.5 pl-12 bg-gray-900/90 border border-gray-800 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/80 transition-colors text-sm"
           />
           <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -214,7 +216,8 @@ function handleModalClick(e) {
         <div
           v-for="app in filteredApps"
           :key="app.id"
-          class="glass-card rounded-2xl p-6 border border-gray-800/80 hover:border-blue-500/40 flex flex-col justify-between group transition-all duration-200"
+          @click="openModal(app)"
+          class="glass-card rounded-2xl p-6 border border-gray-800/80 hover:border-blue-500/50 flex flex-col justify-between group transition-all duration-200 cursor-pointer shadow-lg hover:shadow-blue-500/10"
         >
           <div>
             <!-- Card Header -->
@@ -244,6 +247,9 @@ function handleModalClick(e) {
               <span v-if="app.category" class="px-2.5 py-0.5 text-[10px] font-bold rounded-md bg-blue-500/20 text-blue-400 border border-blue-500/30">
                 {{ app.category }}
               </span>
+              <span v-if="app.repoSource" class="px-2.5 py-0.5 text-[10px] font-bold rounded-md bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                {{ app.repoSource.includes('subsubl') ? 'Community' : 'Ixian Official' }}
+              </span>
               <span v-if="app.isPopular" class="px-2.5 py-0.5 text-[10px] font-bold rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/30">
                 🔥 Popular
               </span>
@@ -258,54 +264,83 @@ function handleModalClick(e) {
           </div>
 
           <!-- Actions -->
-          <div class="flex items-center gap-2 pt-4 border-t border-gray-800/60 mt-2">
+          <div class="flex items-center gap-2 pt-4 border-t border-gray-800/60 mt-2" @click.stop>
             <button
               @click="startSimulator(app)"
-              class="flex-1 px-3 py-2.5 bg-blue-600/90 hover:bg-blue-600 text-white rounded-xl font-bold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-md shadow-blue-600/20"
+              class="flex-1 px-3 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-md shadow-blue-600/20"
             >
-              <span>🧪 Test Live</span>
+              <span>🧪 Try App</span>
             </button>
             <button
               @click="openModal(app)"
-              class="px-3 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700 rounded-xl font-medium text-xs transition-colors"
-              title="View QR Code & Download"
+              class="px-3.5 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700 rounded-xl font-medium text-xs transition-colors"
+              title="View Details & QR Code"
             >
-              QR Code
+              📋 Details
             </button>
           </div>
         </div>
       </div>
     </main>
 
-    <!-- App Details / QR Modal -->
+    <!-- App Details / Popup Card Modal -->
     <Teleport to="body">
       <div v-if="showModal" id="modal-backdrop" @click="handleModalClick" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="glass-panel w-full max-w-md rounded-2xl p-6 border border-gray-700 shadow-2xl relative" @click.stop>
-          <div class="flex items-start justify-between mb-4">
-            <div class="flex items-center gap-3">
-              <img :src="selectedApp?.icon" :alt="selectedApp?.name" class="w-12 h-12 rounded-xl object-cover border border-gray-700 bg-gray-900" />
+        <div class="glass-panel w-full max-w-lg rounded-2xl p-6 md:p-8 border border-gray-700 shadow-2xl relative" @click.stop>
+          <!-- Header -->
+          <div class="flex items-start justify-between mb-5">
+            <div class="flex items-center gap-4">
+              <img :src="selectedApp?.icon" :alt="selectedApp?.name" class="w-16 h-16 rounded-2xl object-cover border border-gray-700 bg-gray-900 shadow-md" />
               <div>
-                <h3 class="text-xl font-bold text-white">{{ selectedApp?.name }}</h3>
-                <p class="text-xs text-gray-400 font-mono">{{ selectedApp?.id }}</p>
+                <div class="flex items-center gap-2">
+                  <h3 class="text-2xl font-bold text-white leading-tight">{{ selectedApp?.name }}</h3>
+                  <span class="px-2 py-0.5 text-[11px] font-mono text-gray-400 bg-gray-900 border border-gray-800 rounded-md">
+                    v{{ selectedApp?.version }}
+                  </span>
+                </div>
+                <p class="text-xs text-gray-400 font-mono mt-0.5">{{ selectedApp?.id }}</p>
+                <span class="inline-block mt-1 text-xs text-blue-400 font-medium">By {{ selectedApp?.publisher || 'Baracuda' }}</span>
               </div>
             </div>
-            <button @click="closeModal" class="text-gray-400 hover:text-white p-1">✕</button>
+            <button @click="closeModal" class="text-gray-400 hover:text-white p-1 text-lg">✕</button>
           </div>
 
-          <p class="text-xs text-gray-300 leading-relaxed mb-4">{{ selectedApp?.description }}</p>
-
-          <div class="bg-black/60 p-4 rounded-xl border border-gray-800 text-center mb-4">
-            <p class="text-xs font-semibold text-gray-400 mb-3">Scan with Spixi Messenger to Install</p>
-            <QrcodeVue v-if="selectedApp" :value="selectedApp.downloadUrl" :size="160" :margin="2" level="H" class="mx-auto rounded-lg bg-white p-2" />
-            <p class="text-[11px] text-gray-500 font-mono mt-2 break-all">{{ selectedApp?.downloadUrl }}</p>
+          <!-- Badges & Source -->
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span v-if="selectedApp?.category" class="px-3 py-1 text-xs font-bold rounded-lg bg-blue-500/20 text-blue-400 border border-blue-500/30">
+              {{ selectedApp.category }}
+            </span>
+            <span v-if="selectedApp?.repoSource" class="px-3 py-1 text-xs font-bold rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+              Source: {{ selectedApp.repoSource }}
+            </span>
           </div>
 
-          <div class="flex gap-2">
-            <button @click="closeModal(); startSimulator(selectedApp)" class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl transition-colors">
-              🧪 Launch Simulator
+          <!-- Description -->
+          <p class="text-xs md:text-sm text-gray-300 leading-relaxed mb-6 bg-gray-900/60 p-4 rounded-xl border border-gray-800">
+            {{ selectedApp?.description }}
+          </p>
+
+          <!-- QR Code Section -->
+          <div class="bg-black/70 p-5 rounded-2xl border border-gray-800 text-center mb-6">
+            <p class="text-xs font-semibold text-gray-300 mb-3 flex items-center justify-center gap-1.5">
+              <span>📱 Scan with Spixi Messenger to Install</span>
+            </p>
+            <QrcodeVue v-if="selectedApp" :value="selectedApp.downloadUrl" :size="170" :margin="2" level="H" class="mx-auto rounded-xl bg-white p-2.5 shadow-md" />
+            <p class="text-[11px] text-gray-500 font-mono mt-3 break-all">{{ selectedApp?.downloadUrl }}</p>
+          </div>
+
+          <!-- Modal Action Buttons -->
+          <div class="flex flex-col sm:flex-row gap-3">
+            <button @click="closeModal(); startSimulator(selectedApp)" class="flex-1 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl transition-all shadow-lg shadow-blue-600/30 flex items-center justify-center gap-2">
+              <span>🧪 Try App (Launch Simulator)</span>
             </button>
-            <a v-if="selectedApp?.zipUrl" :href="selectedApp.zipUrl" download class="px-4 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold text-xs rounded-xl transition-colors flex items-center justify-center">
-              Download .zip
+
+            <a v-if="selectedApp?.sourceUrl" :href="selectedApp.sourceUrl" target="_blank" rel="noopener" class="px-4 py-3 bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold text-xs rounded-xl transition-colors flex items-center justify-center gap-1.5 border border-gray-700">
+              <span>🔗 Source</span>
+            </a>
+
+            <a v-if="selectedApp?.zipUrl" :href="selectedApp.zipUrl" download class="px-4 py-3 bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold text-xs rounded-xl transition-colors flex items-center justify-center gap-1 border border-gray-700">
+              <span>📦 Download .zip</span>
             </a>
           </div>
         </div>
