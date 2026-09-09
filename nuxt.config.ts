@@ -12,7 +12,7 @@ export default defineNuxtConfig({
             '/**': {
                 prerender: true,
                 headers: {
-                    'X-Frame-Options': 'DENY'
+                    'X-Frame-Options': 'SAMEORIGIN'
                 }
             }
         }
@@ -55,13 +55,14 @@ export default defineNuxtConfig({
     colorMode: {
         classSuffix: '',
         storageKey: 'color-theme',
-        preference: 'system',
-        fallback: 'light',
+        preference: 'dark',
+        fallback: 'dark',
     },
 
     googleFonts: {
         families: {
             'Lexend': true,
+            'Inter': true,
         }
     },
 
@@ -75,12 +76,16 @@ export default defineNuxtConfig({
     },
 
     app: {
-        baseURL: '/Spixi-Mini-Apps-Website/',
+        baseURL: '/Baracuda-Mini-Apps-Website/',
         pageTransition: false,
         head: {
-            title: 'Spixi',
+            title: 'Baracuda Mini Apps | Unofficial Spixi Mini Apps Hub',
             charset: 'utf-8',
             viewport: 'width=device-width, initial-scale=1',
+            meta: [
+                { name: 'description', content: 'Explore, package, and test unofficial Baracuda Mini Apps for Spixi decentralized messenger.' },
+                { name: 'theme-color', content: '#0B0F19' }
+            ]
         },
     },
 
