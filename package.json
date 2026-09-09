@@ -1,7 +1,11 @@
 {
-  "name": "spixi-mini-apps",
+  "name": "baracuda-mini-apps-website",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@9.15.5",
+  "engines": {
+    "node": ">=24.0.0"
+  },
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
