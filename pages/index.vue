@@ -110,7 +110,7 @@ function handleModalClick(e) {
           </div>
           <div class="md:w-1/2 hidden md:flex justify-center pr-8 relative">
             <div class="absolute inset-0 bg-accent/20 blur-[100px] rounded-full pointer-events-none"></div>
-            <!-- ⚡ Bolt Optimization: Removed preload to avoid double download of hero images -->
+            <!-- ⚡ Bolt Optimization: Removed preload and added loading="lazy" to prevent eager double-download of hidden theme variants -->
             <NuxtImg
               src="/img/mini-d.png"
               class="relative z-10 drop-shadow-2xl hidden dark:block"
@@ -118,6 +118,7 @@ function handleModalClick(e) {
               width="800"
               format="webp"
               sizes="sm:100vw md:50vw lg:800px"
+              loading="lazy"
             />
             <NuxtImg
               src="/img/mini-l.png"
@@ -126,6 +127,7 @@ function handleModalClick(e) {
               width="800"
               format="webp"
               sizes="sm:100vw md:50vw lg:800px"
+              loading="lazy"
             />
           </div>
         </div>

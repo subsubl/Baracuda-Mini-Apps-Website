@@ -21,3 +21,7 @@
 ## 2026-08-08 - [GraphQL Binary Payload Optimization]
 **Learning:** Using GitHub GraphQL to deeply fetch a recursive file tree and reading `text` from `Blob`s for binary files (like images) results in enormous data payloads. This wastes memory by representing binary data as large strings, causing parsing overhead and risking truncation or query limits.
 **Action:** Always fetch file metadata separately from large file contents. First, list the files or directories, then use batched alias queries explicitly fetching the `byteSize` of the blob to determine existence rather than requesting the `text` content, avoiding massive binary payloads entirely.
+
+## 2026-10-10 - [Lazy Load Hidden Theme Images]
+**Learning:** Adding `loading="lazy"` to theme-dependent `<NuxtImg>` variants toggled via CSS (e.g., `hidden dark:block`) is crucial. Without it, the browser eagerly downloads the hidden variant anyway, causing a double download that wastes bandwidth and degrades load performance.
+**Action:** When using CSS visibility classes for theme-dependent images like `<NuxtImg>`, always include the `loading="lazy"` attribute on both variants (or at least the hidden one) to prevent the browser from eagerly downloading the hidden variant on initial page load.
