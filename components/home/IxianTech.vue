@@ -6,8 +6,9 @@ const { t } = useI18n()
         <div class="flex flex-col md:flex-row items-center justify-between py-7 px-10 relative overflow-hidden rounded-2xl">
             <div class="md:w-2/3">
                 <!-- ⚡ Bolt Optimization: Replaced v-if="$colorMode.value" with Tailwind classes for SSR and no layout shifts -->
-                <NuxtImg src="/img/IxianTechLight.svg" class="block dark:hidden" />
-                <NuxtImg src="/img/IxianTechDark.svg" class="hidden dark:block" />
+                <!-- Added loading="lazy" to prevent downloading the hidden theme variant on initial page load -->
+                <NuxtImg src="/img/IxianTechLight.svg" loading="lazy" class="block dark:hidden" />
+                <NuxtImg src="/img/IxianTechDark.svg" loading="lazy" class="hidden dark:block" />
                 <h2 class="text-5xl font-lexend font-semibold text-black dark:text-spixi-dark pt-4">
                     {{ t('pages.home.features.tech.title') }}
                 </h2>
