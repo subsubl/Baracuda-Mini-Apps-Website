@@ -21,3 +21,6 @@
 ## 2026-08-08 - [GraphQL Binary Payload Optimization]
 **Learning:** Using GitHub GraphQL to deeply fetch a recursive file tree and reading `text` from `Blob`s for binary files (like images) results in enormous data payloads. This wastes memory by representing binary data as large strings, causing parsing overhead and risking truncation or query limits.
 **Action:** Always fetch file metadata separately from large file contents. First, list the files or directories, then use batched alias queries explicitly fetching the `byteSize` of the blob to determine existence rather than requesting the `text` content, avoiding massive binary payloads entirely.
+## 2024-10-25 - [Lazy Loading Anti-Pattern on Hero Images]
+**Learning:** Adding `loading="lazy"` to LCP/above-the-fold elements (like hero section background patterns or main illustrations) is a well-known web performance anti-pattern. It forces the browser to wait until the DOM is parsed and layout is calculated before it starts fetching the image, degrading the LCP metric.
+**Action:** Only apply `loading="lazy"` to images explicitly below the fold (e.g., in App Grids, modals, footers, etc.).

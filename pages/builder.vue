@@ -451,7 +451,7 @@ contentSize = ${zipSize}`;
 
             <div v-if="generatedIcon" class="flex flex-col items-center p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group relative">
                 <a :href="generatedIcon.url" :download="generatedIcon.name" class="absolute inset-0 z-10 w-full h-full"></a>
-                <img :src="generatedIcon.url" class="w-10 h-10 mb-3 object-contain group-hover:scale-110 transition-transform"/>
+                <img loading="lazy" :src="generatedIcon.url" class="w-10 h-10 mb-3 object-contain group-hover:scale-110 transition-transform"/>
                 <span class="font-medium text-gray-900 dark:text-white truncate max-w-full px-2" :title="generatedIcon.name">{{ generatedIcon.name }}</span>
                 <span class="text-xs text-gray-500 mt-1">Icon</span>
             </div>

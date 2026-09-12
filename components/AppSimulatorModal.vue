@@ -5,7 +5,8 @@
       <!-- Top Bar -->
       <div class="px-6 py-4 bg-gray-900/90 border-b border-gray-800 flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <img :src="app?.icon || '/img/default-icon.png'" :alt="app?.name" class="w-8 h-8 rounded-lg border border-gray-700 object-cover" />
+          <!-- ⚡ Bolt Optimization: Added loading="lazy" for off-screen images -->
+          <img loading="lazy" :src="app?.icon || '/img/default-icon.png'" :alt="app?.name" class="w-8 h-8 rounded-lg border border-gray-700 object-cover" />
           <div>
             <h3 class="font-bold text-white flex items-center gap-2 text-base">
               {{ app?.name || 'Mini App Simulator' }}
