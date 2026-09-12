@@ -18,8 +18,8 @@ let images = {
         </div>
         <div class="md:w-3/5 w-full flex justify-center">
             <!-- ⚡ Bolt Optimization: Replaced v-if="$colorMode.value" with Tailwind classes for SSR and no layout shifts -->
-            <NuxtImg v-if="images.light" :src="images.light" class="w-50 md:w-full rounded-[40px] block dark:hidden" />
-            <NuxtImg v-if="images.dark" :src="images.dark" class="w-50 md:w-full rounded-[40px] hidden dark:block" />
+            <NuxtImg loading="lazy" v-if="images.light" :src="images.light" class="w-50 md:w-full rounded-[40px] block dark:hidden" />
+            <NuxtImg loading="lazy" v-if="images.dark" :src="images.dark" class="w-50 md:w-full rounded-[40px] hidden dark:block" />
         </div>
     </div>
 </template>

@@ -68,7 +68,8 @@ defineProps({
 
       <div class="flex flex-col md:flex-row gap-2 md:gap-4 items-center md:items-start">
         <NuxtLink v-if="store.url" :to="store.url" class="flex items-center py-4">
-          <img :src="store.image" alt="Google Play" class="w-[150px] h-auto" />
+          <!-- ⚡ Bolt Optimization: Added loading="lazy" for off-screen images -->
+          <img loading="lazy" :src="store.image" alt="Google Play" class="w-[150px] h-auto" />
         </NuxtLink>
 
         <p v-if="store.url && link.url" class="text-spixi dark:text-spixi-dark font-medium">
@@ -94,7 +95,7 @@ defineProps({
     </div>
 
     <div class="flex-shrink-0 w-full md:w-1/3 flex justify-center md:justify-end" v-if="isMiniApp">
-      <img :src="miniAppImg" alt="mini-app-image" class="rounded-2xl w-[200px] h-auto object-cover md:w-full" />
+      <img loading="lazy" :src="miniAppImg" alt="mini-app-image" class="rounded-2xl w-[200px] h-auto object-cover md:w-full" />
     </div>
   </div>
 

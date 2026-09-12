@@ -20,8 +20,9 @@ const { t } = useI18n()
                 </div>
             </div>
             <div class="md:w-1/2 flex justify-end">
-                <NuxtImg src="/img/SpixiSummaryLight.png" class="w-[432px] block dark:hidden" />
-                <NuxtImg src="/img/SpixiSummaryDark.png" class="w-[432px] hidden dark:block" />
+                <!-- ⚡ Bolt Optimization: Added loading="lazy" for off-screen images -->
+                <NuxtImg loading="lazy" src="/img/SpixiSummaryLight.png" class="w-[432px] block dark:hidden" />
+                <NuxtImg loading="lazy" src="/img/SpixiSummaryDark.png" class="w-[432px] hidden dark:block" />
             </div>
         </div>
     </div>

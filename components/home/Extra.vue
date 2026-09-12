@@ -35,7 +35,7 @@ let images = {
             </p>
         </div>
         <!-- ⚡ Bolt Optimization: Replaced v-if="$colorMode.value" with Tailwind classes for SSR and no layout shifts -->
-        <NuxtImg v-if="images.light" :src="images.light" class="w-40 block dark:hidden" />
-        <NuxtImg v-if="images.dark" :src="images.dark" class="w-40 hidden dark:block" />
+        <NuxtImg loading="lazy" v-if="images.light" :src="images.light" class="w-40 block dark:hidden" />
+        <NuxtImg loading="lazy" v-if="images.dark" :src="images.dark" class="w-40 hidden dark:block" />
     </div>
 </template>
