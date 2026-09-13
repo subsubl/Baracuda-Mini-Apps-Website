@@ -260,9 +260,11 @@ onMounted(() => {
             <!-- Card Header -->
             <div class="flex items-start justify-between mb-4">
               <div class="flex items-center gap-3">
+                <!-- ⚡ Bolt Optimization: Added loading="lazy" to defer loading of off-screen app icons in the grid -->
                 <img
                   :src="app.icon"
                   :alt="app.name"
+                  loading="lazy"
                   class="w-14 h-14 rounded-2xl object-cover border border-gray-700 bg-gray-900 group-hover:scale-105 transition-transform"
                   @error="$event.target.src='/img/default-icon.png'"
                 />
