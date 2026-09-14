@@ -21,3 +21,7 @@
 ## 2026-08-08 - [GraphQL Binary Payload Optimization]
 **Learning:** Using GitHub GraphQL to deeply fetch a recursive file tree and reading `text` from `Blob`s for binary files (like images) results in enormous data payloads. This wastes memory by representing binary data as large strings, causing parsing overhead and risking truncation or query limits.
 **Action:** Always fetch file metadata separately from large file contents. First, list the files or directories, then use batched alias queries explicitly fetching the `byteSize` of the blob to determine existence rather than requesting the `text` content, avoiding massive binary payloads entirely.
+
+## 2024-05-25 - [Grid Image Lazy Loading Optimization]
+**Learning:** Rendering large lists or grids of images (like the App Grid in `pages/index.vue`) without `loading="lazy"` forces the browser to download all images simultaneously on initial page load, consuming bandwidth and delaying the rendering of critical content (LCP).
+**Action:** Always include the native `loading="lazy"` attribute on `<img>` tags for items in large lists or grids that may render below the fold.
