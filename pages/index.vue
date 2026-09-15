@@ -260,9 +260,11 @@ onMounted(() => {
             <!-- Card Header -->
             <div class="flex items-start justify-between mb-4">
               <div class="flex items-center gap-3">
+                <!-- ⚡ Bolt Optimization: Added loading="lazy" to defer loading of off-screen icons -->
                 <img
                   :src="app.icon"
                   :alt="app.name"
+                  loading="lazy"
                   class="w-14 h-14 rounded-2xl object-cover border border-gray-700 bg-gray-900 group-hover:scale-105 transition-transform"
                   @error="$event.target.src='/img/default-icon.png'"
                 />
@@ -327,7 +329,8 @@ onMounted(() => {
           <!-- Header -->
           <div class="flex items-start justify-between mb-5">
             <div class="flex items-center gap-4">
-              <img :src="selectedApp?.icon" :alt="selectedApp?.name" class="w-16 h-16 rounded-2xl object-cover border border-gray-700 bg-gray-900 shadow-md" />
+              <!-- ⚡ Bolt Optimization: Added loading="lazy" to defer loading of icon -->
+              <img :src="selectedApp?.icon" :alt="selectedApp?.name" loading="lazy" class="w-16 h-16 rounded-2xl object-cover border border-gray-700 bg-gray-900 shadow-md" />
               <div>
                 <div class="flex items-center gap-2">
                   <h3 class="text-2xl font-bold text-white leading-tight">{{ selectedApp?.name }}</h3>
