@@ -1,8 +1,10 @@
 caVersion = 0
 id = com.mostnonameuser.spixi.aiassistant
-publisher = mostnonameuser 
+publisher = mostnonameuser
 name = AI Assistant
 version = 0.1.2
 capabilities = multiUser
-protocols = com.mostnonameuser.aiassistant
-icon = icon.png
+image = https://dronko.si/apps/com.mostnonameuser.spixi.aiassistant.png
+contentUrl = https://dronko.si/apps/com.mostnonameuser.spixi.aiassistant.zspixiapp
+checksum = 166d6681ca1fb2c43be7d63c082435653ff05daecc097bc2a18a5fed0fb8a951
+contentSize = 71453

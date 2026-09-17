@@ -6,3 +6,7 @@ version = 1.1.0
 capabilities = multiUser
 minUsers = 2
 maxUsers = 2
+image = https://dronko.si/apps/com.ixilabs.spixi.starwind-arena.png
+contentUrl = https://dronko.si/apps/com.ixilabs.spixi.starwind-arena.zspixiapp
+checksum = 9126691d392153159024c25d7d39f242df21bb17958ada53ac2a424bbea7a0a4
+contentSize = 3230968

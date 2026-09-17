@@ -82,7 +82,7 @@ function openModal(app) {
 
 function closeModal() {
   showModal.value = false
-  selectedApp.value = null
+  // keep selectedApp — "Try App" in the details modal launches the simulator with it
   if (typeof window !== 'undefined' && window.location.hash.includes('app=')) {
     history.pushState('', document.title, window.location.pathname + window.location.search)
   }

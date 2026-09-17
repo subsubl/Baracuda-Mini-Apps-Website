@@ -4,3 +4,7 @@ publisher = IXI Labs
 name = Spixi Authenticator
 version = 1.0.0
 capabilities = singleUser, authentication, transactionSigning, registeredNamesManagement
+image = https://dronko.si/apps/com.ixilabs.spixi.auth.png
+contentUrl = https://dronko.si/apps/com.ixilabs.spixi.auth.zspixiapp
+checksum = 63ef1b7e1d7ecc77a4366fcc671384ca1372763896810522d07fe77ee689f7b7
+contentSize = 1490699

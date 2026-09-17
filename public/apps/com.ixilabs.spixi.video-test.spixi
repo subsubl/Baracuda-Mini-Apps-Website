@@ -4,3 +4,7 @@ publisher = IXI Labs
 name = Spixi Video Test
 version = 0.1.0
 capabilities = singleUser
+image = https://dronko.si/apps/com.ixilabs.spixi.video-test.png
+contentUrl = https://dronko.si/apps/com.ixilabs.spixi.video-test.zspixiapp
+checksum = 8fb74cb03a1c7aebb1af581d2b2afed0f36231e300fe5d493af3be5a481c972c
+contentSize = 12830

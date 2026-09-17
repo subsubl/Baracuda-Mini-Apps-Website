@@ -5,3 +5,7 @@ name = Whiteboard
 version = 1.0.2
 capabilities = multiUser
 maxUsers = 3
+image = https://dronko.si/apps/com.ixilabs.spixi.whiteboard.png
+contentUrl = https://dronko.si/apps/com.ixilabs.spixi.whiteboard.zspixiapp
+checksum = 85eac137b29f774b001d30cf6a7b8d88d1269bb63a3028a0eaff5857ce2ee63d
+contentSize = 18591

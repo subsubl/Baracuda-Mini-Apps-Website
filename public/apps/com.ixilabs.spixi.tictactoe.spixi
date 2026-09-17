@@ -5,3 +5,7 @@ name = Tic-Tac-Toe
 version = 1.0.7
 capabilities = multiUser
 maxUsers = 2
+image = https://dronko.si/apps/com.ixilabs.spixi.tictactoe.png
+contentUrl = https://dronko.si/apps/com.ixilabs.spixi.tictactoe.zspixiapp
+checksum = 5cb2aecaae46fe1e597456f6a1c337d65f6c9dd58cd7bbd6f0d360781b03a2b6
+contentSize = 49616

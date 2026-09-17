@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import crypto from 'crypto';
 import { fileURLToPath } from 'url';
 import JSZip from 'jszip';
 
@@ -11,6 +12,15 @@ const ixianAppsDir = path.resolve(__dirname, '../../Spixi-Mini-Apps/apps');
 
 const DEST_APPS_DIR = path.join(__dirname, '../public/apps');
 const OUTPUT_FILE = path.join(__dirname, '../public/apps.json');
+
+// Public site root (no trailing slash). Set SITE_URL for production builds so
+// QR codes / installation metadata carry absolute https URLs. Optional locally.
+const SITE_URL = (process.env.SITE_URL || '').replace(/\/+$/, '');
+const abs = (p) => SITE_URL ? `${SITE_URL}/${p.replace(/^\/+/, '')}` : p;
+
+function sha256(buf) {
+    return crypto.createHash('sha256').update(buf).digest('hex');
+}
 
 function parseAppInfo(text) {
     const lines = text.split(/\r?\n/);
@@ -56,9 +66,10 @@ async function addDirectoryToZip(zip, dirPath, zipFolder) {
 }
 
 async function processApps() {
-    if (!fs.existsSync(DEST_APPS_DIR)) {
-        fs.mkdirSync(DEST_APPS_DIR, { recursive: true });
+    if (fs.existsSync(DEST_APPS_DIR)) {
+        fs.rmSync(DEST_APPS_DIR, { recursive: true, force: true });
     }
+    fs.mkdirSync(DEST_APPS_DIR, { recursive: true });
 
     const sources = [
         {
@@ -121,9 +132,8 @@ async function processApps() {
                         fs.copyFileSync(iconSrc, path.join(DEST_APPS_DIR, `${folder}.png`));
                     }
 
-                    // Copy appinfo.spixi
+                    // Copy appinfo.spixi into the app folder (reference copy)
                     fs.copyFileSync(appInfoPath, path.join(destFolderPath, 'appinfo.spixi'));
-                    fs.copyFileSync(appInfoPath, path.join(DEST_APPS_DIR, `${folder}.spixi`));
 
                     // Copy app files
                     const appSubFolder = path.join(folderPath, 'app');
@@ -140,7 +150,31 @@ async function processApps() {
                     const zipSource = fs.existsSync(appSubFolder) ? appSubFolder : folderPath;
                     await addDirectoryToZip(zip, zipSource, '');
                     const zipContent = await zip.generateAsync({ type: 'nodebuffer' });
-                    fs.writeFileSync(path.join(DEST_APPS_DIR, `${folder}.zip`), zipContent);
+                    const zipPath = path.join(DEST_APPS_DIR, `${folder}.zip`);
+                    fs.writeFileSync(zipPath, zipContent);
+
+                    // Official Spixi packaging (per ixian app-packer):
+                    //   apps/<folder>.zspixiapp - the app archive
+                    //   apps/<folder>.spixi     - text metadata with image/contentUrl/checksum/contentSize
+                    const zspixiPath = path.join(DEST_APPS_DIR, `${folder}.zspixiapp`);
+                    fs.renameSync(zipPath, zspixiPath);
+                    const zspixiContent = fs.readFileSync(zspixiPath);
+                    const iconPublic = fs.existsSync(iconSrc) ? `apps/${folder}.png` : `apps/${folder}/icon.png`;
+                    const meta = [
+                        `caVersion = ${info.caVersion || '0'}`,
+                        `id = ${info.id}`,
+                        `publisher = ${info.publisher || (source.repoUrl.includes('subsubl') ? 'Baracuda Community' : 'Ixian Platform')}`,
+                        `name = ${info.name}`,
+                        `version = ${info.version || '1.0.0'}`,
+                    ];
+                    if (info.capabilities) meta.push(`capabilities = ${info.capabilities}`);
+                    if (info.minUsers) meta.push(`minUsers = ${info.minUsers}`);
+                    if (info.maxUsers) meta.push(`maxUsers = ${info.maxUsers}`);
+                    meta.push(`image = ${abs(iconPublic)}`);
+                    meta.push(`contentUrl = ${abs(`apps/${folder}.zspixiapp`)}`);
+                    meta.push(`checksum = ${sha256(zspixiContent)}`);
+                    meta.push(`contentSize = ${zspixiContent.length}`);
+                    fs.writeFileSync(path.join(DEST_APPS_DIR, `${folder}.spixi`), meta.join('\n') + '\n');
 
                     // Entrypoint URL
                     const hasAppFolder = fs.existsSync(appSubFolder);
@@ -169,8 +203,8 @@ async function processApps() {
                         category: category,
                         icon: `apps/${folder}/icon.png`,
                         appUrl: appUrl,
-                        downloadUrl: `apps/${folder}.spixi`,
-                        zipUrl: `apps/${folder}.zip`,
+                        downloadUrl: abs(`apps/${folder}.spixi`),
+                        zipUrl: abs(`apps/${folder}.zspixiapp`),
                         sourceUrl: `${source.repoUrl}/tree/${source.branch}/apps/${folder}`,
                         isNew: folder.includes('protocol') || folder.includes('coinflip') || folder.includes('dentist'),
                         isPopular: folder.includes('protocol') || folder.includes('doom') || folder.includes('tictactoe') || folder.includes('pong') || folder.includes('starwind'),
