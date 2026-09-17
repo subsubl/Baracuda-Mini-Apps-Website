@@ -174,7 +174,7 @@ async function processApps() {
                         sourceUrl: `${source.repoUrl}/tree/${source.branch}/apps/${folder}`,
                         isNew: folder.includes('protocol') || folder.includes('coinflip') || folder.includes('dentist'),
                         isPopular: folder.includes('protocol') || folder.includes('doom') || folder.includes('tictactoe') || folder.includes('pong') || folder.includes('starwind'),
-                        installCount: Math.floor(Math.random() * 800) + 120
+                        installCount: 0 // placeholder; real install metrics are not available yet
                     };
 
                     appsMap.set(info.id, appObject);

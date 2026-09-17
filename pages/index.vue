@@ -8,7 +8,9 @@ const QrcodeVue = defineAsyncComponent(() => import('qrcode.vue'))
 const { t } = useI18n()
 
 // Fetch apps data
-const { data: apps, pending } = await useFetch('/api/apps', {
+const { data: apps, pending } = await useFetch('/apps.json', {
+  server: false,
+  default: () => [],
   transform: (apps) => apps.map(app => ({
     ...app,
     _searchName: (app.name || '').toLowerCase(),

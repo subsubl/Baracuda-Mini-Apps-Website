@@ -14,7 +14,7 @@
         "sourceUrl": "https://github.com/subsubl/Spixi-mini-APPs/tree/main/apps/com.baracuda.spixi.coinflip",
         "isNew": true,
         "isPopular": false,
-        "installCount": 862
+        "installCount": 0
     },
     {
         "id": "com.baracuda.spixi.dentistgame",
@@ -31,7 +31,7 @@
         "sourceUrl": "https://github.com/subsubl/Spixi-mini-APPs/tree/main/apps/com.baracuda.spixi.dentistgame",
         "isNew": true,
         "isPopular": false,
-        "installCount": 565
+        "installCount": 0
     },
     {
         "id": "com.baracuda.spixi.doom",
@@ -48,7 +48,7 @@
         "sourceUrl": "https://github.com/subsubl/Spixi-mini-APPs/tree/main/apps/com.baracuda.spixi.doom",
         "isNew": false,
         "isPopular": true,
-        "installCount": 336
+        "installCount": 0
     },
     {
         "id": "com.baracuda.spixi.kalker",
@@ -65,7 +65,7 @@
         "sourceUrl": "https://github.com/subsubl/Spixi-mini-APPs/tree/main/apps/com.baracuda.spixi.kalker",
         "isNew": false,
         "isPopular": false,
-        "installCount": 461
+        "installCount": 0
     },
     {
         "id": "com.baracuda.spixi.pong",
@@ -82,7 +82,7 @@
         "sourceUrl": "https://github.com/subsubl/Spixi-mini-APPs/tree/main/apps/com.baracuda.spixi.pong",
         "isNew": false,
         "isPopular": true,
-        "installCount": 212
+        "installCount": 0
     },
     {
         "id": "com.baracuda.spixi.protocol-eclipse",
@@ -99,7 +99,7 @@
         "sourceUrl": "https://github.com/subsubl/Spixi-mini-APPs/tree/main/apps/com.baracuda.spixi.protocol-eclipse",
         "isNew": true,
         "isPopular": true,
-        "installCount": 174
+        "installCount": 0
     },
     {
         "id": "com.baracuda.spixi.survivalmanual",
@@ -116,7 +116,7 @@
         "sourceUrl": "https://github.com/subsubl/Spixi-mini-APPs/tree/main/apps/com.baracuda.spixi.survivalmanual",
         "isNew": false,
         "isPopular": false,
-        "installCount": 673
+        "installCount": 0
     },
     {
         "id": "com.ixilabs.spixi.auth",
@@ -133,7 +133,7 @@
         "sourceUrl": "https://github.com/subsubl/Spixi-mini-APPs/tree/main/apps/com.ixilabs.spixi.auth",
         "isNew": false,
         "isPopular": false,
-        "installCount": 243
+        "installCount": 0
     },
     {
         "id": "com.ixilabs.spixi.doomwasm",
@@ -150,7 +150,7 @@
         "sourceUrl": "https://github.com/subsubl/Spixi-mini-APPs/tree/main/apps/com.ixilabs.spixi.doomwasm",
         "isNew": false,
         "isPopular": true,
-        "installCount": 336
+        "installCount": 0
     },
     {
         "id": "com.ixilabs.spixi.gate-control",
@@ -167,7 +167,7 @@
         "sourceUrl": "https://github.com/subsubl/Spixi-mini-APPs/tree/main/apps/com.ixilabs.spixi.gate-control",
         "isNew": false,
         "isPopular": false,
-        "installCount": 750
+        "installCount": 0
     },
     {
         "id": "com.ixilabs.spixi.mini-apps-test",
@@ -184,7 +184,7 @@
         "sourceUrl": "https://github.com/subsubl/Spixi-mini-APPs/tree/main/apps/com.ixilabs.spixi.mini-apps-test",
         "isNew": false,
         "isPopular": false,
-        "installCount": 323
+        "installCount": 0
     },
     {
         "id": "com.ixilabs.spixi.starwind-arena",
@@ -201,7 +201,7 @@
         "sourceUrl": "https://github.com/subsubl/Spixi-mini-APPs/tree/main/apps/com.ixilabs.spixi.starwind-arena",
         "isNew": false,
         "isPopular": true,
-        "installCount": 578
+        "installCount": 0
     },
     {
         "id": "com.ixilabs.spixi.tictactoe",
@@ -218,7 +218,7 @@
         "sourceUrl": "https://github.com/subsubl/Spixi-mini-APPs/tree/main/apps/com.ixilabs.spixi.tictactoe",
         "isNew": false,
         "isPopular": true,
-        "installCount": 214
+        "installCount": 0
     },
     {
         "id": "com.ixilabs.spixi.video-test",
@@ -235,7 +235,7 @@
         "sourceUrl": "https://github.com/subsubl/Spixi-mini-APPs/tree/main/apps/com.ixilabs.spixi.video-test",
         "isNew": false,
         "isPopular": false,
-        "installCount": 917
+        "installCount": 0
     },
     {
         "id": "com.ixilabs.spixi.whiteboard",
@@ -252,7 +252,7 @@
         "sourceUrl": "https://github.com/subsubl/Spixi-mini-APPs/tree/main/apps/com.ixilabs.spixi.whiteboard",
         "isNew": false,
         "isPopular": false,
-        "installCount": 855
+        "installCount": 0
     },
     {
         "id": "com.mostnonameuser.spixi.aiassistant",
@@ -269,6 +269,6 @@
         "sourceUrl": "https://github.com/subsubl/Spixi-mini-APPs/tree/main/apps/com.mostnonameuser.spixi.aiassistant",
         "isNew": false,
         "isPopular": false,
-        "installCount": 218
+        "installCount": 0
     }
 ]
