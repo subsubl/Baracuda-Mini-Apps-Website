@@ -21,3 +21,7 @@
 ## 2026-08-08 - [GraphQL Binary Payload Optimization]
 **Learning:** Using GitHub GraphQL to deeply fetch a recursive file tree and reading `text` from `Blob`s for binary files (like images) results in enormous data payloads. This wastes memory by representing binary data as large strings, causing parsing overhead and risking truncation or query limits.
 **Action:** Always fetch file metadata separately from large file contents. First, list the files or directories, then use batched alias queries explicitly fetching the `byteSize` of the blob to determine existence rather than requesting the `text` content, avoiding massive binary payloads entirely.
+
+## 2026-10-27 - [Vue Unbounded Array Memory Leak & Render Thrashing]
+**Learning:** In Vue components handling dynamic event streams or logs (like `AppSimulatorModal.vue`), allowing an array to grow unboundedly while binding it to a `v-for` loop causes severe memory leaks and UI lag. Furthermore, using array indices (`:key="idx"`) when `shift()`ing items from the beginning of the array forces Vue to re-patch every single DOM node on every update, devastating rendering performance.
+**Action:** Always bound continuous event arrays (e.g., `if (logs.length > MAX) logs.shift()`). Most importantly, always assign and use a unique ID (`:key="log.id"`) for each item in dynamic lists, especially when items are removed from the start, so Vue can efficiently update only the changed DOM nodes.
