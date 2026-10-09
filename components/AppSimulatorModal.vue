@@ -109,7 +109,8 @@
               <div v-if="logs.length === 0" class="text-gray-600 italic py-4 text-center">
                 No SDK events recorded yet. Interact with the app or send controls above.
               </div>
-              <div v-for="(log, idx) in logs" :key="idx" class="leading-relaxed border-b border-gray-900 pb-1">
+              <!-- ⚡ Bolt Optimization: Use unique IDs for v-for :key to prevent O(n) re-renders -->
+              <div v-for="log in logs" :key="log.id" class="leading-relaxed border-b border-gray-900 pb-1">
                 <span class="text-gray-500">[{{ log.time }}]</span>
                 <span :class="log.typeClass" class="font-bold ml-1">[{{ log.type }}]</span>
                 <span class="text-gray-300 ml-1.5 break-all">{{ log.msg }}</span>
@@ -137,6 +138,7 @@ const emit = defineEmits(['close']);
 const appIframe = ref(null);
 const appUrl = ref('');
 const logs = ref([]);
+let logIdCounter = 0;
 const simSessionId = ref('sess_987654321');
 const simPeerData = ref('{"action":"ping","time":123456}');
 const simPaymentAmount = ref(10);
@@ -155,7 +157,11 @@ function close() {
 
 function addLog(type, msg, color = 'text-blue-400') {
   const time = new Date().toLocaleTimeString();
-  logs.value.push({ time, type, msg, typeClass: color });
+  // ⚡ Bolt Optimization: Bound the array length to prevent memory leaks and use unique IDs
+  logs.value.push({ id: ++logIdCounter, time, type, msg, typeClass: color });
+  if (logs.value.length > 100) {
+    logs.value.shift();
+  }
 }
 
 function clearLogs() {

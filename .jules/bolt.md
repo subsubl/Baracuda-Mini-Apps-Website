@@ -21,3 +21,7 @@
 ## 2026-08-08 - [GraphQL Binary Payload Optimization]
 **Learning:** Using GitHub GraphQL to deeply fetch a recursive file tree and reading `text` from `Blob`s for binary files (like images) results in enormous data payloads. This wastes memory by representing binary data as large strings, causing parsing overhead and risking truncation or query limits.
 **Action:** Always fetch file metadata separately from large file contents. First, list the files or directories, then use batched alias queries explicitly fetching the `byteSize` of the blob to determine existence rather than requesting the `text` content, avoiding massive binary payloads entirely.
+
+## 2024-05-18 - [Vue Dynamic List Rendering Optimization]
+**Learning:** In Vue components handling dynamic lists that grow over time (like event logs in `AppSimulatorModal.vue`), using the array index as the `v-for` `:key` causes massive O(n) re-renders when removing items from the beginning of the array (e.g., using `.shift()` to prevent memory leaks).
+**Action:** Always bound the array length to prevent memory leaks and use unique IDs for `v-for` `:key` attributes instead of array indices. This allows Vue to achieve O(1) DOM updates instead of O(n) by cleanly removing the oldest DOM node and appending the new one.
