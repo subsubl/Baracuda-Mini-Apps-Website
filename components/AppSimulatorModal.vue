@@ -109,7 +109,7 @@
               <div v-if="logs.length === 0" class="text-gray-600 italic py-4 text-center">
                 No SDK events recorded yet. Interact with the app or send controls above.
               </div>
-              <div v-for="(log, idx) in logs" :key="idx" class="leading-relaxed border-b border-gray-900 pb-1">
+              <div v-for="log in logs" :key="log.id" class="leading-relaxed border-b border-gray-900 pb-1">
                 <span class="text-gray-500">[{{ log.time }}]</span>
                 <span :class="log.typeClass" class="font-bold ml-1">[{{ log.type }}]</span>
                 <span class="text-gray-300 ml-1.5 break-all">{{ log.msg }}</span>
@@ -153,9 +153,17 @@ function close() {
   emit('close');
 }
 
+// ⚡ Bolt Optimization: Use unique ID to prevent massive O(n) re-renders, and bound array size to prevent memory leaks
+let logIdCounter = 0;
+const MAX_LOGS = 100;
+
 function addLog(type, msg, color = 'text-blue-400') {
   const time = new Date().toLocaleTimeString();
-  logs.value.push({ time, type, msg, typeClass: color });
+  logs.value.push({ id: logIdCounter++, time, type, msg, typeClass: color });
+
+  if (logs.value.length > MAX_LOGS) {
+    logs.value.shift();
+  }
 }
 
 function clearLogs() {
