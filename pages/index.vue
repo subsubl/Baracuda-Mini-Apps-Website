@@ -54,9 +54,13 @@ const filteredApps = computed(() => {
     return apps.value
   }
 
+  // ⚡ Bolt Optimization: Hoisted invariant loop checks outside the filter to avoid redundant evaluations
+  const isCategoryAll = category === 'All'
+  const hasQuery = !!query
+
   return apps.value.filter(app => {
-    if (category !== 'All' && app.category !== category) return false
-    if (query) {
+    if (!isCategoryAll && app.category !== category) return false
+    if (hasQuery) {
       if (!app._searchName.includes(query) && !app._searchDesc.includes(query)) return false
     }
     return true
