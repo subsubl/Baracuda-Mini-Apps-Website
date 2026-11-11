@@ -50,15 +50,18 @@ const filteredApps = computed(() => {
   const category = selectedCategory.value
   const query = debouncedSearchQuery.value ? debouncedSearchQuery.value.trim().toLowerCase() : ''
 
-  if (category === 'All' && !query) {
+  // ⚡ Bolt Optimization: Hoisted loop-invariant checks outside the .filter() callback
+  // to avoid redundant evaluations and improve iteration speed
+  const hasCategoryFilter = category !== 'All'
+  const hasQuery = query.length > 0
+
+  if (!hasCategoryFilter && !hasQuery) {
     return apps.value
   }
 
   return apps.value.filter(app => {
-    if (category !== 'All' && app.category !== category) return false
-    if (query) {
-      if (!app._searchName.includes(query) && !app._searchDesc.includes(query)) return false
-    }
+    if (hasCategoryFilter && app.category !== category) return false
+    if (hasQuery && !app._searchName.includes(query) && !app._searchDesc.includes(query)) return false
     return true
   })
 })
