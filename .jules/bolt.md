@@ -24,3 +24,7 @@
 ## 2026-10-10 - Prevent unbounded memory growth and re-renders in array-backed logs
 **Learning:** In Vue, appending elements to an array unbounded can lead to significant memory accumulation and slow render times. Specifically, when limiting array size by removing elements from the beginning (e.g., using `shift()`), array indices change for all remaining items. If an element's index is used as its `:key` in a `v-for` directive, it triggers an O(n) re-render of the entire list.
 **Action:** Use a unique, stable ID for list items in dynamic lists, especially those that mutate through the removal of older elements. Always bound the maximum length of lists that represent continuous event streams (like logs) to prevent memory leaks.
+
+## 2025-05-18 - [Vue Computed Search Optimizations]
+**Learning:** In Vue computed properties that perform array filtering based on active states (like search queries or selected categories), loop-invariant conditions (e.g., checks against active filters that do not depend on the specific iterated element) evaluated *inside* the loop incur redundant evaluation costs, allocating overhead on every iteration.
+**Action:** Always hoist loop-invariant checks (e.g., `const hasCategoryFilter = category !== 'All'`) to boolean constants outside the `.filter()` callback to avoid redundant CPU evaluations. This significantly improves array filtering iteration speed on active changes.
